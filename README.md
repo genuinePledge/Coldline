@@ -1,5 +1,5 @@
 # Coldline: Saysary.
-Game project for a "Проектная деятельность"
+Game project for a "Проектная деятельность"\n
 •	Genre: Top-Down Stealth Action
 •	Visual Style: Pixel Art (?) [Inspirations: Hotline Miami, The Matrix, Metal Gear Solid, Super Mario Bros.]
 •	Platform: Windows
