@@ -2,7 +2,7 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 
-namespace utility
+namespace vect
 {
 	sf::Vector2f operator-(const sf::Vector2f& v);
 	sf::Vector2f operator+(const sf::Vector2f& v);

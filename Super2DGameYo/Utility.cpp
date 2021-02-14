@@ -1,6 +1,6 @@
 #include "Utility.h"
 
-namespace utility
+namespace vect
 {
     sf::Vector2f operator-(const sf::Vector2f& v)
     {
