@@ -12,4 +12,5 @@ namespace vect
 	float operator*(const sf::Vector2f& v1, const sf::Vector2f& v2);
 	float norm(const sf::Vector2f& v);
 	float angle(const sf::Vector2f& v1, const sf::Vector2f& v2);
+	
 }

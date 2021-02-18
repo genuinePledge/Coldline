@@ -34,6 +34,6 @@ namespace vect
 
     float angle(const sf::Vector2f& v1, const sf::Vector2f& v2)
     {
-        return acos((v1 * v2) / (norm(v1) * norm(v2)));
+        return (acos((v1 * v2) / (norm(v1) * norm(v2))) * 180.f / 3.141592653589f);
     }
 }
