@@ -19,7 +19,7 @@ void Player::update(float delta)
 void Player::move_by(float x, float y)
 {
 	this->move(x, y);
-	//camera.move(x, y);
+	camera.move(x, y);
 	hurtbox.move(x, y);
 }
 

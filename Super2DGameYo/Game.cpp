@@ -5,25 +5,25 @@
 #include <thread>
 #include <chrono>
 
-sf::CircleShape circle(14);
+sf::RenderTexture mapTex;
+sf::Sprite bufferMapTex;
 
 Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	: width(sizeX), height(sizeY),
-	  window(sf::VideoMode(width, height), name),
-	  player(16.f, 16.f, "res/tex/test_player_16x16.png")
+	window(sf::VideoMode(width, height), name, sf::Style::Fullscreen, sf::ContextSettings::ContextSettings(0,0,8)),
+	player(16.f, 16.f, "res/tex/test_player_16x16.png"),
+	map("res/maps/smol_map.tmx")
 {
-	sf::Vector2f zoomed(( float ) width / upscaleValue, ( float ) height / upscaleValue);
-	window.setFramerateLimit(60);
+	sf::Vector2f zoomed(( float ) width / ZOOM_VALUE, ( float ) height / ZOOM_VALUE);
+	//window.setVerticalSyncEnabled(true);
 
-	player.getCamera()->setCenter(zoomed.x / 2, zoomed.y / 2);
+	player.getCamera()->setCenter(map.getPlayerSpawnLocation());
 	player.getCamera()->setSize(zoomed);
 	
+	player.setPosition(map.getPlayerSpawnLocation());
+	player.getHurtbox()->setPosition(map.getPlayerSpawnLocation());
+
 	window.setView(*player.getCamera());
-
-	//defaultView = window.getDefaultView();
-
-	player.setPosition(zoomed.x / 2, zoomed.y / 2);
-	player.getHurtbox()->setPosition(zoomed.x / 2, zoomed.y / 2);
 
 	font.loadFromFile("res/fonts/Cabin.ttf");
 
@@ -33,6 +33,12 @@ Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	fpsText.setOutlineThickness(2);
 	fpsText.setFont(font);
 	fpsText.setCharacterSize(20);
+
+	mapTex.create(800, 800);
+	mapTex.draw(map);
+	mapTex.display();
+
+	bufferMapTex.setTexture(mapTex.getTexture());
 }
 
 Game::~Game()
@@ -41,26 +47,21 @@ Game::~Game()
 
 void Game::run() // Функция, в которой всё происходит
 {
-	sf::Int64 lastLoopTime = clock.restart().asMicroseconds();
+	long lastLoopTime = clock.restart().asMilliseconds();
 	const int TARGET_FPS = 60;
-	const long OPTIMAL_TIME = 1000000 / TARGET_FPS;
-	sf::Int64 lastFpsTime = 0;
-	uint16_t fps = 0;
-
-	circle.setOrigin(14, 14);
-	circle.setPosition(50, 50);
+	const long OPTIMAL_TIME = 1000 / TARGET_FPS;
 
 	while (window.isOpen())
 	{
-		sf::Int64 now = clock.getElapsedTime().asMicroseconds();
-		sf::Int64 updateLength = now - lastLoopTime;
+		long now = clock.getElapsedTime().asMilliseconds();
+		long updateLength = now - lastLoopTime;
 		lastLoopTime = now;
 		float deltaTime = updateLength / ((float)OPTIMAL_TIME);
 
 		lastFpsTime += updateLength;
 		fps++;
 		
-		if (lastFpsTime >= 1000000)
+		if (lastFpsTime >= 1000)
 		{
 			fpsText.setString("FPS: " + std::to_string(( int ) fps));
 			lastFpsTime = 0;
@@ -69,13 +70,41 @@ void Game::run() // Функция, в которой всё происходит
 
 		update(deltaTime);
 		render();
-
-		//try { std::this_thread::sleep_for(std::chrono::microseconds( (lastLoopTime - clock.getElapsedTime().asMicroseconds() + OPTIMAL_TIME)/100000 )); }
-		//catch (const std::exception&) { }
 	}
 }
 
+
 void Game::update(float delta)
+{
+	handleEvent();
+
+	window.setView(*player.getCamera());
+
+	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+	sf::Vector2f trueMousePos = window.mapPixelToCoords(pixelPos);
+	float angle = vect::angle(trueMousePos - player.getPosition(), sf::Vector2f(player.getPosition().x, player.getPosition().y - 20.f) - player.getPosition());
+	if (trueMousePos.x < player.getPosition().x)
+		angle = 360.f - angle;
+
+	player.rotate(angle);
+	player.update(delta);
+}
+
+void Game::render()
+{
+	// Отрисовка
+	window.clear(map.getBackgroundColor());
+	window.setView(*player.getCamera());
+	//window.draw(map);
+	window.draw(bufferMapTex);
+	window.draw(player);
+	//window.draw(*player.getHurtbox());
+	window.setView(window.getDefaultView());
+	window.draw(fpsText);
+	window.display();
+}
+
+void Game::handleEvent()
 {
 	sf::Event e;
 	while (window.pollEvent(e))
@@ -87,41 +116,4 @@ void Game::update(float delta)
 			break;
 		}
 	}
-	window.setView(*player.getCamera());
-
-	// Конвертация координат с окна на view
-
-	sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-	sf::Vector2f trueMousePos = window.mapPixelToCoords(pixelPos);
-	
-
-	// Код, чтобы игрок следил за курсором мыши
-
-	float angle = vect::angle(trueMousePos - player.getPosition(), sf::Vector2f(player.getPosition().x, player.getPosition().y - 20.f) - player.getPosition());
-	if (trueMousePos.x < player.getPosition().x)
-		angle = 360.f - angle;
-	player.rotate(angle);
-
-	// DEBUG info
-
-	//std::cout << "mouse coord: (" << trueMousePos.x << ", " << trueMousePos.y << ")  angle: " << angle << " deg.\n";
-	
-	//system("cls");
-	//std::cout << "player pos: (" << player.getPosition().x << ", " << player.getPosition().y << ")\t";
-	//std::cout << "hurtbox center: (" << player.getHurtbox()->getOrigin().x << ", " << player.getHurtbox()->getOrigin().y << ") \n";
-
-	player.update(delta);
-}
-
-void Game::render()
-{
-	// Отрисовка
-	window.clear(sf::Color(90, 101, 163, 255));
-	window.setView(*player.getCamera());
-	window.draw(circle);
-	window.draw(player);
-	window.draw(*player.getHurtbox());
-	window.setView(window.getDefaultView());
-	window.draw(fpsText);
-	window.display();
 }

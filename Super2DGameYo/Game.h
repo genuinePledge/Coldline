@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include "Map.h"
 
 class Game
 {
@@ -11,6 +12,7 @@ public:
 	void run();
 	void update(float delta);
 	void render();
+	void handleEvent();
 
 	int width, height;
 
@@ -22,10 +24,12 @@ private:
 	sf::Font font;
 
 	Player player;
+	Map map;
 
-	double interpolation = 0;
-	const int TICKS_PER_SEC = 60;
-	const int SKIP_TICKS = 1000 / TICKS_PER_SEC;
-	const int MAX_FRAME_SKIP = 5;
-	const uint8_t upscaleValue = 6;
+	int fps = 0;
+	long lastFpsTime = 0;
+
+	const uint8_t ZOOM_VALUE = 6;
+	const uint8_t TARGET_FPS = 60;
+	const long OPTIMAL_TIME = 1000 / TARGET_FPS;
 };
