@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.4" tiledversion="1.4.3" name="map_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
- <image source="res/tex/map_tileset.png" width="256" height="256"/>
+ <image source="../tex/map_tileset.png" width="256" height="256"/>
  <tile id="0">
   <objectgroup draworder="index" id="2">
    <object id="1" type="collision_wall" x="11" y="12" width="5" height="4"/>
@@ -51,6 +51,30 @@
    <object id="1" type="collision_wa" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
+ <tile id="22">
+  <objectgroup draworder="index" id="2">
+   <object id="1" type="collision_wal" x="0" y="12" width="16" height="4"/>
+  </objectgroup>
+ </tile>
+ <tile id="23">
+  <objectgroup draworder="index" id="3">
+   <object id="2" type="collision_wall" x="0" y="16">
+    <polygon points="0,0 16,0 16,-16 9,-15.9565 0.130435,-9.04348"/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="24">
+  <objectgroup draworder="index" id="2">
+   <object id="1" type="collision_wall" x="0" y="0">
+    <polygon points="0,0 0,16 16,16 15.9565,7.04348 6.95652,0.0434783"/>
+   </object>
+  </objectgroup>
+ </tile>
+ <tile id="25">
+  <objectgroup draworder="index" id="2">
+   <object id="1" type="collision_wall" x="0" y="12" width="16" height="4"/>
+  </objectgroup>
+ </tile>
  <tile id="32">
   <objectgroup draworder="index" id="2">
    <object id="1" type="collision_wall" x="11" y="0" width="5" height="16"/>
@@ -78,6 +102,26 @@
    <object id="1" type="collision_wall" x="0" y="16">
     <polygon points="0,0 16,0 16,-16 11.0039,-16 11.0056,-4 0.0078125,-3.99609"/>
    </object>
+  </objectgroup>
+ </tile>
+ <tile id="38">
+  <objectgroup draworder="index" id="2">
+   <object id="1" type="collision_wall" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="39">
+  <objectgroup draworder="index" id="2">
+   <object id="1" type="collision_wall" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="40">
+  <objectgroup draworder="index" id="2">
+   <object id="1" type="collision_wall" x="0" y="0" width="16" height="16"/>
+  </objectgroup>
+ </tile>
+ <tile id="41">
+  <objectgroup draworder="index" id="2">
+   <object id="1" type="collision_wall" x="0" y="0" width="16" height="16"/>
   </objectgroup>
  </tile>
  <tile id="48">
