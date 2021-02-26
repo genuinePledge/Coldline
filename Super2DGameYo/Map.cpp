@@ -3,19 +3,28 @@
 Map::Map(const std::string& mapPath)
 {
 	mapDoc.load_file(mapPath.c_str());
-	pugi::xml_node node = mapDoc.child("map");
-	width = atoi(node.attribute("width").value());
-	height = atoi(node.attribute("height").value());
-	tileSize = atoi(node.attribute("tilewidth").value());
+	pugi::xml_node firstNode = mapDoc.child("map");
+	width = atoi(firstNode.attribute("width").value());
+	height = atoi(firstNode.attribute("height").value());
+	tileSize = atoi(firstNode.attribute("tilewidth").value());
 	
-	loadTileset(node.first_child().attribute("source").value());
-
-	node = node.first_child();
-	while (node)
+	std::string badPath = firstNode.first_child().attribute("source").value();
+	if (badPath.find("..") != std::string::npos)
 	{
-		if (!std::string("layer").compare(node.name()))
+		std::string goodPath = badPath.replace(badPath.find(".."), 2, "res");
+		loadTileset(goodPath);
+	}
+	else
+	{
+		loadTileset(badPath);
+	}
+
+	pugi::xml_node mapContents = firstNode.first_child();
+	while (mapContents)
+	{
+		if (!std::string("layer").compare(mapContents.name()))
 		{
-			std::stringstream ss(node.first_child().text().get());
+			std::stringstream ss(mapContents.first_child().text().get());
 			std::string str;
 			std::vector<int16_t> tmp;
 			for (int i = 0; i < width * height; i++)
@@ -23,22 +32,36 @@ Map::Map(const std::string& mapPath)
 				std::getline(ss, str, ',');
 				tmp.push_back(( int16_t ) (atoi(str.c_str()) - 1));
 			}
-			map.push_back(tmp);
-			layerNum++;
+			map[mapContents.attribute("name").value()] = tmp;
+			layers.push_back(mapContents.attribute("name").value());
 		}
-		if (!std::string("objectgroup").compare(node.name()))
+		if (!std::string("objectgroup").compare(mapContents.name()) && !std::string("spawns").compare(mapContents.attribute("name").value()))
 		{
-			if (!std::string("player_spawn").compare(node.first_child().attribute("name").value()))
+			playerSpawn.x = atof(mapContents.first_child().attribute("x").value());
+			playerSpawn.y = atof(mapContents.first_child().attribute("y").value());
+		}
+		if (!std::string("objectgroup").compare(mapContents.name()) && !std::string("solids").compare(mapContents.attribute("name").value()))
+		{
+			pugi::xml_node obj = mapContents.first_child();
+			while (obj)
 			{
-				playerSpawn.x = atof(node.first_child().attribute("x").value());
-				playerSpawn.y = atof(node.first_child().attribute("y").value());
+				sf::RectangleShape rect;
+				
+				rect.setPosition( sf::Vector2f( atoi( obj.attribute("x").value() ), atoi( obj.attribute("y").value() ) ) );
+				rect.setSize( sf::Vector2f( atoi( obj.attribute("width").value() ), atoi( obj.attribute("height").value() ) ) );
+
+				rect.setFillColor(sf::Color(0, 255, 0, 100));
+				
+				solids.push_back(rect);
+
+				obj = obj.next_sibling();
 			}
 		}
-		node = node.next_sibling();
+		mapContents = mapContents.next_sibling();
 	}
 
 	
-	for (int i = 0; i < layerNum; i++)
+	for (int i = 0; i < layers.size(); i++)
 	{
 		sf::VertexArray vert;
 		vert.setPrimitiveType(sf::Quads);
@@ -47,16 +70,16 @@ Map::Map(const std::string& mapPath)
 	}
 
 	
-	for (int z = 0; z < layerNum; z++)
+	for (int z = 0; z < layers.size(); z++)
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
 			{
-				int tileNumber = map[z][i + j * width];
+				int tileNumber = map[layers[z]][i + j * width];
 
 				if (tileNumber == -1)
 					tileNumber = 255;
 
-				sf::IntRect texrect = tileset[tileNumber];
+				sf::IntRect texrect = tiles[tileNumber];
 
 				sf::Vertex* quad = &vertices[z][(i + j * width) * 4];
 
@@ -67,7 +90,14 @@ Map::Map(const std::string& mapPath)
 			}
 
 	sf::Image img = tilesetImage.copyToImage();
-	bgColor = img.getPixel(tileset[129].top, tileset[129].left);
+	bgColor = img.getPixel(tiles[129].top, tiles[129].left);
+
+	fLayer = layers[0];
+	lLayer = layers[layers.size() - 1];
+
+	map.clear();
+	tiles.clear();
+	tiles.shrink_to_fit();
 }
 
 Map::~Map() { }
@@ -77,12 +107,23 @@ void Map::loadTileset(const std::string& path)
 	tilesetDoc.load_file(path.c_str());
 	pugi::xml_node node = tilesetDoc.child("tileset");
 	node = node.child("image");
-	tilesetImage.loadFromFile(node.attribute("source").value());
+
+	std::string badPath = node.attribute("source").value();
+	if (badPath.find("..") != std::string::npos)
+	{
+		std::string goodPath = badPath.replace(badPath.find(".."), 2, "res");
+		tilesetImage.loadFromFile(goodPath);
+	}
+	else
+	{
+		tilesetImage.loadFromFile(badPath);
+	}
+
 	for (int i = 0; i < tilesetImage.getSize().y / tileSize; i++)
 	{
 		for (int j = 0; j < tilesetImage.getSize().x / tileSize; j++)
 		{
-			tileset.push_back(sf::IntRect(i * tileSize, j * tileSize, tileSize, tileSize));
+			tiles.push_back(sf::IntRect(i * tileSize, j * tileSize, tileSize, tileSize));
 		}
 	}
 }
@@ -101,7 +142,5 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform *= getTransform();
 	states.texture = &tilesetImage;
-	for (int i = 1; i < layerNum; i++)
-		target.draw(vertices[i], states);
-
+	target.draw(vertices[currentLayer], states);
 }

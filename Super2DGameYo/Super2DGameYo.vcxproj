@@ -24,6 +24,7 @@
     <ProjectGuid>{2f514fab-f688-46bf-b258-dd527427cecb}</ProjectGuid>
     <RootNamespace>Super2DGameYo</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Super2DGameYo</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

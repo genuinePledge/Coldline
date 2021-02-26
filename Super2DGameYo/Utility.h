@@ -1,5 +1,6 @@
 #pragma once
 #include <math.h>
+#include <string>
 #include <SFML/Graphics.hpp>
 
 namespace vect

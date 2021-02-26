@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Player.h"
 #include "Map.h"
 
@@ -20,6 +21,8 @@ private:
 	sf::RenderWindow window;
 	sf::Clock clock;
 
+	sf::Music music;
+
 	sf::Text fpsText;
 	sf::Font font;
 
@@ -28,8 +31,12 @@ private:
 
 	int fps = 0;
 	long lastFpsTime = 0;
+	bool fpsRenderFlag = 1;
 
-	const uint8_t ZOOM_VALUE = 6;
+	sf::RenderTexture* buf;
+	std::map<std::string, sf::Sprite> mapTexture;
+
+	uint8_t ZOOM_VALUE = 6;
 	const uint8_t TARGET_FPS = 60;
 	const long OPTIMAL_TIME = 1000 / TARGET_FPS;
 };

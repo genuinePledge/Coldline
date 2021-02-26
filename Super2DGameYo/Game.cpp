@@ -5,14 +5,11 @@
 #include <thread>
 #include <chrono>
 
-sf::RenderTexture mapTex;
-sf::Sprite bufferMapTex;
-
 Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	: width(sizeX), height(sizeY),
-	window(sf::VideoMode(width, height), name, sf::Style::Fullscreen, sf::ContextSettings::ContextSettings(0,0,8)),
+	window(sf::VideoMode(width, height), name, sf::Style::Fullscreen),
 	player(16.f, 16.f, "res/tex/test_player_16x16.png"),
-	map("res/maps/smol_map.tmx")
+	map("res/maps/test_map.tmx")
 {
 	sf::Vector2f zoomed(( float ) width / ZOOM_VALUE, ( float ) height / ZOOM_VALUE);
 	//window.setVerticalSyncEnabled(true);
@@ -34,22 +31,34 @@ Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	fpsText.setFont(font);
 	fpsText.setCharacterSize(20);
 
-	mapTex.create(800, 800);
-	mapTex.draw(map);
-	mapTex.display();
+	buf = new sf::RenderTexture[map.layers.size()];
+	
+	for (int i = 0; i < map.layers.size(); i++)
+	{
+		buf[i].create(800, 800);
+		map.currentLayer = i;
+		buf[i].draw(map);
+		buf[i].display();
 
-	bufferMapTex.setTexture(mapTex.getTexture());
+		mapTexture[map.layers[i]].setTexture(buf[i].getTexture());
+	}
+
+
+
+	player.retrieveWorldSolids(map.solids);
+
+
+	map.solids.clear();
+	map.solids.shrink_to_fit();
 }
 
 Game::~Game()
 {
 }
 
-void Game::run() // Функция, в которой всё происходит
+void Game::run()
 {
 	long lastLoopTime = clock.restart().asMilliseconds();
-	const int TARGET_FPS = 60;
-	const long OPTIMAL_TIME = 1000 / TARGET_FPS;
 
 	while (window.isOpen())
 	{
@@ -86,21 +95,51 @@ void Game::update(float delta)
 	if (trueMousePos.x < player.getPosition().x)
 		angle = 360.f - angle;
 
-	player.rotate(angle);
+	player.setRotation(angle);
 	player.update(delta);
 }
 
 void Game::render()
 {
-	// Отрисовка
+	// Background
 	window.clear(map.getBackgroundColor());
+
+	// Set view
 	window.setView(*player.getCamera());
-	//window.draw(map);
-	window.draw(bufferMapTex);
+
+	// Draw map
+	while (map.layers.begin()->compare("playerLayer"))
+	{
+		if (!map.layers.begin()->compare("background")) 
+		{
+			std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
+			continue;
+		}
+		window.draw(mapTexture[*map.layers.begin()]);
+		std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
+	}
+
+
 	window.draw(player);
-	//window.draw(*player.getHurtbox());
+	std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
+
+	do {
+		window.draw(mapTexture[*map.layers.begin()]);
+		std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
+	} while ((*(map.layers.end() - 1)).compare(map.lLayer));
+
+	if (map.hitboxRenderFlag)
+		for (int i = 0; i < player.worldSolids.size(); i++)
+			window.draw(player.worldSolids[i]);
+
+	if (player.hitboxRenderFlag)
+		window.draw(*player.getHurtbox());
+
 	window.setView(window.getDefaultView());
-	window.draw(fpsText);
+
+	if (fpsRenderFlag)
+		window.draw(fpsText);
+
 	window.display();
 }
 
@@ -113,6 +152,31 @@ void Game::handleEvent()
 		{
 		case sf::Event::Closed:
 			window.close();
+			break;
+		case sf::Event::KeyReleased:
+			switch (e.key.code)
+			{
+			case sf::Keyboard::PageUp:
+				ZOOM_VALUE++;
+				player.getCamera()->setSize(width / ZOOM_VALUE, height / ZOOM_VALUE);
+				break;
+			case sf::Keyboard::PageDown:
+				if (ZOOM_VALUE > 1)
+					ZOOM_VALUE--;
+				player.getCamera()->setSize(width / ZOOM_VALUE, height / ZOOM_VALUE);
+				break;
+			case sf::Keyboard::F1:
+				map.hitboxRenderFlag = !map.hitboxRenderFlag;
+				break;
+			case sf::Keyboard::F2:
+				player.hitboxRenderFlag = !player.hitboxRenderFlag;
+				break;
+			case sf::Keyboard::F3:
+				fpsRenderFlag = !fpsRenderFlag;
+				break;
+			default:
+				break;
+			}
 			break;
 		}
 	}
