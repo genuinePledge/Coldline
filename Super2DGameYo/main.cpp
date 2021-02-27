@@ -5,7 +5,7 @@
 
 int main()
 {
-    Game game(1360, 768, "Coldline");
+    Game game(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height, "Coldline");
     game.run();
     return 0;
 }

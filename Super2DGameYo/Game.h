@@ -36,7 +36,7 @@ private:
 	sf::RenderTexture* buf;
 	std::map<std::string, sf::Sprite> mapTexture;
 
-	uint8_t ZOOM_VALUE = 6;
+	uint8_t ZOOM_VALUE = 4;
 	const uint8_t TARGET_FPS = 60;
 	const long OPTIMAL_TIME = 1000 / TARGET_FPS;
 };
