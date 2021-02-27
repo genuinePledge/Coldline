@@ -8,8 +8,6 @@ public:
 	Entity(float x, float y, const std::string& filePath);
 	~Entity();
 
-	bool hitboxRenderFlag = 1;
-
 	virtual void update(float) = 0;
 	virtual void updatePosition(sf::Vector2f) = 0;
 	virtual void checkCollision();

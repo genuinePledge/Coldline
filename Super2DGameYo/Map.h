@@ -15,7 +15,6 @@ public:
 	~Map();
 
 	std::vector<sf::RectangleShape> solids;
-	bool hitboxRenderFlag = 1;
 	int currentLayer;
 	std::vector<std::string> layers;
 	std::string fLayer, lLayer;

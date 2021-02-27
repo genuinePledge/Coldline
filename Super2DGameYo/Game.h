@@ -31,10 +31,12 @@ private:
 
 	int fps = 0;
 	long lastFpsTime = 0;
-	bool fpsRenderFlag = 1;
 
 	sf::RenderTexture* buf;
 	std::map<std::string, sf::Sprite> mapTexture;
+
+	bool fpsRenderFlag = 1;
+	bool colliderRenderFlag = 1;
 
 	uint8_t ZOOM_VALUE = 4;
 	const uint8_t TARGET_FPS = 60;

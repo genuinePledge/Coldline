@@ -128,11 +128,11 @@ void Game::render()
 		std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
 	} while ((*(map.layers.end() - 1)).compare(map.lLayer));
 
-	if (map.hitboxRenderFlag)
+	if (colliderRenderFlag)
 		for (int i = 0; i < player.worldSolids.size(); i++)
 			window.draw(player.worldSolids[i]);
 
-	if (player.hitboxRenderFlag)
+	if (colliderRenderFlag)
 		window.draw(*player.getHurtbox());
 
 	window.setView(window.getDefaultView());
@@ -166,12 +166,9 @@ void Game::handleEvent()
 				player.getCamera()->setSize(width / ZOOM_VALUE, height / ZOOM_VALUE);
 				break;
 			case sf::Keyboard::F1:
-				map.hitboxRenderFlag = !map.hitboxRenderFlag;
+				colliderRenderFlag = !colliderRenderFlag;
 				break;
 			case sf::Keyboard::F2:
-				player.hitboxRenderFlag = !player.hitboxRenderFlag;
-				break;
-			case sf::Keyboard::F3:
 				fpsRenderFlag = !fpsRenderFlag;
 				break;
 			default:
