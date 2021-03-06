@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Game.h"
-#include "pugixml.hpp"
 
 int main()
 {

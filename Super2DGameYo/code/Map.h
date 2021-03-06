@@ -4,7 +4,7 @@
 #include <sstream>
 #include <map>
 #include <iostream>
-#include "pugixml.hpp"
+#include "../pugi-xml/pugixml.hpp"
 #include "SFML/Graphics.hpp"
 #include "Utility.h"
 
