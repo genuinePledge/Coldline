@@ -11,14 +11,14 @@ public:
 		return m;
 	}
 
-	ResourceHolder<sf::Texture> m_texture;
-	ResourceHolder<sf::Font> m_font;
-	ResourceHolder<sf::SoundBuffer> m_audio;
+	ResourceHolder<sf::Texture> textures;
+	ResourceHolder<sf::Font> fonts;
+	ResourceHolder<sf::SoundBuffer> sounds;
 private:
 	ResourceManager()
-		: m_texture("tex", "png")
-		, m_font("fonts", "ttf")
-		, m_audio("audio", "wav")
+		: textures("tex", "png")
+		, fonts("fonts", "ttf")
+		, sounds("audio", "wav")
 	{
 
 	}
