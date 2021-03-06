@@ -36,7 +36,7 @@
     <ClCompile Include="pugi-xml/pugixml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyUnit.cpp">
+    <ClCompile Include="code/EnemyUnit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,7 +62,10 @@
     <ClInclude Include="pugi-xml/pugixml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyUnit.h">
+    <ClInclude Include="code/EnemyUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code/GameStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
