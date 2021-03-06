@@ -172,6 +172,8 @@
     <ClInclude Include="code/Player.h" />
     <ClInclude Include="code/GameStates.h" />
     <ClInclude Include="code/EnemyUnit.h" />
+    <ClInclude Include="code/ResourceHolder.h" />
+    <ClInclude Include="code/ResourceManager.h" />
     <ClInclude Include="code/Utility.h" />
     <ClInclude Include="pugi-xml/pugiconfig.hpp" />
     <ClInclude Include="pugi-xml/pugixml.hpp" />

@@ -68,6 +68,18 @@
     <ClInclude Include="code/GameStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="code/ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code/ResourceHolder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceHolder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\smol_map.tmx" />
