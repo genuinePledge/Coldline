@@ -18,6 +18,7 @@ public:
 	int width, height;
 
 private:
+
 	sf::RenderWindow window;
 	sf::Clock clock;
 
@@ -28,6 +29,10 @@ private:
 
 	Player player;
 	Map map;
+
+	std::vector<Layer> layers;
+	std::vector<std::unique_ptr<Object>> colliders;
+	std::vector<std::unique_ptr<Object>> spawns;
 
 	int fps = 0;
 	long lastFpsTime = 0;
