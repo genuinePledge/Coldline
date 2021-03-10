@@ -52,3 +52,38 @@ void Layer::offsetTexCoords(int offset)
 		i -= offset;
 	}
 }
+
+void Layer::initVertexArray()
+{
+	m_vertices.setPrimitiveType(sf::Quads);
+	m_vertices.resize(m_width * m_height * 4);
+
+	for (int i = 0; i < m_width; i++)
+		for (int j = 0; j < m_height; j++)
+		{
+			int tileNumber = m_data[i + j * m_width];
+			sf::Vertex* quad = &m_vertices[(i + j * m_width) * 4];
+			
+			if (tileNumber == 0)
+			{
+				quad[0].position = sf::Vector2f(i * m_tilesize, j * m_tilesize);
+				quad[1].position = sf::Vector2f((i + 1) * m_tilesize, j * m_tilesize);
+				quad[2].position = sf::Vector2f((i + 1) * m_tilesize, (j + 1) * m_tilesize);
+				quad[3].position = sf::Vector2f(i * m_tilesize, (j + 1) * m_tilesize);
+
+				quad[0].color = sf::Color(255, 255, 255, 0);
+				quad[1].color = sf::Color(255, 255, 255, 0);
+				quad[2].color = sf::Color(255, 255, 255, 0);
+				quad[3].color = sf::Color(255, 255, 255, 0);
+			}
+			else
+			{
+				sf::IntRect texrect = m_tileset.texCoords[tileNumber];
+
+				quad[0] = sf::Vertex(sf::Vector2f(i * m_tilesize, j * m_tilesize),			  sf::Vector2f(texrect.left, texrect.top));
+				quad[1] = sf::Vertex(sf::Vector2f((i + 1) *m_tilesize, j * m_tilesize),		  sf::Vector2f(texrect.left + texrect.width, texrect.top));
+				quad[2] = sf::Vertex(sf::Vector2f((i + 1) *m_tilesize, (j + 1) * m_tilesize), sf::Vector2f(texrect.left + texrect.width, texrect.top + texrect.height));
+				quad[3] = sf::Vertex(sf::Vector2f(i * m_tilesize, (j + 1) * m_tilesize),	  sf::Vector2f(texrect.left, texrect.top + texrect.height));
+			}
+		}
+}

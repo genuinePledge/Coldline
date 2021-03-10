@@ -13,6 +13,7 @@ public:
 	void parse(const pugi::xml_node& node);
 	void setTileset(std::vector<Tileset>& tilesets);
 	void offsetTexCoords(int offset);
+	void initVertexArray();
 
 private:
 	sf::VertexArray m_vertices;
@@ -24,6 +25,7 @@ private:
 	uint16_t m_height;
 
 	uint8_t m_tilesetID;
+	uint8_t m_tilesize;
 
 };
 
