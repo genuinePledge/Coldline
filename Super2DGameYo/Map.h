@@ -7,9 +7,17 @@ public:
 	Map(const std::string& filePath);
 	~Map();
 
+	enum class ObjType
+	{
+		solids,
+		spawns
+	};
+
 private:
 
 	void loadMap(const pugi::xml_node& node);
+
+
 
 	uint8_t m_tileSize;
 	uint16_t m_mapWidth;
