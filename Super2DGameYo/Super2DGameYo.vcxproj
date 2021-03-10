@@ -162,8 +162,10 @@
     <ClCompile Include="code/Player.cpp" />
     <ClCompile Include="code/EnemyUnit.cpp" />
     <ClCompile Include="code/Utility.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="pugi-xml/pugixml.cpp" />
     <ClCompile Include="Tileset.cpp" />
   </ItemGroup>
@@ -176,8 +178,10 @@
     <ClInclude Include="code/ResourceHolder.h" />
     <ClInclude Include="code/ResourceManager.h" />
     <ClInclude Include="code/Utility.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="pugi-xml/pugiconfig.hpp" />
     <ClInclude Include="pugi-xml/pugixml.hpp" />
     <ClInclude Include="Tileset.h" />
