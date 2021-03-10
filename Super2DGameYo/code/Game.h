@@ -31,8 +31,8 @@ private:
 	Map map;
 
 	std::vector<Layer> layers;
-	std::vector<std::unique_ptr<Object>> colliders;
-	std::vector<std::unique_ptr<Object>> spawns;
+	std::vector<std::shared_ptr<Object>> colliders;
+	std::vector<std::shared_ptr<Object>> spawns;
 
 	int fps = 0;
 	long lastFpsTime = 0;

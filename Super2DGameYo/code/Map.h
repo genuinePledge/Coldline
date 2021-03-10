@@ -18,14 +18,14 @@ public:
 
 	void render(sf::RenderTarget& target) const;
 	std::vector<Layer> getLayers() const;
-	std::vector<std::unique_ptr<Object>> getObjects(ObjType type);
+	std::vector<std::shared_ptr<Object>> getObjects(ObjType type);
 
 private:
 
 	void loadMap(const pugi::xml_node& node);
 	void loadTileset(const pugi::xml_node& node);
 
-	std::unordered_map<ObjType, std::vector<std::unique_ptr<Object>>> m_objects;
+	std::unordered_map<ObjType, std::vector<std::shared_ptr<Object>>> m_objects;
 	std::vector<Layer> m_layers;
 	std::vector<Tileset> m_tilesets;
 

@@ -9,14 +9,14 @@ Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	: width(sizeX), height(sizeY),
 	window(sf::VideoMode(width, height), name, sf::Style::Fullscreen),
 	player(16.f, 16.f, "res/tex/test_player_16x16.png"),
-	map("res/maps/test_map.tmx")
+	map("res/maps/map.tmx")
 {
 	sf::Vector2f zoomed(( float ) width / ZOOM_VALUE, ( float ) height / ZOOM_VALUE);
 	//window.setVerticalSyncEnabled(true);
 
 	layers = map.getLayers();
-	colliders = std::move(map.getObjects(Map::ObjType::solids));
-	spawns = std::move(map.getObjects(Map::ObjType::spawns));
+	colliders = map.getObjects(Map::ObjType::solids);
+	spawns = map.getObjects(Map::ObjType::spawns);
 
 	player.getCamera()->setCenter(spawns[0]->getRekt().getPosition());
 	player.getCamera()->setSize(zoomed);
@@ -33,6 +33,8 @@ Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	fpsText.setOutlineThickness(2);
 	fpsText.setFont(font);
 	fpsText.setCharacterSize(20);
+
+	player.worldSolids = map.getObjects(Map::ObjType::solids);
 }
 
 Game::~Game()

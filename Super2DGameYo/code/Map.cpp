@@ -24,9 +24,9 @@ std::vector<Layer> Map::getLayers() const
 	return m_layers;
 }
 
-std::vector<std::unique_ptr<Object>> Map::getObjects(ObjType type)
+std::vector<std::shared_ptr<Object>> Map::getObjects(ObjType type)
 {
-	return std::move(m_objects[type]);
+	return m_objects[type];
 }
 
 
@@ -60,7 +60,7 @@ void Map::loadMap(const pugi::xml_node& node)
 			{
 				pugi::xml_node spawn = childnode.first_child();
 
-				std::vector<std::unique_ptr<Object>> objs;
+				std::vector<std::shared_ptr<Object>> objs;
 
 				while (spawn)
 				{
@@ -69,19 +69,19 @@ void Map::loadMap(const pugi::xml_node& node)
 					float width = atof(spawn.attribute("width").value());
 					float height = atof(spawn.attribute("height").value());
 
-					std::unique_ptr<Object> obj = std::make_unique<Object>(x, y);
+					std::shared_ptr<Object> obj = std::make_shared<Object>(x, y);
 
-					objs.push_back(std::move(obj));
+					objs.push_back(obj);
 					spawn = spawn.next_sibling();
 				}
-				m_objects[ObjType::spawns] = std::move(objs);
+				m_objects[ObjType::spawns] = objs;
 			}
 
 			if (!std::string("solids").compare(childnode.attribute("name").value()))
 			{
 				pugi::xml_node solid = childnode.first_child();
 
-				std::vector<std::unique_ptr<Object>> objs;
+				std::vector<std::shared_ptr<Object>> objs;
 
 				while (solid)
 				{
@@ -90,12 +90,12 @@ void Map::loadMap(const pugi::xml_node& node)
 					float width = atof(solid.attribute("width").value());
 					float height = atof(solid.attribute("height").value());
 
-					std::unique_ptr<Object> obj = std::make_unique<Collider>(x, y, width, height);
+					std::shared_ptr<Object> obj = std::make_shared<Collider>(x, y, width, height);
 
-					objs.push_back(std::move(obj));
+					objs.push_back(obj);
 					solid = solid.next_sibling();
 				}
-				m_objects[ObjType::solids] = std::move(objs);
+				m_objects[ObjType::solids] = objs;
 			}
 		}
 		childnode = childnode.next_sibling();
