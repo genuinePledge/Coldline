@@ -15,6 +15,7 @@ public:
 	void offsetTexCoords(int offset);
 	void initVertexArray();
 	void setTilesize(int size);
+	std::string getName() const;
 
 private:
 	sf::VertexArray m_vertices;

@@ -93,6 +93,11 @@ void Layer::setTilesize(int size)
 	m_tilesize = size;
 }
 
+std::string Layer::getName() const
+{
+	return m_name;
+}
+
 void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.texture = &m_tileset.getTexture();
