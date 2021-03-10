@@ -6,6 +6,7 @@ class Object
 public:
 	Object(float x, float y);
 
+	virtual void render(sf::RenderTarget& target) const;
 	
 protected:
 	sf::Color m_color;
