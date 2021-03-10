@@ -1,7 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "Tileset.h"
-#include "pugi-xml/pugixml.hpp"
+#include "../pugi-xml/pugixml.hpp"
 #include <sstream>
 
 class Layer : public sf::Drawable

@@ -55,3 +55,35 @@ void Map::loadMap(const pugi::xml_node& node)
 		childnode = childnode.next_sibling();
 	}
 }
+
+void Map::loadTileset(const pugi::xml_node& node)
+{
+	Tileset tileset;
+
+	pugi::xml_document doc;
+	doc.load_file(node.attribute("source").value());
+	pugi::xml_node ts_node = doc.first_child();
+
+	tileset.setName(node.attribute("name").value());
+	tileset.setTilecount(atoi(node.attribute("tilecount").value()));
+	tileset.setColumnCount(atoi(node.attribute("columns").value()));
+
+	ts_node = ts_node.first_child();
+	while (ts_node)
+	{
+		if (!std::string("image").compare(node.name()))
+		{
+			tileset.setTexture(ResourceManager::get().m_texture.get(node.attribute("source").value()));
+			tileset.setTextureSize(sf::Vector2i(atoi(node.attribute("width").value()), atoi(node.attribute("height").value())));
+		}
+		ts_node = ts_node.next_sibling();
+	}
+
+	tileset.texCoords.push_back(sf::IntRect());
+
+	for (int i = 0; i < tileset.getTilecount() / tileset.getColumnCount(); i++)
+		for (int j = 0; j < tileset.getColumnCount(); j++)
+			tileset.texCoords.push_back(sf::IntRect(j * m_tileSize, i * m_tileSize, m_tileSize, m_tileSize));
+
+	m_tilesets.push_back(tileset);
+}
