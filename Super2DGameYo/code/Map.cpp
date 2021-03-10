@@ -24,12 +24,17 @@ void Map::loadMap(const pugi::xml_node& node)
 	{
 		if (!std::string("tileset").compare(childnode.name()))
 		{
-
+			loadTileset(childnode);
 		}
 
 		if (!std::string("layer").compare(childnode.name()))
 		{
-
+			Layer layer;
+			layer.parse(childnode);
+			layer.setTileset(m_tilesets);
+			layer.setTilesize(m_tileSize);
+			layer.initVertexArray();
+			m_layers.push_back(layer);
 		}
 
 		if (!std::string("objectgroup").compare(childnode.name()))
@@ -37,19 +42,43 @@ void Map::loadMap(const pugi::xml_node& node)
 			if (!std::string("spawns").compare(childnode.attribute("name").value()))
 			{
 				pugi::xml_node spawn = childnode.first_child();
+
+				std::vector<std::unique_ptr<Object>> objs;
+
 				while (spawn)
 				{
+					float x = atof(spawn.attribute("x").value());
+					float y = atof(spawn.attribute("y").value());
+					float width = atof(spawn.attribute("width").value());
+					float height = atof(spawn.attribute("height").value());
+
+					std::unique_ptr<Object> obj = std::make_unique<Object>(x, y);
+
+					objs.push_back(std::move(obj));
 					spawn = spawn.next_sibling();
 				}
+				m_objects[ObjType::spawns] = std::move(objs);
 			}
 
 			if (!std::string("solids").compare(childnode.attribute("name").value()))
 			{
 				pugi::xml_node solid = childnode.first_child();
+
+				std::vector<std::unique_ptr<Object>> objs;
+
 				while (solid)
 				{
+					float x = atof(solid.attribute("x").value());
+					float y = atof(solid.attribute("y").value());
+					float width = atof(solid.attribute("width").value());
+					float height = atof(solid.attribute("height").value());
+
+					std::unique_ptr<Object> obj = std::make_unique<Collider>(x, y, width, height);
+
+					objs.push_back(std::move(obj));
 					solid = solid.next_sibling();
 				}
+				m_objects[ObjType::solids] = std::move(objs);
 			}
 		}
 		childnode = childnode.next_sibling();

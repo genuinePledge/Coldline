@@ -1,6 +1,7 @@
 #pragma once
 #include "Layer.h"
 #include "ResourceManager.h"
+#include "Collider.h"
 #include <unordered_map>
 
 class Map
@@ -20,7 +21,7 @@ private:
 	void loadMap(const pugi::xml_node& node);
 	void loadTileset(const pugi::xml_node& node);
 
-	std::unordered_map<ObjType, std::vector<std::unique_ptr<Tileset>>> m_objects;
+	std::unordered_map<ObjType, std::vector<std::unique_ptr<Object>>> m_objects;
 	std::vector<Layer> m_layers;
 	std::vector<Tileset> m_tilesets;
 
