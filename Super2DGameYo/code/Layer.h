@@ -14,6 +14,7 @@ public:
 	void setTileset(std::vector<Tileset>& tilesets);
 	void offsetTexCoords(int offset);
 	void initVertexArray();
+	void setTilesize(int size);
 
 private:
 	sf::VertexArray m_vertices;

@@ -88,6 +88,11 @@ void Layer::initVertexArray()
 		}
 }
 
+void Layer::setTilesize(int size)
+{
+	m_tilesize = size;
+}
+
 void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.texture = &m_tileset.getTexture();
