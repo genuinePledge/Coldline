@@ -18,7 +18,7 @@ public:
 
 	void render(sf::RenderTarget& target) const;
 	std::vector<Layer> getLayers() const;
-	std::vector<std::unique_ptr<Object>> getObjects(ObjType type) const;
+	std::vector<std::unique_ptr<Object>> getObjects(ObjType type);
 
 private:
 

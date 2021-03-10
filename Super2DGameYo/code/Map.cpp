@@ -24,6 +24,12 @@ std::vector<Layer> Map::getLayers() const
 	return m_layers;
 }
 
+std::vector<std::unique_ptr<Object>> Map::getObjects(ObjType type)
+{
+	return std::move(m_objects[type]);
+}
+
+
 void Map::loadMap(const pugi::xml_node& node)
 {
 	m_tileSize = atoi(node.attribute("tileheight").value());
