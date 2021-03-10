@@ -30,7 +30,7 @@ void Player::checkCollision()
 	for (auto &solid : worldSolids)
 	{
 		sf::FloatRect rPlayer(this->getPosition().x - sizeX / 2, this->getPosition().y - sizeY / 2, sizeX, sizeY);
-		sf::FloatRect rSolid = solid.getGlobalBounds();
+		sf::FloatRect rSolid = solid->getRekt().getGlobalBounds();
 		sf::FloatRect nextPos = hurtbox.getGlobalBounds();
 
 		nextPos = rPlayer;

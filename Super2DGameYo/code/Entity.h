@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <algorithm>
+#include "Collider.h"
 
 class Entity : public sf::Drawable, public sf::Transformable
 {
@@ -11,10 +12,9 @@ public:
 	virtual void update(float) = 0;
 	virtual void updatePosition(sf::Vector2f) = 0;
 	virtual void checkCollision();
-	void retrieveWorldSolids(const std::vector<sf::RectangleShape>& s);
 
 	sf::RectangleShape* getHurtbox();
-	std::vector<sf::RectangleShape> worldSolids;
+	std::vector < std::shared_ptr<Object> > worldSolids;
 
 protected:
 	sf::RectangleShape hurtbox;
