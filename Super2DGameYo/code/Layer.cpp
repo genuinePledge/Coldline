@@ -100,6 +100,6 @@ std::string Layer::getName() const
 
 void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.texture = &m_tileset.getTexture();
+	states.texture = &m_tileset.m_texture;
 	target.draw(m_vertices, states);
 }
