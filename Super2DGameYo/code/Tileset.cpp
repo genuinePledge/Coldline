@@ -54,7 +54,3 @@ sf::Vector2i Tileset::getTextureSize() const
 	return sf::Vector2i(m_textureWidth, m_textureHeight);
 }
 
-sf::Texture Tileset::getTexture() const
-{
-	return m_texture;
-}

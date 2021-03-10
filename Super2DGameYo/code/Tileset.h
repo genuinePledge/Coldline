@@ -8,6 +8,7 @@ public:
 	~Tileset();
 
 	std::vector<sf::IntRect> texCoords;
+	sf::Texture m_texture;
 
 	void		 setName(const std::string& name);
 	void		 setTilecount(size_t count);
@@ -18,7 +19,6 @@ public:
 	size_t		 getTilecount()	  const;
 	size_t		 getColumnCount() const;
 	sf::Vector2i getTextureSize() const;
-	sf::Texture  getTexture()	  const;
 
 private:
 	std::string m_name;
@@ -27,6 +27,5 @@ private:
 	uint16_t m_textureWidth;
 	uint16_t m_textureHeight;
 
-	sf::Texture m_texture;
 };
 
