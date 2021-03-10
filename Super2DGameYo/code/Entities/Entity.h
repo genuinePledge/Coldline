@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <algorithm>
-#include "Collider.h"
+#include "../Map/Collider.h"
 
 class Entity : public sf::Drawable, public sf::Transformable
 {

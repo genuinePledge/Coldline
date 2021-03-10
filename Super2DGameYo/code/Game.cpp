@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Utility.h"
+#include "Utility/Utility.h"
 #include <math.h>
 #include <iostream>
 #include <thread>
