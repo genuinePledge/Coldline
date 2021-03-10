@@ -11,6 +11,8 @@ public:
 	~Layer();
 
 	void parse(const pugi::xml_node& node);
+	void setTileset(std::vector<Tileset>& tilesets);
+	void offsetTexCoords(int offset);
 
 private:
 	sf::VertexArray m_vertices;
