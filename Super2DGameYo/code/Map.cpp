@@ -13,6 +13,12 @@ Map::~Map()
 {
 }
 
+void Map::render(sf::RenderTarget& target) const
+{
+	for (auto& layer : m_layers)
+		target.draw(layer);
+}
+
 void Map::loadMap(const pugi::xml_node& node)
 {
 	m_tileSize = atoi(node.attribute("tileheight").value());
