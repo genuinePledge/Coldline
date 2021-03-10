@@ -15,45 +15,45 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code/Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="code/Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="code/main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code/Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="code/Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="code/Utility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pugi-xml/pugixml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code/EnemyUnit.cpp">
+    <ClCompile Include="code\Map\Collider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Map\Object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Map\Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Map\Layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Entities\EnemyUnit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Entities\Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Entities\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Gfx\Tileset.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Utility\Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code/Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="code/Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code/Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code/Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code/Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pugi-xml/pugiconfig.hpp">
@@ -62,22 +62,40 @@
     <ClInclude Include="pugi-xml/pugixml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code/EnemyUnit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="code/GameStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code/ResourceManager.h">
+    <ClInclude Include="code\Map\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code/ResourceHolder.h">
+    <ClInclude Include="code\Map\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceHolder.h">
+    <ClInclude Include="code\Map\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManager.h">
+    <ClInclude Include="code\Map\Layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Entities\EnemyUnit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Entities\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Entities\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Gfx\Tileset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Utility\ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Utility\ResourceHolder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Utility\Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

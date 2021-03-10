@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "Player.h"
-#include "Map.h"
+#include "Entities/Player.h"
+#include "Map/Map.h"
 
 class Game
 {
@@ -18,6 +18,7 @@ public:
 	int width, height;
 
 private:
+
 	sf::RenderWindow window;
 	sf::Clock clock;
 
@@ -29,11 +30,12 @@ private:
 	Player player;
 	Map map;
 
+	std::vector<Layer> layers;
+	std::vector<std::shared_ptr<Object>> colliders;
+	std::vector<std::shared_ptr<Object>> spawns;
+
 	int fps = 0;
 	long lastFpsTime = 0;
-
-	sf::RenderTexture* buf;
-	std::map<std::string, sf::Sprite> mapTexture;
 
 	bool fpsRenderFlag = 1;
 	bool colliderRenderFlag = 1;

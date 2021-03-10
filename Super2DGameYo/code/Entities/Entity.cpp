@@ -33,11 +33,6 @@ void Entity::checkCollision()
 	
 }
 
-void Entity::retrieveWorldSolids(const std::vector<sf::RectangleShape>& s)
-{
-	worldSolids = s;
-}
-
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform *= getTransform();

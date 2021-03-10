@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Utility.h"
+#include "Utility/Utility.h"
 #include <math.h>
 #include <iostream>
 #include <thread>
@@ -9,21 +9,24 @@ Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	: width(sizeX), height(sizeY),
 	window(sf::VideoMode(width, height), name, sf::Style::Fullscreen),
 	player(16.f, 16.f, "res/tex/test_player_16x16.png"),
-	map("res/maps/test_map.tmx")
+	map("res/maps/map.tmx")
 {
 	sf::Vector2f zoomed(( float ) width / ZOOM_VALUE, ( float ) height / ZOOM_VALUE);
 	//window.setVerticalSyncEnabled(true);
 
-	player.getCamera()->setCenter(map.getPlayerSpawnLocation());
+	layers = map.getLayers();
+	colliders = map.getObjects(Map::ObjType::solids);
+	spawns = map.getObjects(Map::ObjType::spawns);
+
+	player.getCamera()->setCenter(spawns[0]->getRekt().getPosition());
 	player.getCamera()->setSize(zoomed);
 	
-	player.setPosition(map.getPlayerSpawnLocation());
-	player.getHurtbox()->setPosition(map.getPlayerSpawnLocation());
+	player.setPosition(spawns[0]->getRekt().getPosition());
+	player.getHurtbox()->setPosition(spawns[0]->getRekt().getPosition());
 
 	window.setView(*player.getCamera());
 
-	font.loadFromFile("res/fonts/Cabin.ttf");
-
+	font = ResourceManager::get().m_font.get("Cabin");
 	fpsText.setPosition(5.f, 5.f);
 	fpsText.setOutlineColor(sf::Color::Black);
 	fpsText.setFillColor(sf::Color::White);
@@ -31,25 +34,7 @@ Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	fpsText.setFont(font);
 	fpsText.setCharacterSize(20);
 
-	buf = new sf::RenderTexture[map.layers.size()];
-	
-	for (int i = 0; i < map.layers.size(); i++)
-	{
-		buf[i].create(800, 800);
-		map.currentLayer = i;
-		buf[i].draw(map);
-		buf[i].display();
-
-		mapTexture[map.layers[i]].setTexture(buf[i].getTexture());
-	}
-
-
-
-	player.retrieveWorldSolids(map.solids);
-
-
-	map.solids.clear();
-	map.solids.shrink_to_fit();
+	player.worldSolids = map.getObjects(Map::ObjType::solids);
 }
 
 Game::~Game()
@@ -102,35 +87,23 @@ void Game::update(float delta)
 void Game::render()
 {
 	// Background
-	window.clear(map.getBackgroundColor());
+	window.clear();
 
 	// Set view
 	window.setView(*player.getCamera());
 
-	// Draw map
-	while (map.layers.begin()->compare("playerLayer"))
+	for (auto const& l : layers)
 	{
-		if (!map.layers.begin()->compare("background")) 
-		{
-			std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
+		if (!l.getName().compare("background"))
 			continue;
-		}
-		window.draw(mapTexture[*map.layers.begin()]);
-		std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
+		window.draw(l);
 	}
 
-
 	window.draw(player);
-	std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
-
-	do {
-		window.draw(mapTexture[*map.layers.begin()]);
-		std::rotate(map.layers.begin(), map.layers.begin() + 1, map.layers.end());
-	} while ((*(map.layers.end() - 1)).compare(map.lLayer));
 
 	if (colliderRenderFlag)
-		for (int i = 0; i < player.worldSolids.size(); i++)
-			window.draw(player.worldSolids[i]);
+		for (auto const& c : colliders)
+			c->render(window);
 
 	if (colliderRenderFlag)
 		window.draw(*player.getHurtbox());
@@ -178,3 +151,4 @@ void Game::handleEvent()
 		}
 	}
 }
+
