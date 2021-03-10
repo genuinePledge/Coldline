@@ -19,6 +19,11 @@ void Map::render(sf::RenderTarget& target) const
 		target.draw(layer);
 }
 
+std::vector<Layer> Map::getLayers() const
+{
+	return m_layers;
+}
+
 void Map::loadMap(const pugi::xml_node& node)
 {
 	m_tileSize = atoi(node.attribute("tileheight").value());
