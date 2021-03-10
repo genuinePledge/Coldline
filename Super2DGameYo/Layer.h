@@ -4,7 +4,7 @@
 #include "pugi-xml/pugixml.hpp"
 #include <sstream>
 
-class Layer
+class Layer : public sf::Drawable
 {
 public:
 	Layer();
@@ -26,6 +26,10 @@ private:
 
 	uint8_t m_tilesetID;
 	uint8_t m_tilesize;
+
+
+	// Inherited via Drawable
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 };
 

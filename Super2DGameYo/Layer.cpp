@@ -87,3 +87,9 @@ void Layer::initVertexArray()
 			}
 		}
 }
+
+void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	states.texture = &m_tileset.getTexture();
+	target.draw(m_vertices, states);
+}
