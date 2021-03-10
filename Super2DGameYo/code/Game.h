@@ -37,9 +37,6 @@ private:
 	int fps = 0;
 	long lastFpsTime = 0;
 
-	sf::RenderTexture* buf;
-	std::map<std::string, sf::Sprite> mapTexture;
-
 	bool fpsRenderFlag = 1;
 	bool colliderRenderFlag = 1;
 
