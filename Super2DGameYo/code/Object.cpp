@@ -6,6 +6,7 @@ Object::Object(float x, float y)
 	rect.setFillColor(m_color);
 	rect.setPosition(x, y);
 	rect.setSize(sf::Vector2f(16, 16));
+	rect.setOrigin(8, 8);
 }
 
 void Object::render(sf::RenderTarget& target) const
