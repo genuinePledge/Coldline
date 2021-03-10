@@ -159,22 +159,22 @@
     <ClCompile Include="code/Entity.cpp" />
     <ClCompile Include="code/Game.cpp" />
     <ClCompile Include="code/main.cpp" />
-    <ClCompile Include="code/Map.cpp" />
     <ClCompile Include="code/Player.cpp" />
     <ClCompile Include="code/EnemyUnit.cpp" />
     <ClCompile Include="code/Utility.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="pugi-xml/pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code/Entity.h" />
     <ClInclude Include="code/Game.h" />
-    <ClInclude Include="code/Map.h" />
     <ClInclude Include="code/Player.h" />
     <ClInclude Include="code/GameStates.h" />
     <ClInclude Include="code/EnemyUnit.h" />
     <ClInclude Include="code/ResourceHolder.h" />
     <ClInclude Include="code/ResourceManager.h" />
     <ClInclude Include="code/Utility.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="pugi-xml/pugiconfig.hpp" />
     <ClInclude Include="pugi-xml/pugixml.hpp" />
   </ItemGroup>
