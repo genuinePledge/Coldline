@@ -165,6 +165,7 @@
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="pugi-xml/pugixml.cpp" />
+    <ClCompile Include="Tileset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code/Entity.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="pugi-xml/pugiconfig.hpp" />
     <ClInclude Include="pugi-xml/pugixml.hpp" />
+    <ClInclude Include="Tileset.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\smol_map.tmx">
