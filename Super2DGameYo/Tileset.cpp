@@ -29,6 +29,11 @@ void Tileset::setTextureSize(sf::Vector2i size)
 	m_textureWidth = size.x;
 }
 
+void Tileset::setTexture(const sf::Texture& tex)
+{
+	m_texture = tex;
+}
+
 std::string Tileset::getName() const
 {
 	return m_name;
@@ -47,4 +52,9 @@ size_t Tileset::getColumnCount() const
 sf::Vector2i Tileset::getTextureSize() const
 {
 	return sf::Vector2i(m_textureWidth, m_textureHeight);
+}
+
+sf::Texture Tileset::getTexture() const
+{
+	return m_texture;
 }

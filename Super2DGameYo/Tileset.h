@@ -13,10 +13,12 @@ public:
 	void		 setTilecount(size_t count);
 	void		 setColumnCount(size_t count);
 	void		 setTextureSize(sf::Vector2i);
+	void		 setTexture(const sf::Texture& tex);
 	std::string  getName()		  const;
 	size_t		 getTilecount()	  const;
 	size_t		 getColumnCount() const;
 	sf::Vector2i getTextureSize() const;
+	sf::Texture  getTexture()	  const;
 
 private:
 	std::string m_name;
@@ -25,6 +27,6 @@ private:
 	uint16_t m_textureWidth;
 	uint16_t m_textureHeight;
 
-	sf::Texture mapTexture;
+	sf::Texture m_texture;
 };
 
