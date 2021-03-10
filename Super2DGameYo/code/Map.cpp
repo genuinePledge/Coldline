@@ -107,20 +107,29 @@ void Map::loadTileset(const pugi::xml_node& node)
 	Tileset tileset;
 
 	pugi::xml_document doc;
-	doc.load_file(node.attribute("source").value());
+
+	std::string path = node.attribute("source").value();
+	if (path.find("..") != std::string::npos)
+	{
+		path.replace(path.find(".."), 2, "res");
+	}
+	
+	doc.load_file(path.c_str());
 	pugi::xml_node ts_node = doc.first_child();
 
-	tileset.setName(node.attribute("name").value());
-	tileset.setTilecount(atoi(node.attribute("tilecount").value()));
-	tileset.setColumnCount(atoi(node.attribute("columns").value()));
+	tileset.setName(ts_node.attribute("name").value());
+	tileset.setTilecount(atoi(ts_node.attribute("tilecount").value()));
+	tileset.setColumnCount(atoi(ts_node.attribute("columns").value()));
 
 	ts_node = ts_node.first_child();
 	while (ts_node)
 	{
-		if (!std::string("image").compare(node.name()))
+		if (!std::string("image").compare(ts_node.name()))
 		{
-			tileset.setTexture(ResourceManager::get().m_texture.get(node.attribute("source").value()));
-			tileset.setTextureSize(sf::Vector2i(atoi(node.attribute("width").value()), atoi(node.attribute("height").value())));
+			std::string path = ts_node.attribute("source").value();
+			
+			tileset.setTexture(ResourceManager::get().m_texture.get(path.substr(7, tileset.getName().length())));
+			tileset.setTextureSize(sf::Vector2i(atoi(ts_node.attribute("width").value()), atoi(ts_node.attribute("height").value())));
 		}
 		ts_node = ts_node.next_sibling();
 	}
