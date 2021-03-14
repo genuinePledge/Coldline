@@ -24,6 +24,13 @@ void StateManager::exitGame()
 	m_shouldPop = true;
 }
 
+void StateManager::changeState(std::unique_ptr<StateBase> state)
+{
+	m_change = std::move(state);
+	m_shouldChangeState = true;
+	m_shouldPop = true;
+}
+
 void StateManager::tryPop()
 {
 	if (m_shouldPop)
