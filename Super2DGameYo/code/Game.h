@@ -3,6 +3,8 @@
 #include <SFML/Audio.hpp>
 #include "Entities/Player.h"
 #include "Map/Map.h"
+#include "States/StateManager.h"
+#include "Utility/Utility.h"
 
 class Game
 {
@@ -14,8 +16,24 @@ public:
 	void update(float delta);
 	void render();
 	void handleEvent();
+	sf::RenderWindow& getWindow();
+	Player& getPlayer();
 
 	int width, height;
+	uint8_t ZOOM_VALUE = 4;
+	const uint8_t TARGET_FPS = 60;
+	const long OPTIMAL_TIME = 1000 / TARGET_FPS;
+	bool fpsRenderFlag = 1;
+	bool colliderRenderFlag = 1;
+
+	std::vector<Layer> layers;
+	std::vector<std::shared_ptr<Object>> colliders;
+	std::vector<std::shared_ptr<Object>> spawns;
+
+	sf::Text fpsText;
+	sf::Font font;
+
+	Map map;
 
 private:
 
@@ -24,23 +42,11 @@ private:
 
 	sf::Music music;
 
-	sf::Text fpsText;
-	sf::Font font;
+	sf::Event m_event;
 
 	Player player;
-	Map map;
 
-	std::vector<Layer> layers;
-	std::vector<std::shared_ptr<Object>> colliders;
-	std::vector<std::shared_ptr<Object>> spawns;
+	StateManager m_stateManager;
 
 	int fps = 0;
-	long lastFpsTime = 0;
-
-	bool fpsRenderFlag = 1;
-	bool colliderRenderFlag = 1;
-
-	uint8_t ZOOM_VALUE = 4;
-	const uint8_t TARGET_FPS = 60;
-	const long OPTIMAL_TIME = 1000 / TARGET_FPS;
 };

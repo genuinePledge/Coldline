@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "Utility/Utility.h"
 #include <math.h>
 #include <iostream>
 #include <thread>
@@ -9,32 +8,33 @@ Game::Game(uint16_t sizeX, uint16_t sizeY, const std::string& name)
 	: width(sizeX), height(sizeY),
 	window(sf::VideoMode(width, height), name, sf::Style::Fullscreen),
 	player(16.f, 16.f, "res/tex/test_player_16x16.png"),
-	map("res/maps/map.tmx")
+	map("res/maps/map.tmx"),
+	m_stateManager(*this)
 {
-	sf::Vector2f zoomed(( float ) width / ZOOM_VALUE, ( float ) height / ZOOM_VALUE);
-	//window.setVerticalSyncEnabled(true);
+	//sf::Vector2f zoomed(( float ) width / ZOOM_VALUE, ( float ) height / ZOOM_VALUE);
+	////window.setVerticalSyncEnabled(true);
 
-	layers = map.getLayers();
-	colliders = map.getObjects(Map::ObjType::solids);
-	spawns = map.getObjects(Map::ObjType::spawns);
+	//layers = map.getLayers();
+	//colliders = map.getObjects(Map::ObjType::solids);
+	//spawns = map.getObjects(Map::ObjType::spawns);
 
-	player.getCamera()->setCenter(spawns[0]->getRekt().getPosition());
-	player.getCamera()->setSize(zoomed);
-	
-	player.setPosition(spawns[0]->getRekt().getPosition());
-	player.getHurtbox()->setPosition(spawns[0]->getRekt().getPosition());
+	//player.getCamera()->setCenter(spawns[0]->getRekt().getPosition());
+	//player.getCamera()->setSize(zoomed);
+	//
+	//player.setPosition(spawns[0]->getRekt().getPosition());
+	//player.getHurtbox()->setPosition(spawns[0]->getRekt().getPosition());
 
-	window.setView(*player.getCamera());
+	//window.setView(*player.getCamera());
 
-	font = ResourceManager::get().m_font.get("Cabin");
-	fpsText.setPosition(5.f, 5.f);
-	fpsText.setOutlineColor(sf::Color::Black);
-	fpsText.setFillColor(sf::Color::White);
-	fpsText.setOutlineThickness(2);
-	fpsText.setFont(font);
-	fpsText.setCharacterSize(20);
+	//font = ResourceManager::get().m_font.get("Cabin");
+	//fpsText.setPosition(5.f, 5.f);
+	//fpsText.setOutlineColor(sf::Color::Black);
+	//fpsText.setFillColor(sf::Color::White);
+	//fpsText.setOutlineThickness(2);
+	//fpsText.setFont(font);
+	//fpsText.setCharacterSize(20);
 
-	player.worldSolids = map.getObjects(Map::ObjType::solids);
+	//player.worldSolids = map.getObjects(Map::ObjType::solids);
 }
 
 Game::~Game()
@@ -43,27 +43,32 @@ Game::~Game()
 
 void Game::run()
 {
-	long lastLoopTime = clock.restart().asMilliseconds();
+	auto lastLoopTime = sf::Time::Zero;
+	auto lastFpsTime = sf::Time::Zero;
 
-	while (window.isOpen())
+	while (window.isOpen() && !m_stateManager.isEmpty())
 	{
-		long now = clock.getElapsedTime().asMilliseconds();
-		long updateLength = now - lastLoopTime;
+		auto& state = m_stateManager.getCurrentState();
+
+		auto now = clock.getElapsedTime();
+		auto updateLength = now - lastLoopTime;
 		lastLoopTime = now;
-		float deltaTime = updateLength / ((float)OPTIMAL_TIME);
+		auto deltaTime = updateLength / ((float)OPTIMAL_TIME);
 
 		lastFpsTime += updateLength;
 		fps++;
 		
-		if (lastFpsTime >= 1000)
+		if (lastFpsTime >= sf::seconds(1))
 		{
 			fpsText.setString("FPS: " + std::to_string(( int ) fps));
-			lastFpsTime = 0;
+			lastFpsTime = sf::Time::Zero;
 			fps = 0;
 		}
 
-		update(deltaTime);
-		render();
+		state.handleEvent();
+		state.update(deltaTime);
+		state.render();
+		m_stateManager.tryPop();
 	}
 }
 
@@ -150,5 +155,15 @@ void Game::handleEvent()
 			break;
 		}
 	}
+}
+
+sf::RenderWindow& Game::getWindow()
+{
+	return window;
+}
+
+Player& Game::getPlayer()
+{
+	return player;
 }
 

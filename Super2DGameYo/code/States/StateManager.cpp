@@ -1,7 +1,8 @@
 #include "StateManager.h"
 
-StateManager::StateManager()
+StateManager::StateManager(Game& game)
 {
+	pushState(std::make_unique<StateGameplay>(game));
 }
 
 StateManager::~StateManager()
@@ -51,6 +52,11 @@ void StateManager::tryPop()
 
 		m_states.pop_back();
 	}
+}
+
+bool StateManager::isEmpty()
+{
+	return m_states.empty();
 }
 
 StateBase& StateManager::getCurrentState()

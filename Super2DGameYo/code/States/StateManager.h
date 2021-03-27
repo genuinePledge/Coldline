@@ -1,12 +1,13 @@
 #pragma once
 #include "StateBase.h"
+#include "StateGameplay.h"
 #include <memory>
 #include <deque>
 
 class StateManager
 {
 public:
-	StateManager();
+	StateManager(Game& game);
 	~StateManager();
 
 	void pushState(std::unique_ptr<StateBase> state);
@@ -14,6 +15,7 @@ public:
 	void exitGame();
 	void changeState(std::unique_ptr<StateBase> state);
 	void tryPop();
+	bool isEmpty();
 	StateBase& getCurrentState();
 
 private:
