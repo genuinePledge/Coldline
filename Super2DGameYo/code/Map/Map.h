@@ -8,6 +8,7 @@ class Map
 {
 public:
 	Map(const std::string& filePath);
+	Map(const Map&) = default;
 	~Map();
 
 	enum class ObjType

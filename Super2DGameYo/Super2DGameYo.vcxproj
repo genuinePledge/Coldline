@@ -94,6 +94,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)entt\include;$(SolutionDir)SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +129,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\uncmi\source\repos\Super2DGameYo\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -173,13 +175,23 @@
     <ClCompile Include="code\States\StateGameplay.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\Components\Materal.h" />
+    <ClInclude Include="code\Components\RectShape.h" />
+    <ClInclude Include="code\Components\RigidBody.h" />
+    <ClInclude Include="code\Components\Transform.h" />
     <ClInclude Include="code\Entities\Entity.h" />
     <ClInclude Include="code/Game.h" />
     <ClInclude Include="code\Entities\Player.h" />
     <ClInclude Include="code\Entities\EnemyUnit.h" />
     <ClInclude Include="code\Locator.h" />
+    <ClInclude Include="code\Main.h" />
     <ClInclude Include="code\States\StateBase.h" />
+    <ClInclude Include="code\Systems\ControllerSystem.h" />
+    <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
+    <ClInclude Include="code\Systems\MovementSystem.h" />
+    <ClInclude Include="code\Systems\RenderMapSystem.h" />
+    <ClInclude Include="code\Systems\RenderSpriteSystem.h" />
     <ClInclude Include="code\Utility\ResourceHolder.h" />
     <ClInclude Include="code\Utility\ResourceManager.h" />
     <ClInclude Include="code\Utility\Utility.h" />
@@ -187,6 +199,7 @@
     <ClInclude Include="code\Map\Layer.h" />
     <ClInclude Include="code\Map\Map.h" />
     <ClInclude Include="code\Map\Object.h" />
+    <ClInclude Include="code\Window.h" />
     <ClInclude Include="code\World.h" />
     <ClInclude Include="pugi-xml/pugiconfig.hpp" />
     <ClInclude Include="pugi-xml/pugixml.hpp" />
