@@ -93,7 +93,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)entt\include;$(SolutionDir)SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)entt\include;$(SolutionDir)SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,6 +161,7 @@
     <ClCompile Include="code/main.cpp" />
     <ClCompile Include="code\Entities\Player.cpp" />
     <ClCompile Include="code\Entities\EnemyUnit.cpp" />
+    <ClCompile Include="code\States\StateBase.cpp" />
     <ClCompile Include="code\Utility\Utility.cpp" />
     <ClCompile Include="code\Map\Collider.cpp" />
     <ClCompile Include="code\Map\Layer.cpp" />
@@ -168,13 +169,17 @@
     <ClCompile Include="code\Map\Object.cpp" />
     <ClCompile Include="pugi-xml/pugixml.cpp" />
     <ClCompile Include="code\Gfx\Tileset.cpp" />
+    <ClCompile Include="code\States\StateManager.cpp" />
+    <ClCompile Include="code\States\StateGameplay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Entities\Entity.h" />
     <ClInclude Include="code/Game.h" />
     <ClInclude Include="code\Entities\Player.h" />
-    <ClInclude Include="code/GameStates.h" />
     <ClInclude Include="code\Entities\EnemyUnit.h" />
+    <ClInclude Include="code\Locator.h" />
+    <ClInclude Include="code\States\StateBase.h" />
+    <ClInclude Include="code\Systems\IUpdateSystem.h" />
     <ClInclude Include="code\Utility\ResourceHolder.h" />
     <ClInclude Include="code\Utility\ResourceManager.h" />
     <ClInclude Include="code\Utility\Utility.h" />
@@ -182,9 +187,12 @@
     <ClInclude Include="code\Map\Layer.h" />
     <ClInclude Include="code\Map\Map.h" />
     <ClInclude Include="code\Map\Object.h" />
+    <ClInclude Include="code\World.h" />
     <ClInclude Include="pugi-xml/pugiconfig.hpp" />
     <ClInclude Include="pugi-xml/pugixml.hpp" />
     <ClInclude Include="code\Gfx\Tileset.h" />
+    <ClInclude Include="code\States\StateManager.h" />
+    <ClInclude Include="code\States\StateGameplay.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\smol_map.tmx">

@@ -51,6 +51,15 @@
     <ClCompile Include="code\Utility\Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="code\States\StateManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\States\StateGameplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\States\StateBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code/Game.h">
@@ -60,9 +69,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pugi-xml/pugixml.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code/GameStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Map\Collider.h">
@@ -96,6 +102,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Utility\Utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\States\StateBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\States\StateManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\States\StateGameplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Locator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Systems\IUpdateSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
