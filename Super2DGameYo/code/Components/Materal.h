@@ -4,4 +4,5 @@
 struct Material
 {
 	sf::Texture texture;
+	sf::Color color;
 };
