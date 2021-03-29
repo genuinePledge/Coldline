@@ -3,5 +3,5 @@
 
 struct RectShape
 {
-	sf::RectangleShape shape;
+	sf::VertexArray vertices;
 };
