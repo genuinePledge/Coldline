@@ -6,12 +6,20 @@ class RenderMapSystem : public IRenderSystem
 {
 	virtual void render(entt::registry& registry, sf::RenderTarget& target) override
 	{
-		registry.view<Map>().each([&](auto entity, Map map)
+		/*registry.view<Layer>().each([&](auto entity, Layer& layer)
 		{
-			for (auto const& layer : map.getLayers())
-			{
-				target.draw(layer);
-			}
-		});
+			target.draw(layer);
+		});*/
+
+		auto const& view = registry.view<Layer>();
+
+		for (auto i = view.end() - 1; i != view.begin() - 1; i--)
+		{
+			auto& layer = view.get<Layer>(*i);
+			target.draw(layer);
+		}
+
+		/*for (auto const& layer : Locator::MainMap::ref().m_layers)
+			target.draw(layer);*/
 	}
 };
