@@ -4,9 +4,11 @@
 class Window
 {
 public:
-	Window(sf::VideoMode mode, const std::string& name, bool fullscreen)
-		: m_window(mode, name, (fullscreen ? sf::Style::Fullscreen : sf::Style::Default))
-	{ }
+	Window(bool fullscreen)
+		: m_window(sf::VideoMode(SCREEN_SIZE.x, SCREEN_SIZE.y), title, (fullscreen ? sf::Style::Fullscreen : sf::Style::Default))
+	{
+		m_window.setVerticalSyncEnabled(false);
+	}
 	bool update()
 	{
 		if (m_window.isOpen())
@@ -31,6 +33,11 @@ public:
 	{
 		return m_view;
 	}
+
+public:
+	const sf::Vector2<uint16_t> SCREEN_SIZE = { 800, 600 };
+	const float ZOOM_FACTOR = 4.f;
+	std::string title = "Coldline. Build ver.0.2. FPS: ";
 
 private:
 	void handleEvents()
