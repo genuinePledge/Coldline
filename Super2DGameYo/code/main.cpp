@@ -3,12 +3,17 @@
 #include "Game.h"
 #include "Window.h"
 #include "Locator.h"
-#include "Main.h"
+#include <Windows.h>
 
-int main()
+int CALLBACK wWinMain(
+    HINSTANCE   hInstance,
+    HINSTANCE   hPrevInstance,
+    PWSTR       lpCmdLine,
+    int         nCmdShow
+)
 {
-    Locator::MainWindow::set(sf::VideoMode(1920, 1080), "yea boi", true);
-    Main main;
+    Locator::MainWindow::set(false);
+    Game main;
     main.init();
     while (Locator::MainWindow::ref().update())
     {
@@ -17,3 +22,15 @@ int main()
     return 0;
 }
 
+
+int main()
+{
+    Locator::MainWindow::set(false);
+    Game main;
+    main.init();
+    while (Locator::MainWindow::ref().update())
+    {
+        main.run();
+    }
+    return 0;
+}
