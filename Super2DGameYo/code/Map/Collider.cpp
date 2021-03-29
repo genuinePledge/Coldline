@@ -9,7 +9,7 @@ Collider::Collider(float x, float y, float width, float height)
     m_body.setSize(sf::Vector2f(width, height));
 }
 
-sf::RectangleShape Collider::getRekt() const
+sf::RectangleShape& Collider::getRekt()
 {
     return m_body;
 }

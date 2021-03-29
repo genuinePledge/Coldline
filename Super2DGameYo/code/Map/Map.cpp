@@ -5,6 +5,7 @@ Map::Map(const std::string& filePath)
 	pugi::xml_document doc;
 	doc.load_file(filePath.c_str());
 	pugi::xml_node mapNode = doc.first_child();
+	layerCounter = 0;
 	
 	loadMap(mapNode);
 }
@@ -27,6 +28,13 @@ std::vector<Layer> Map::getLayers() const
 std::vector<std::shared_ptr<Object>> Map::getObjects(ObjType type)
 {
 	return m_objects[type];
+}
+
+Layer& Map::getCurrentLayer()
+{
+	if (layerCounter >= m_layers.size())
+		layerCounter = 0;
+	return m_layers[layerCounter++];
 }
 
 

@@ -7,6 +7,7 @@ Object::Object(float x, float y)
 	rect.setPosition(x, y);
 	rect.setSize(sf::Vector2f(16, 16));
 	rect.setOrigin(8, 8);
+	renderFlag = true;
 }
 
 void Object::render(sf::RenderTarget& target) const
@@ -14,7 +15,7 @@ void Object::render(sf::RenderTarget& target) const
 	target.draw(rect);
 }
 
-sf::RectangleShape Object::getRekt() const
+sf::RectangleShape& Object::getRekt()
 {
 	return rect;
 }

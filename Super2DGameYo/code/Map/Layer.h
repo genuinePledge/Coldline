@@ -1,13 +1,14 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "../Gfx/Tileset.h"
-#include "../../pugi-xml/pugixml.hpp"
+#include "pugixml.hpp"
 #include <sstream>
 
 class Layer : public sf::Drawable
 {
 public:
 	Layer();
+	Layer(const Layer&) = default;
 	~Layer();
 
 	void parse(const pugi::xml_node& node);
