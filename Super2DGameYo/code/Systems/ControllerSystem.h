@@ -6,7 +6,7 @@ class ControllerSystem : public IUpdateSystem
 {
 	virtual void update(entt::registry& registry, float dt) override
 	{
-		registry.view<RigidBody>().each([&](auto entity, RigidBody body)
+		registry.view<RigidBody>().each([&](auto entity, RigidBody& body)
 		{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 				body.velocity.x -= body.speed * dt;
@@ -16,6 +16,7 @@ class ControllerSystem : public IUpdateSystem
 				body.velocity.x += body.speed * dt;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 				body.velocity.y -= body.speed * dt;
+			
 		});
 	}
 };
