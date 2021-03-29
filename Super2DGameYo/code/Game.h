@@ -1,52 +1,57 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include "Entities/Player.h"
-#include "Map/Map.h"
-#include "States/StateManager.h"
-#include "Utility/Utility.h"
+#include "SFML/Graphics.hpp"
+#include "World.h"
 
 class Game
 {
 public:
-	Game(uint16_t sizeX, uint16_t sizeY, const std::string& name);
-	~Game();
+	void init()
+	{
+		lastLoopTime = m_clock.restart().asMilliseconds();
+		fps = 0;
+		lastFpsTime = 0;
+	}
 
-	void run();
-	void update(float delta);
-	void render();
-	void handleEvent();
-	sf::RenderWindow& getWindow();
-	Player& getPlayer();
-
-	int width, height;
-	uint8_t ZOOM_VALUE = 4;
-	const uint8_t TARGET_FPS = 60;
-	const long OPTIMAL_TIME = 1000 / TARGET_FPS;
-	bool fpsRenderFlag = 1;
-	bool colliderRenderFlag = 1;
-
-	std::vector<Layer> layers;
-	std::vector<std::shared_ptr<Object>> colliders;
-	std::vector<std::shared_ptr<Object>> spawns;
-
-	sf::Text fpsText;
-	sf::Font font;
-
-	Map map;
+	void run()
+	{
+		update();
+		render();
+	}
 
 private:
+	void update()
+	{
+		long now = m_clock.getElapsedTime().asMilliseconds();
+		long updateLength = now - lastLoopTime;
+		lastLoopTime = now;
+		float dt = updateLength / (1000.f / 60.f);
 
-	sf::RenderWindow window;
-	sf::Clock clock;
+		lastFpsTime += updateLength;
+		fps++;
 
-	sf::Music music;
+		if (lastFpsTime >= 1000)
+		{
+			Locator::MainWindow::ref().get().setTitle(Locator::MainWindow::ref().title + std::to_string(fps));
+			fps = 0;
+			lastFpsTime = 0;
+		}
 
-	sf::Event m_event;
+		m_world.update(dt);
+	}
 
-	Player player;
+	void render()
+	{
+		Locator::MainWindow::ref().get().clear();
 
-	StateManager m_stateManager;
+		m_world.render();
 
-	int fps = 0;
+		Locator::MainWindow::ref().get().display();
+	}
+
+private:
+	sf::Clock m_clock;
+	long lastLoopTime;
+	long lastFpsTime;
+	int fps;
+	World m_world;
 };
