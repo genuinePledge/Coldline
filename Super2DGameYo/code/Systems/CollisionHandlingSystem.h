@@ -3,7 +3,7 @@
 #include "IUpdateSystem.h"
 #include "entt/entt.hpp"
 
-class CollisionDetectionAndRespondSystem : public IUpdateSystem
+class CollisionHandlingSystem : public IUpdateSystem
 {
 	virtual void update(entt::registry& registry, float dt) override
 	{
@@ -37,6 +37,17 @@ class CollisionDetectionAndRespondSystem : public IUpdateSystem
 						Locator::MainWindow::ref().getView().setCenter(rSolid.left - halfSize, rPlayer.top + halfSize);
 					}
 					else
+					if (rPlayer.top > rSolid.top
+						&& rPlayer.top + rPlayer.height > rSolid.top + rSolid.height
+						&& rPlayer.left < rSolid.left + rSolid.width
+						&& rPlayer.left + rPlayer.width > rSolid.left)
+					{
+						body.velocity.y = 0;
+						transform.position = sf::Vector2f(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
+						collider.getRekt().setPosition(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
+						Locator::MainWindow::ref().getView().setCenter(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
+					}
+					else
 					if (rPlayer.left > rSolid.left
 						&& rPlayer.left + rPlayer.width > rSolid.left + rSolid.width
 						&& rPlayer.top < rSolid.top + rSolid.height
@@ -57,17 +68,6 @@ class CollisionDetectionAndRespondSystem : public IUpdateSystem
 						transform.position = sf::Vector2f(rPlayer.left + halfSize, rSolid.top - halfSize);
 						collider.getRekt().setPosition(rPlayer.left + halfSize, rSolid.top - halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rPlayer.left + halfSize, rSolid.top - halfSize);
-					}
-					else
-					if (rPlayer.top > rSolid.top
-						&& rPlayer.top + rPlayer.height > rSolid.top + rSolid.height
-						&& rPlayer.left < rSolid.left + rSolid.width
-						&& rPlayer.left + rPlayer.width > rSolid.left)
-					{
-						body.velocity.y = 0;
-						transform.position = sf::Vector2f(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
-						collider.getRekt().setPosition(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
-						Locator::MainWindow::ref().getView().setCenter(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
 					}
 				}
 			}
