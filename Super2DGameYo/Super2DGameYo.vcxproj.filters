@@ -107,10 +107,13 @@
     <ClInclude Include="code\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Systems\CollisionDetectionAndRespondSystem.h">
+    <ClInclude Include="code\Components\CollisionData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Components\CollisionData.h">
+    <ClInclude Include="code\Systems\CollisionHandlingSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Components\ControllerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

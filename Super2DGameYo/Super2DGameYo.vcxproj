@@ -170,13 +170,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Components\CollisionData.h" />
+    <ClInclude Include="code\Components\ControllerComponent.h" />
     <ClInclude Include="code\Components\Materal.h" />
     <ClInclude Include="code\Components\RectShape.h" />
     <ClInclude Include="code\Components\RigidBody.h" />
     <ClInclude Include="code\Components\Transform.h" />
     <ClInclude Include="code\Locator.h" />
     <ClInclude Include="code\Game.h" />
-    <ClInclude Include="code\Systems\CollisionDetectionAndRespondSystem.h" />
+    <ClInclude Include="code\Systems\CollisionHandlingSystem.h" />
     <ClInclude Include="code\Systems\ControllerSystem.h" />
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
