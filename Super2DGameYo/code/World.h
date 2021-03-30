@@ -7,7 +7,7 @@
 #include "Systems/RenderMapSystem.h"
 #include "Systems/ControllerSystem.h"
 #include "Systems/MovementSystem.h"
-#include "Systems/CollisionDetectionAndRespondSystem.h"
+#include "Systems/CollisionHandlingSystem.h"
 #include "Utility/ResourceManager.h"
 
 class World
@@ -54,8 +54,8 @@ private:
 	void initSystems()
 	{
 		m_updateSystems.emplace_back(std::make_unique<ControllerSystem>());
+		m_updateSystems.emplace_back(std::make_unique<CollisionHandlingSystem>());
 		m_updateSystems.emplace_back(std::make_unique<MovementSystem>());
-		m_updateSystems.emplace_back(std::make_unique<CollisionDetectionAndRespondSystem>());
 
 		m_renderSystems.emplace_back(std::make_unique<RenderMapSystem>());
 		m_renderSystems.emplace_back(std::make_unique<RenderSpriteSystem>());
@@ -95,24 +95,31 @@ private:
 
 		}*/
 
-		/*for (auto i = 1; i < spawns.size(); i++)
+		for (auto i = 1; i < spawns.size(); i++)
 		{
 			const auto entity = reg.create();
-			reg.emplace<Transform>(entity,
-								   spawns[i]->getRekt().getPosition(),
-								   spawns[i]->getRekt().getScale(),
-								   spawns[i]->getRekt().getRotation());
+			auto const& transform = reg.emplace<Transform>(entity,
+														   spawns[i]->getRekt().getPosition(),
+														   spawns[i]->getRekt().getScale(),
+														   spawns[i]->getRekt().getOrigin(),
+														   spawns[i]->getRekt().getRotation());
 
-			reg.emplace<Material>(entity,
-								  ResourceManager::get().m_texture.get("enemy"));
+			auto const& material = reg.emplace<Material>(entity,
+								  ResourceManager::get().m_texture.get("enemy"),
+								  sf::Color::Transparent);
 
-			sf::RectangleShape shape(sf::Vector2f(16, 16));
-			shape.setTexture(&ResourceManager::get().m_texture.get("enemy"));
-			shape.setPosition(spawns[i]->getRekt().getPosition());
-			shape.setOrigin(8, 8);
-			reg.emplace<RectShape>(entity,
-								   shape);
-		}*/
+			auto& shape = reg.emplace<RectShape>(entity);
+			shape = createShape(shape, sf::Vector2f(16.f, 16.f), material.texture.getSize());
+			
+			reg.emplace<RigidBody>(entity);
+
+			auto& collider = reg.emplace<Collider>(entity,
+												   transform.position.x,
+												   transform.position.y,
+												   16.f,
+												   16.f);
+			collider.getRekt().setOrigin(collider.getRekt().getSize() / 2.f);
+		}
 
 		// Performance test
 
@@ -200,9 +207,10 @@ private:
 
 		shape = createShape(shape, size, material.texture.getSize());
 
-		reg.emplace<RigidBody>(player,
-							   sf::Vector2f(0, 0),
-							   3.f);
+		auto& body = reg.emplace<RigidBody>(player);
+		body.speed = 3.f;
+		body.acceleration = 0.3f;
+		body.deceleration = 0.1f;
 
 		auto& collider = reg.emplace<Collider>(player,
 											   pos.x,
@@ -211,6 +219,8 @@ private:
 											   size.y);
 		
 		collider.getRekt().setOrigin(collider.getRekt().getSize() / 2.f);
+
+		reg.emplace<Controller>(player);
 
 		auto& window = Locator::MainWindow::ref();
 
