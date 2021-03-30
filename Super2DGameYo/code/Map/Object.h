@@ -9,7 +9,7 @@ public:
 	virtual void render(sf::RenderTarget& target) const;
 	virtual sf::RectangleShape& getRekt();
 	
-	bool renderFlag;
+	static bool renderFlag;
 
 protected:
 	sf::Color m_color;

@@ -7,8 +7,9 @@ Object::Object(float x, float y)
 	rect.setPosition(x, y);
 	rect.setSize(sf::Vector2f(16, 16));
 	rect.setOrigin(8, 8);
-	renderFlag = true;
 }
+
+bool Object::renderFlag = true;
 
 void Object::render(sf::RenderTarget& target) const
 {
