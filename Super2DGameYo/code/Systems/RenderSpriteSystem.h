@@ -15,7 +15,7 @@ class RenderSpriteSystem : public IRenderSystem
 			state.transform.rotate(transform.rotation, transform.origin);
 			state.texture = &material.texture;
 			target.draw(shape.vertices, state);
-			if (collider.renderFlag)
+			if (Collider::renderFlag)
 				collider.render(target);
 		});
 	}
