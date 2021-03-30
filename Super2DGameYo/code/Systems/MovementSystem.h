@@ -13,7 +13,8 @@ class MovementSystem : public IUpdateSystem
 			collider.getRekt().move(body.velocity);
 			Locator::MainWindow::ref().getView().move(body.velocity);
 
-			body.velocity = sf::Vector2f(0, 0);
+			//body.velocity = sf::Vector2f(0, 0);
+			
 
 			auto& win = Locator::MainWindow::ref().get();
 			sf::Vector2f mousePos = win.mapPixelToCoords(sf::Mouse::getPosition(win));
