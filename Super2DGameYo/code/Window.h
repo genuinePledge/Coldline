@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "Map/Collider.h"
 
 class Window
 {
@@ -7,7 +8,7 @@ public:
 	Window(bool fullscreen)
 		: m_window(sf::VideoMode(SCREEN_SIZE.x, SCREEN_SIZE.y), title, (fullscreen ? sf::Style::Fullscreen : sf::Style::Default))
 	{
-		m_window.setVerticalSyncEnabled(false);
+		m_window.setVerticalSyncEnabled(true);
 	}
 	bool update()
 	{
@@ -47,6 +48,14 @@ private:
 		{
 			if (e.type == sf::Event::Closed)
 				m_window.close();
+			if (e.type == sf::Event::KeyReleased)
+			{
+				switch (e.key.code)
+				{
+				case sf::Keyboard::F1:
+					Collider::renderFlag = !Collider::renderFlag;
+				}
+			}
 		}
 	}
 
