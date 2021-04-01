@@ -7,9 +7,8 @@ class Game
 public:
 	void init()
 	{
-		lastLoopTime = m_clock.restart().asMilliseconds();
-		fps = 0;
-		lastFpsTime = 0;
+		m_fps = 0;
+		m_lastFpsTime = 0;
 	}
 
 	void run()
@@ -21,22 +20,25 @@ public:
 private:
 	void update()
 	{
-		long now = m_clock.getElapsedTime().asMilliseconds();
-		long updateLength = now - lastLoopTime;
-		lastLoopTime = now;
-		float dt = updateLength / (1000.f / 60.f);
+		auto delta = m_clock.restart().asMilliseconds();
 
-		lastFpsTime += updateLength;
-		fps++;
+		m_lastFpsTime += delta;
+		lag += delta;
+		m_fps++;
 
-		if (lastFpsTime >= 1000)
+		if (m_lastFpsTime >= 1000)
 		{
-			Locator::MainWindow::ref().get().setTitle(Locator::MainWindow::ref().title + std::to_string(fps));
-			fps = 0;
-			lastFpsTime = 0;
+			Locator::MainWindow::ref().get().setTitle(Locator::MainWindow::ref().title + std::to_string(m_fps));
+			m_fps = 0;
+			m_lastFpsTime = 0;
 		}
 
-		m_world.update(dt);
+		if (lag >= MS_PER_UPDATE)
+		{
+			m_world.update((float)delta);
+			lag -= MS_PER_UPDATE;
+		}
+
 	}
 
 	void render()
@@ -50,8 +52,10 @@ private:
 
 private:
 	sf::Clock m_clock;
-	long lastLoopTime;
-	long lastFpsTime;
-	int fps;
+	float m_lastFpsTime;
+	uint16_t m_fps;
+	const uint8_t TICKRATE = 120;
+	const float MS_PER_UPDATE = 1000.f / (float)TICKRATE;
+	float lag = 0.f;
 	World m_world;
 };
