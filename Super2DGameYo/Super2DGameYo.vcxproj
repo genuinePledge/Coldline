@@ -179,6 +179,7 @@
     <ClInclude Include="code\Game.h" />
     <ClInclude Include="code\Systems\CollisionHandlingSystem.h" />
     <ClInclude Include="code\Systems\ControllerSystem.h" />
+    <ClInclude Include="code\Systems\IFixedUpdateSystem.h" />
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
     <ClInclude Include="code\Systems\MovementSystem.h" />
