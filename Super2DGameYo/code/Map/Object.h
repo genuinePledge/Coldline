@@ -7,8 +7,10 @@ public:
 	Object(float x, float y);
 
 	virtual void render(sf::RenderTarget& target) const;
-	virtual sf::RectangleShape getRekt() const;
+	virtual sf::RectangleShape& getRekt();
 	
+	static bool renderFlag;
+
 protected:
 	sf::Color m_color;
 

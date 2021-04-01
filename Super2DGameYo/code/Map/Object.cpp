@@ -9,12 +9,14 @@ Object::Object(float x, float y)
 	rect.setOrigin(8, 8);
 }
 
+bool Object::renderFlag = true;
+
 void Object::render(sf::RenderTarget& target) const
 {
 	target.draw(rect);
 }
 
-sf::RectangleShape Object::getRekt() const
+sf::RectangleShape& Object::getRekt()
 {
 	return rect;
 }
