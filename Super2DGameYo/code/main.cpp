@@ -12,7 +12,7 @@ int CALLBACK wWinMain(
     int         nCmdShow
 )
 {
-    Locator::MainWindow::set(false);
+    Locator::MainWindow::set(true);
     Game main;
     main.init();
     while (Locator::MainWindow::ref().update())

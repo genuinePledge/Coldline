@@ -8,6 +8,7 @@
 #include "Systems/ControllerSystem.h"
 #include "Systems/MovementSystem.h"
 #include "Systems/CollisionHandlingSystem.h"
+#include "Systems/RenderColliderSystem.h"
 #include "Utility/ResourceManager.h"
 
 class World
@@ -59,6 +60,7 @@ private:
 
 		m_renderSystems.emplace_back(std::make_unique<RenderMapSystem>());
 		m_renderSystems.emplace_back(std::make_unique<RenderSpriteSystem>());
+		m_renderSystems.emplace_back(std::make_unique<RenderColliderSystem>());
 	}
 
 	void test()
@@ -68,32 +70,6 @@ private:
 		std::vector<std::shared_ptr<Object>> spawns(Locator::MainMap::ref().getObjects(Map::ObjType::spawns));
 		std::vector<std::shared_ptr<Object>> walls(Locator::MainMap::ref().getObjects(Map::ObjType::solids));
 		std::vector<Layer> layers(Locator::MainMap::ref().getLayers());
-
-		/*for (auto const& wall : walls)
-		{
-			const auto wallCollider = reg.create();
-
-			sf::Color color(0, 255, 0, 100);
-			
-
-			auto transform = reg.emplace<Transform>(wallCollider,
-													wall->getRekt().getPosition(),
-													wall->getRekt().getScale(),
-													wall->getRekt().getRotation());
-			
-			auto material = reg.emplace<Material>(wallCollider,
-								  ResourceManager::get().m_texture.get("trans"),
-								  color);
-
-			sf::RectangleShape shape;
-			shape.setFillColor(material.color);
-			shape.setPosition(transform.position);
-			shape.setSize(wall->getRekt().getSize());
-
-			reg.emplace<RectShape>(wallCollider,
-								   shape);
-
-		}*/
 
 		for (auto i = 1; i < spawns.size(); i++)
 		{
@@ -120,23 +96,6 @@ private:
 												   16.f);
 			collider.getRekt().setOrigin(collider.getRekt().getSize() / 2.f);
 		}
-
-		// Performance test
-
-		/*for (auto i = 0u; i < 10u; i++)
-		{
-			for (auto j = 0; j < 10u; j++)
-			{
-				const auto entity = reg.create();
-
-				sf::RectangleShape shape;
-				shape.setTexture(&ResourceManager::get().m_texture.get("derebass"));
-				shape.setPosition(i * 16, j * 16);
-				shape.setSize(sf::Vector2f(16, 16));
-
-				reg.emplace<RectShape>(entity, shape);
-			}
-		}*/
 
 		for (auto const& layer : layers)
 		{

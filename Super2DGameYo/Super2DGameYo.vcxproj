@@ -182,6 +182,7 @@
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
     <ClInclude Include="code\Systems\MovementSystem.h" />
+    <ClInclude Include="code\Systems\RenderColliderSystem.h" />
     <ClInclude Include="code\Systems\RenderMapSystem.h" />
     <ClInclude Include="code\Systems\RenderSpriteSystem.h" />
     <ClInclude Include="code\Utility\ResourceHolder.h" />

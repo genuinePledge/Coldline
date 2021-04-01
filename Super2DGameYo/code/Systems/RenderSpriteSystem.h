@@ -7,7 +7,7 @@ class RenderSpriteSystem : public IRenderSystem
 {
 	virtual void render(entt::registry& registry, sf::RenderTarget& target) override
 	{
-		registry.view<RectShape, Transform, Material, Collider>().each([&](auto entity, RectShape& shape, Transform& transform, Material& material, Collider& collider)
+		registry.view<RectShape, Transform, Material>().each([&](auto entity, RectShape& shape, Transform& transform, Material& material)
 		{
 			sf::RenderStates state;
 			state.transform.translate(transform.position - transform.origin);
@@ -15,8 +15,6 @@ class RenderSpriteSystem : public IRenderSystem
 			state.transform.rotate(transform.rotation, transform.origin);
 			state.texture = &material.texture;
 			target.draw(shape.vertices, state);
-			if (Collider::renderFlag)
-				collider.render(target);
 		});
 	}
 };

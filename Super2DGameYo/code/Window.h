@@ -37,7 +37,7 @@ public:
 
 public:
 	const sf::Vector2<uint16_t> SCREEN_SIZE = { 800, 600 };
-	const float ZOOM_FACTOR = 4.f;
+	const float ZOOM_FACTOR = 3.f;
 	std::string title = "Coldline. Build ver.0.2. FPS: ";
 
 private:
