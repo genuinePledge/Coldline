@@ -71,7 +71,7 @@ private:
 		std::vector<std::shared_ptr<Object>> walls(Locator::MainMap::ref().getObjects(Map::ObjType::solids));
 		std::vector<Layer> layers(Locator::MainMap::ref().getLayers());
 
-		for (auto i = 1; i < spawns.size(); i++)
+		for (auto i = 1u; i < spawns.size(); i++)
 		{
 			const auto entity = reg.create();
 			auto const& transform = reg.emplace<Transform>(entity,
@@ -127,25 +127,6 @@ private:
 
 		auto& data = reg.emplace<CollisionData>(player);
 		data.colliders = walls;
-
-		/*const auto map = reg.create();
-		auto& transform = reg.emplace<Transform>(map);
-		auto& shape = reg.emplace<RectShape>(map);
-		auto& material = reg.emplace<Material>(map);
-
-		buffer.create(800, 800);
-		m_renderSystems[1]->render(reg, buffer);
-		buffer.display();
-
-		material.texture = buffer.getTexture();
-		shape = createShape(shape, static_cast<sf::Vector2f>(material.texture.getSize()), material.texture.getSize());
-		
-		transform.position = sf::Vector2f(0.f, 0.f);
-		transform.scale = sf::Vector2f(1.f, 1.f);
-		transform.rotation = 0.f;
-		transform.origin = sf::Vector2f(0.f, 0.f);*/
-
-		//m_renderSystems.pop_back();
 	}
 
 private:
@@ -167,8 +148,8 @@ private:
 		shape = createShape(shape, size, material.texture.getSize());
 
 		auto& body = reg.emplace<RigidBody>(player);
-		body.speed = 3.f;
-		body.acceleration = 0.3f;
+		body.speed = 2.f;
+		body.acceleration = 0.2f;
 		body.deceleration = 0.1f;
 
 		auto& collider = reg.emplace<Collider>(player,
@@ -206,5 +187,4 @@ private:
 private:
 	std::vector<std::unique_ptr<IRenderSystem>> m_renderSystems;
 	std::vector<std::unique_ptr<IUpdateSystem>> m_updateSystems;
-	sf::RenderTexture buffer;
 };
