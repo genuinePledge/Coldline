@@ -2,6 +2,9 @@
 #include "IUpdateSystem.h"
 #include "entt/entt.hpp"
 #include "../Utility/Utility.h"
+#include "../Components/RigidBody.h"
+#include "../Components/Transform.h"
+#include "../Map/Collider.h"
 
 class MovementSystem : public IUpdateSystem
 {
