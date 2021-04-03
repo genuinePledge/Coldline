@@ -1,6 +1,5 @@
 #pragma once
 #include "SFML/Graphics.hpp"
-#include "Map/Collider.h"
 
 class Window
 {
@@ -35,29 +34,21 @@ public:
 		return m_view;
 	}
 
-public:
-	const sf::Vector2<uint16_t> SCREEN_SIZE = { 800, 600 };
-	const float ZOOM_FACTOR = 3.f;
-	std::string title = "Coldline. Build ver.0.2. FPS: ";
-
-private:
 	void handleEvents()
 	{
 		sf::Event e;
 		while (m_window.pollEvent(e))
 		{
 			if (e.type == sf::Event::Closed)
-				m_window.close();
-			if (e.type == sf::Event::KeyReleased)
-			{
-				switch (e.key.code)
-				{
-				case sf::Keyboard::F1:
-					Collider::renderFlag = !Collider::renderFlag;
-				}
-			}
+				m_window.close();	
 		}
 	}
+public:
+	const sf::Vector2<uint16_t> SCREEN_SIZE = { 800, 600 };
+	const float ZOOM_FACTOR = 3.f;
+	std::string title = "Coldline. Build ver.0.2. FPS: ";
+
+private:
 
 private:
 	sf::RenderWindow m_window;
