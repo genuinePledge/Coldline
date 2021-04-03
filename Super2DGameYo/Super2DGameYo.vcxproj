@@ -160,6 +160,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code/main.cpp" />
+    <ClCompile Include="code\State\StateBase.cpp" />
+    <ClCompile Include="code\State\StateManager.cpp" />
     <ClCompile Include="code\Utility\Utility.cpp" />
     <ClCompile Include="code\Map\Collider.cpp" />
     <ClCompile Include="code\Map\Layer.cpp" />
@@ -169,6 +171,7 @@
     <ClCompile Include="pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\Components\Button.h" />
     <ClInclude Include="code\Components\CollisionData.h" />
     <ClInclude Include="code\Components\ControllerComponent.h" />
     <ClInclude Include="code\Components\Materal.h" />
@@ -177,11 +180,17 @@
     <ClInclude Include="code\Components\Transform.h" />
     <ClInclude Include="code\Locator.h" />
     <ClInclude Include="code\Game.h" />
+    <ClInclude Include="code\Scene\Scene.h" />
+    <ClInclude Include="code\State\StateBase.h" />
+    <ClInclude Include="code\State\StateMainMenu.h" />
+    <ClInclude Include="code\State\StateManager.h" />
+    <ClInclude Include="code\State\StatePlaying.h" />
     <ClInclude Include="code\Systems\CollisionHandlingSystem.h" />
     <ClInclude Include="code\Systems\ControllerSystem.h" />
     <ClInclude Include="code\Systems\IFixedUpdateSystem.h" />
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
+    <ClInclude Include="code\Systems\MainMenuInputSystem.h" />
     <ClInclude Include="code\Systems\MovementSystem.h" />
     <ClInclude Include="code\Systems\RenderColliderSystem.h" />
     <ClInclude Include="code\Systems\RenderMapSystem.h" />
@@ -194,8 +203,9 @@
     <ClInclude Include="code\Map\Map.h" />
     <ClInclude Include="code\Map\Object.h" />
     <ClInclude Include="code\Window.h" />
-    <ClInclude Include="code\World.h" />
+    <ClInclude Include="code\Scene\TestLevel.h" />
     <ClInclude Include="code\Gfx\Tileset.h" />
+    <ClInclude Include="code\Scene\MainMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\smol_map.tmx">
