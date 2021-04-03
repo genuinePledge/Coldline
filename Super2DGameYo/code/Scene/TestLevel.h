@@ -1,23 +1,26 @@
 #pragma once
-#include "Locator.h"
-#include "Components/Transform.h"
-#include "Components/Materal.h"
-#include "Components/RigidBody.h"
-#include "Systems/RenderSpriteSystem.h"
-#include "Systems/RenderMapSystem.h"
-#include "Systems/ControllerSystem.h"
-#include "Systems/MovementSystem.h"
-#include "Systems/CollisionHandlingSystem.h"
-#include "Systems/RenderColliderSystem.h"
-#include "Utility/ResourceManager.h"
+#include "Scene.h"
 
-class World
+class TestLevel : public Scene
 {
 public:
-	World()
+	TestLevel()
 	{
 		init();
-		test();
+	}
+
+	~TestLevel() override
+	{
+		auto& reg = Locator::Registry::ref();
+		for (auto& entity : m_entities)
+			reg.destroy(entity);
+	}
+
+	void init()
+	{
+		initServiceLocators();
+		initSystems();
+		setupEntities();
 	}
 
 	void update(float dt)
@@ -29,26 +32,20 @@ public:
 		}
 	}
 
-	void render() const
+	void render()
 	{
-		Locator::MainWindow::ref().get().setView(Locator::MainWindow::ref().getView());
 		auto& reg = Locator::Registry::ref();
 		auto& wnd = Locator::MainWindow::ref();
+		wnd.get().setView(wnd.getView());
 		for (auto const& sys : m_renderSystems)
 		{
 			sys->render(reg, wnd.get());
 		}
-	}
-private:
-	void init()
-	{
-		initServiceLocators();
-		initSystems();
+		wnd.get().setView(wnd.get().getDefaultView());
 	}
 
 	void initServiceLocators()
 	{
-		Locator::Registry::set();
 		Locator::MainMap::set("res/maps/map.tmx");
 	}
 
@@ -63,7 +60,7 @@ private:
 		m_renderSystems.emplace_back(std::make_unique<RenderColliderSystem>());
 	}
 
-	void test()
+	void setupEntities()
 	{
 		auto& reg = Locator::Registry::ref();
 
@@ -95,12 +92,14 @@ private:
 												   16.f,
 												   16.f);
 			collider.getRekt().setOrigin(collider.getRekt().getSize() / 2.f);
+			m_entities.push_back(entity);
 		}
 
 		for (auto const& layer : layers)
 		{
 			const auto layer_entity = reg.create();
 			reg.emplace<Layer>(layer_entity, layer);
+			m_entities.push_back(layer_entity);
 		}
 
 		for (auto const& wall : walls)
@@ -120,6 +119,7 @@ private:
 			transform.rotation = wall->getRekt().getRotation();
 			transform.scale = wall->getRekt().getScale();
 			transform.origin = wall->getRekt().getOrigin();
+			m_entities.push_back(wall_entity);
 		}
 
 		auto player = reg.create();
@@ -127,6 +127,7 @@ private:
 
 		auto& data = reg.emplace<CollisionData>(player);
 		data.colliders = walls;
+		m_entities.push_back(player);
 	}
 
 private:
@@ -171,7 +172,6 @@ private:
 
 		return player;
 	}
-
 	RectShape& createShape(RectShape& shape, sf::Vector2f size, sf::Vector2u texSize)
 	{
 		shape.vertices.setPrimitiveType(sf::Quads);
@@ -183,8 +183,4 @@ private:
 
 		return shape;
 	}
-
-private:
-	std::vector<std::unique_ptr<IRenderSystem>> m_renderSystems;
-	std::vector<std::unique_ptr<IUpdateSystem>> m_updateSystems;
 };

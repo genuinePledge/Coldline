@@ -2,6 +2,7 @@
 #include "IRenderSystem.h"
 #include "../Components/RectShape.h"
 #include "../Components/Transform.h"
+#include "../Components/Materal.h"
 
 class RenderSpriteSystem : public IRenderSystem
 {

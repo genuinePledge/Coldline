@@ -1,5 +1,9 @@
 #pragma once
 #include "../Components/CollisionData.h"
+#include "../Components/Transform.h"
+#include "../Components/RectShape.h"
+#include "../Components/RigidBody.h"
+#include "../Map/Collider.h"
 #include "IUpdateSystem.h"
 #include "entt/entt.hpp"
 

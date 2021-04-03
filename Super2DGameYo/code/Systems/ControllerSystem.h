@@ -2,6 +2,8 @@
 #include "IUpdateSystem.h"
 #include "entt/entt.hpp"
 #include "../Components/ControllerComponent.h"
+#include "../Components/RigidBody.h"
+#include "../Components/Transform.h"
 
 class ControllerSystem : public IUpdateSystem
 {

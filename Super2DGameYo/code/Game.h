@@ -1,61 +1,64 @@
 #pragma once
 #include "SFML/Graphics.hpp"
-#include "World.h"
+#include "entt/entt.hpp"
+#include "State/StateManager.h"
+#include "State/StateMainMenu.h"
+#include "Scene/MainMenu.h"
 
 class Game
 {
 public:
+	Game() = default;
+
+
 	void init()
 	{
-		m_fps = 0;
-		m_lastFpsTime = 0;
+		Locator::MainWindow::set(false);
+		Locator::Registry::set();
+		stateManager.init<StateMainMenu>(std::make_unique<MainMenu>());
 	}
 
 	void run()
 	{
-		update();
-		render();
-	}
+		constexpr uint8_t TICKRATE = 120;
+		constexpr float MS_PER_UPDATE = 1000.f / (float)TICKRATE;
+		float m_lastFpsTime = 0.f;;
+		uint16_t m_fps = 0;
+		float lag = 0.f;
 
-private:
-	void update()
-	{
-		auto delta = m_clock.restart().asMilliseconds();
+		while (Locator::MainWindow::ref().get().isOpen() && !stateManager.isEmpty()) {
+			auto delta = m_clock.restart().asMilliseconds();
 
-		m_lastFpsTime += delta;
-		lag += delta;
-		m_fps++;
+			m_lastFpsTime += delta;
+			lag += delta;
+			m_fps++;
 
-		if (m_lastFpsTime >= 1000)
-		{
-			Locator::MainWindow::ref().get().setTitle(Locator::MainWindow::ref().title + std::to_string(m_fps));
-			m_fps = 0;
-			m_lastFpsTime = 0;
+			if (m_lastFpsTime >= 1000)
+			{
+				Locator::MainWindow::ref().get().setTitle(Locator::MainWindow::ref().title + std::to_string(m_fps));
+				m_fps = 0;
+				m_lastFpsTime = 0;
+			}
+
+			if (lag >= MS_PER_UPDATE)
+			{
+				stateManager.update((float)delta);
+				lag -= MS_PER_UPDATE;
+			}
+
+			Locator::MainWindow::ref().get().clear();
+
+			stateManager.render();
+
+			Locator::MainWindow::ref().get().display();
+
+			stateManager.handleEvents();
+			stateManager.updateStates();
 		}
-
-		if (lag >= MS_PER_UPDATE)
-		{
-			m_world.update((float)delta);
-			lag -= MS_PER_UPDATE;
-		}
-
-	}
-
-	void render()
-	{
-		Locator::MainWindow::ref().get().clear();
-
-		m_world.render();
-
-		Locator::MainWindow::ref().get().display();
 	}
 
 private:
 	sf::Clock m_clock;
-	float m_lastFpsTime;
-	uint16_t m_fps;
-	const uint8_t TICKRATE = 120;
-	const float MS_PER_UPDATE = 1000.f / (float)TICKRATE;
-	float lag = 0.f;
-	World m_world;
+	
+	StateManager stateManager;
 };
