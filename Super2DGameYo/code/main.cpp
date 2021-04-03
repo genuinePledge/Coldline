@@ -1,9 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include "Game.h"
-#include "Window.h"
+#include <memory>
 #include "Locator.h"
+#include "Game.h"
 #include <Windows.h>
+
 
 int CALLBACK wWinMain(
     HINSTANCE   hInstance,
@@ -12,25 +11,17 @@ int CALLBACK wWinMain(
     int         nCmdShow
 )
 {
-    Locator::MainWindow::set(true);
-    Game main;
-    main.init();
-    while (Locator::MainWindow::ref().update())
-    {
-        main.run();
-    }
+    Game game;
+    game.init();
+    game.run();
     return 0;
 }
 
 
 int main()
 {
-    Locator::MainWindow::set(false);
-    Game main;
-    main.init();
-    while (Locator::MainWindow::ref().update())
-    {
-        main.run();
-    }
+    Game game;
+    game.init();
+    game.run();
     return 0;
 }
