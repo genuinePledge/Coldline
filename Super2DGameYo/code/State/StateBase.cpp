@@ -1,26 +1,50 @@
 #include "StateBase.h"
+#include "StateManager.h"
+#include "../Locator.h"
 
-StateBase::StateBase(StateManager& manager, std::unique_ptr<Scene> scene)
-	: stateManager(&manager), currentScene(std::move(scene))
+StateBase::StateBase(StateManager& manager)
+	: stateManager(&manager)
+	, paused(false)
 {
+}
+
+void StateBase::init()
+{
+	initSystems();
+	setupEntities();
 }
 
 void StateBase::update(float delta)
 {
-	currentScene->update(delta);
+	auto& reg = Locator::Registry::ref();
+
+	for (auto const& sys : m_updateSystems)
+	{
+		sys->update(reg, delta);
+	}
 }
 
 void StateBase::render()
 {
-	currentScene->render();
+	auto& reg = Locator::Registry::ref();
+	auto& wnd = Locator::MainWindow::ref();
+	for (auto const& sys : m_renderSystems)
+	{
+		sys->render(reg, wnd.get());
+	}
 }
 
 void StateBase::pause()
 {
-	isPaused = true;
+	paused = true;
 }
 
 void StateBase::resume()
 {
-	isPaused = false;
+	paused = false;
+}
+
+bool StateBase::isPaused()
+{
+	return paused;
 }

@@ -22,7 +22,7 @@ void StateManager::update(float delta)
 {
 	for (auto const& state : m_states)
 	{
-		if (state->isPaused)
+		if (state->isPaused())
 			continue;
 		state->update(delta);
 	}
@@ -34,13 +34,13 @@ void StateManager::render()
 		state->render();
 }
 
-void StateManager::handleEvents()
+void StateManager::handleEvents(sf::Event e)
 {
 	for (auto const& state : m_states)
 	{
-		if (state->isPaused)
+		if (state->isPaused())
 			continue;
-		state->handleEvents();
+		state->handleEvents(e);
 	}
 }
 
