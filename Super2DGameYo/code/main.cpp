@@ -1,5 +1,4 @@
 #include <memory>
-#include "Locator.h"
 #include "Game.h"
 #include <Windows.h>
 
