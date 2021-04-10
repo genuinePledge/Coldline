@@ -9,7 +9,7 @@ class ControllerSystem : public IUpdateSystem
 {
 	virtual void update(entt::registry& registry, float dt) override
 	{
-		registry.view<RigidBody, Controller, Transform>().each([&](auto entity, RigidBody& body, Transform& transform)
+		registry.view<RigidBody, Controller, sf::RectangleShape>().each([&](auto entity, RigidBody& body, sf::RectangleShape& shape)
 		{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 				body.velocity.x -= body.acceleration;
@@ -21,12 +21,13 @@ class ControllerSystem : public IUpdateSystem
 				body.velocity.y -= body.acceleration;
 
 			auto& win = Locator::MainWindow::ref().get();
-			sf::Vector2f mousePos = win.mapPixelToCoords(sf::Mouse::getPosition(win));
-			float angle = vect::angle(mousePos - transform.position, sf::Vector2f(transform.position.x, transform.position.y - 1.f) - transform.position);
-			if (mousePos.x < transform.position.x)
+			sf::Vector2i pixelPos = sf::Mouse::getPosition(win);
+			sf::Vector2f trueMousePos = win.mapPixelToCoords(pixelPos);
+			float angle = vect::angle(trueMousePos - shape.getPosition(), sf::Vector2f(shape.getPosition().x, shape.getPosition().y - 20.f) - shape.getPosition());
+			if (trueMousePos.x < shape.getPosition().x)
 				angle = 360.f - angle;
 
-			transform.rotation = angle;
+			shape.setRotation(angle);
 		});
 	}
 };
