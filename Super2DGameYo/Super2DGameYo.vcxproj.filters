@@ -45,6 +45,24 @@
     <ClCompile Include="code\State\StateBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="code\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\State\StatePlaying.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\State\StateMainMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Gui\Widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Gui\Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Gui\Label.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Map\Collider.h">
@@ -69,9 +87,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Utility\Utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Scene\TestLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Locator.h">
@@ -131,13 +146,7 @@
     <ClInclude Include="code\State\StateBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Scene\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="code\State\StatePlaying.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Scene\MainMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\State\StateMainMenu.h">
@@ -146,10 +155,19 @@
     <ClInclude Include="code\State\StateManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Components\Button.h">
+    <ClInclude Include="code\Components\ButtonStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Systems\MainMenuInputSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Gui\Widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Gui\Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Gui\Label.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
