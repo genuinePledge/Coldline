@@ -13,7 +13,6 @@ public:
 	{
 		if (m_window.isOpen())
 		{
-			handleEvents();
 			return true;
 		}
 		return false;
@@ -34,15 +33,6 @@ public:
 		return m_view;
 	}
 
-	void handleEvents()
-	{
-		sf::Event e;
-		while (m_window.pollEvent(e))
-		{
-			if (e.type == sf::Event::Closed)
-				m_window.close();	
-		}
-	}
 public:
 	const sf::Vector2<uint16_t> SCREEN_SIZE = { 800, 600 };
 	const float ZOOM_FACTOR = 3.f;
