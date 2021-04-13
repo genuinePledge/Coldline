@@ -44,7 +44,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 						&& rPlayer.top + rPlayer.height > rSolid.top)
 					{
 						body.velocity.x = 0;
-						transform.position += sf::Vector2f(rSolid.left - halfSize, rPlayer.top + halfSize);
+						transform.position = sf::Vector2f(rSolid.left - halfSize, rPlayer.top + halfSize);
 						collider.getRekt().setPosition(rSolid.left - halfSize, rPlayer.top + halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rSolid.left - halfSize, rPlayer.top + halfSize);
 					}
@@ -55,7 +55,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 						&& rPlayer.left + rPlayer.width > rSolid.left)
 					{
 						body.velocity.y = 0;
-						transform.position += sf::Vector2f(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
+						transform.position = sf::Vector2f(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
 						collider.getRekt().setPosition(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
 					}
@@ -66,7 +66,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 						&& rPlayer.top + rPlayer.height > rSolid.top)
 					{
 						body.velocity.x = 0;
-						transform.position += sf::Vector2f(rSolid.left + rSolid.width + halfSize, rPlayer.top + halfSize);
+						transform.position = sf::Vector2f(rSolid.left + rSolid.width + halfSize, rPlayer.top + halfSize);
 						collider.getRekt().setPosition(rSolid.left + rSolid.width + halfSize, rPlayer.top + halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rSolid.left + rSolid.width + halfSize, rPlayer.top + halfSize);
 					}
@@ -77,7 +77,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 						&& rPlayer.left + rPlayer.width > rSolid.left)
 					{
 						body.velocity.y = 0;
-						transform.position += sf::Vector2f(rPlayer.left + halfSize, rSolid.top - halfSize);
+						transform.position = sf::Vector2f(rPlayer.left + halfSize, rSolid.top - halfSize);
 						collider.getRekt().setPosition(rPlayer.left + halfSize, rSolid.top - halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rPlayer.left + halfSize, rSolid.top - halfSize);
 					}
