@@ -1,7 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 
-struct RectShape
+struct Sprite
 {
 	sf::VertexArray vertices;
 };
