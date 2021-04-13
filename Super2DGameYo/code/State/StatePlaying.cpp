@@ -3,6 +3,8 @@
 #include "StateManager.h"
 #include "StateMainMenu.h"
 
+#include "box2d/box2d.h"
+
 #include "../Systems/CollisionHandlingSystem.h"
 #include "../Systems/ControllerSystem.h"
 #include "../Systems/MovementSystem.h"
@@ -11,6 +13,7 @@
 #include "../Systems/RenderSpriteSystem.h"
 
 #include "../Locator.h"
+
 
 StatePlaying::StatePlaying(StateManager& manager, const char* levelName)
 	: StateBase(manager)
@@ -91,6 +94,10 @@ void StatePlaying::initSystems()
 
 void StatePlaying::setupEntities()
 {
+	b2Vec2 gravity(0.f, -9.8f);
+
+	b2World world(gravity);
+
 	auto& reg = Locator::Registry::ref();
 	auto& map = Locator::MainMap::ref();
 
@@ -116,6 +123,8 @@ void StatePlaying::setupEntities()
 		transform.position = spawns[i]->getRekt().getPosition();
 		transform.origin = spawns[i]->getRekt().getOrigin();
 
+		material.texture = ResourceManager::get().m_texture.get("enemy");
+
 		sprite.vertices.setPrimitiveType(sf::Quads);
 		sprite.vertices.resize(4);
 		sprite.vertices[0] = sf::Vertex(sf::Vector2f(0.f, 0.f),								 sf::Vector2f(0.f, 0.f));
@@ -123,7 +132,6 @@ void StatePlaying::setupEntities()
 		sprite.vertices[2] = sf::Vertex(sf::Vector2f(spawns[i]->getRekt().getSize()),		 sf::Vector2f(material.texture.getSize()));
 		sprite.vertices[3] = sf::Vertex(sf::Vector2f(0.f, spawns[i]->getRekt().getSize().y), sf::Vector2f(0.f, material.texture.getSize().y));
 
-		material.texture = ResourceManager::get().m_texture.get("enemy");
 
 		// PUSHING TO THE CONTAINER OF ALL THE ENTITIES IN THE SCENE
 		m_entities.push_back(entity);
@@ -196,9 +204,9 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	sprite.vertices[2] = sf::Vertex(sf::Vector2f(size), sf::Vector2f(material.texture.getSize()));
 	sprite.vertices[3] = sf::Vertex(sf::Vector2f(0.f, size.y), sf::Vector2f(0.f, material.texture.getSize().y));
 
-	body.speed = 2.f;
-	body.acceleration = 0.2f;
-	body.deceleration = 0.1f;
+	body.speed = 2.2f;
+	body.acceleration = 0.3f;
+	body.deceleration = 0.2f;
 
 	auto& window = Locator::MainWindow::ref();
 	sf::View view;
