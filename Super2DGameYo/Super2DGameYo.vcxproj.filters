@@ -104,7 +104,7 @@
     <ClInclude Include="code\Components\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Components\RectShape.h">
+    <ClInclude Include="code\Components\Sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Components\Materal.h">
