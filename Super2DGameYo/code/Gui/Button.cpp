@@ -1,7 +1,7 @@
 #include "Button.h"
 #include "../Locator.h"
 #include "../Components/Materal.h"
-#include "../Components/RectShape.h"
+#include "../Components/Sprite.h"
 #include "../Components/Transform.h"
 #include "../Components/ButtonStates.h"
 
@@ -16,22 +16,17 @@ void gui::Button::init(const sf::Texture& tex)
 	auto& reg = Locator::Registry::ref();
 
 	auto& transform = reg.emplace<Transform>(m_entity);
-	transform.position = sf::Vector2f(0, 0);
-	transform.rotation = 0.f;
-	transform.scale = sf::Vector2f(1, 1);
-	transform.origin = sf::Vector2f(0, 0);
-
 	auto& material = reg.emplace<Material>(m_entity);
-	material.texture = tex;
-	material.color = sf::Color::Transparent;
+	auto& sprite = reg.emplace<Sprite>(m_entity);
 
-	auto& shape = reg.emplace<sf::RectangleShape>(m_entity);
-	shape.setPosition(transform.position);
-	shape.setTexture(&tex);
-	shape.setOrigin(transform.origin);
-	shape.setRotation(transform.rotation);
-	shape.setScale(transform.scale);
-	shape.setSize(sf::Vector2f(tex.getSize()));
+	material.texture = tex;
+
+	sprite.vertices.setPrimitiveType(sf::Quads);
+	sprite.vertices.resize(4);
+	sprite.vertices[0] = sf::Vertex(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f));
+	sprite.vertices[1] = sf::Vertex(sf::Vector2f(material.texture.getSize().x, 0.f), sf::Vector2f(material.texture.getSize().x, 0.f));
+	sprite.vertices[2] = sf::Vertex(sf::Vector2f(material.texture.getSize()), sf::Vector2f(material.texture.getSize()));
+	sprite.vertices[3] = sf::Vertex(sf::Vector2f(0.f, material.texture.getSize().y), sf::Vector2f(0.f, material.texture.getSize().y));
 
 	reg.emplace<ButtonStates>(m_entity);
 }
@@ -40,16 +35,16 @@ void gui::Button::setTexure(const sf::Texture& tex)
 {
 	auto& reg = Locator::Registry::ref();
 
-	auto& shape = reg.get<sf::RectangleShape>(m_entity);
-	shape.setTexture(&tex);
+	auto& material = reg.get<Material>(m_entity);
+	material.texture = tex;
 }
 
 void gui::Button::setPosition(float x, float y)
 {
 	auto& reg = Locator::Registry::ref();
 
-	auto& shape = reg.get<sf::RectangleShape>(m_entity);
-	shape.setPosition(x, y);
+	auto& transform = reg.get<Transform>(m_entity);
+	transform.position = sf::Vector2f(x, y);
 }
 
 void gui::Button::setAction(std::function<void(void)> function)

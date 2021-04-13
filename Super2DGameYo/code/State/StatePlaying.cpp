@@ -101,32 +101,31 @@ void StatePlaying::setupEntities()
 	for (auto i = 1u; i < spawns.size(); i++)
 	{
 		const auto entity = reg.create();
-		auto const& transform = reg.emplace<Transform>(entity,
-			spawns[i]->getRekt().getPosition(),
-			spawns[i]->getRekt().getScale(),
-			spawns[i]->getRekt().getOrigin(),
-			spawns[i]->getRekt().getRotation());
-
-		auto const& material = reg.emplace<Material>(entity,
-			ResourceManager::get().m_texture.get("enemy"),
-			sf::Color::Transparent);
-
-		auto& shape = reg.emplace<sf::RectangleShape>(entity);
-		shape.setPosition(transform.position);
-		shape.setTexture(&ResourceManager::get().m_texture.get("enemy"));
-		shape.setOrigin(transform.origin);
-		shape.setRotation(transform.rotation);
-		shape.setScale(transform.scale);
-		shape.setSize(sf::Vector2f(16.f, 16.f));
-
-		reg.emplace<RigidBody>(entity);
-
+		// ASSIGNING COMPONENTS
+		auto& transform = reg.emplace<Transform>(entity);
+		auto& material = reg.emplace<Material>(entity);
+		auto& sprite = reg.emplace<Sprite>(entity);
+		auto& rigidbody = reg.emplace<RigidBody>(entity);
 		auto& collider = reg.emplace<Collider>(entity,
 			transform.position.x,
 			transform.position.y,
 			16.f,
 			16.f);
-		collider.getRekt().setOrigin(collider.getRekt().getSize() / 2.f);
+
+		// SETTING UP COMPONENTS
+		transform.position = spawns[i]->getRekt().getPosition();
+		transform.origin = spawns[i]->getRekt().getOrigin();
+
+		sprite.vertices.setPrimitiveType(sf::Quads);
+		sprite.vertices.resize(4);
+		sprite.vertices[0] = sf::Vertex(sf::Vector2f(0.f, 0.f),								 sf::Vector2f(0.f, 0.f));
+		sprite.vertices[1] = sf::Vertex(sf::Vector2f(spawns[i]->getRekt().getSize().x, 0.f), sf::Vector2f(material.texture.getSize().x, 0.f));
+		sprite.vertices[2] = sf::Vertex(sf::Vector2f(spawns[i]->getRekt().getSize()),		 sf::Vector2f(material.texture.getSize()));
+		sprite.vertices[3] = sf::Vertex(sf::Vector2f(0.f, spawns[i]->getRekt().getSize().y), sf::Vector2f(0.f, material.texture.getSize().y));
+
+		material.texture = ResourceManager::get().m_texture.get("enemy");
+
+		// PUSHING TO THE CONTAINER OF ALL THE ENTITIES IN THE SCENE
 		m_entities.push_back(entity);
 	}
 
@@ -137,11 +136,12 @@ void StatePlaying::setupEntities()
 		m_entities.push_back(layer_entity);
 	}
 
+
 	for (auto const& wall : walls)
 	{
 		const auto wall_entity = reg.create();
 		reg.emplace<Collider>(wall_entity, *dynamic_cast<Collider*>(wall.get()));
-		auto& shape = reg.emplace<sf::RectangleShape>(wall_entity);
+		auto& sprite = reg.emplace<Sprite>(wall_entity);
 		auto& material = reg.emplace<Material>(wall_entity);
 		auto& transform = reg.emplace<Transform>(wall_entity);
 
@@ -151,14 +151,13 @@ void StatePlaying::setupEntities()
 		transform.position = wall->getRekt().getPosition();
 		transform.rotation = wall->getRekt().getRotation();
 		transform.scale = wall->getRekt().getScale();
-		transform.origin = wall->getRekt().getOrigin();
 
-		shape.setPosition(transform.position);
-		shape.setTexture(&ResourceManager::get().m_texture.get("trans"));
-		shape.setOrigin(transform.origin);
-		shape.setRotation(transform.rotation);
-		shape.setScale(transform.scale);
-		shape.setSize(wall->getRekt().getSize());
+		sprite.vertices.setPrimitiveType(sf::Quads);
+		sprite.vertices.resize(4);
+		sprite.vertices[0] = sf::Vertex(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f));
+		sprite.vertices[1] = sf::Vertex(sf::Vector2f(wall->getRekt().getSize().x, 0.f), sf::Vector2f(material.texture.getSize().x, 0.f));
+		sprite.vertices[2] = sf::Vertex(sf::Vector2f(wall->getRekt().getSize()), sf::Vector2f(material.texture.getSize()));
+		sprite.vertices[3] = sf::Vertex(sf::Vector2f(0.f, wall->getRekt().getSize().y), sf::Vector2f(0.f, material.texture.getSize().y));
 
 		m_entities.push_back(wall_entity);
 	}
@@ -168,49 +167,40 @@ void StatePlaying::setupEntities()
 
 	auto& data = reg.emplace<CollisionData>(player);
 	data.colliders = walls;
+
 	m_entities.push_back(player);
 }
 
 entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& player, sf::Vector2f pos, sf::Vector2f size, const std::string& texPath)
 {
-	auto const& transform = reg.emplace<Transform>(player,
-		pos,
-		sf::Vector2f(1.f, 1.f),
-		sf::Vector2f(size / 2.f),
-		0.f);
-
-	auto const& material = reg.emplace<Material>(player,
-		ResourceManager::get().m_texture.get(texPath),
-		sf::Color(0, 0, 0, 0));
-
-	auto& shape = reg.emplace<sf::RectangleShape>(player);
-
-	shape.setPosition(transform.position);
-	shape.setTexture(&ResourceManager::get().m_texture.get(texPath));
-	shape.setOrigin(transform.origin);
-	shape.setRotation(transform.rotation);
-	shape.setScale(transform.scale);
-	shape.setSize(size);
-	shape.setOutlineColor(sf::Color::Red);
-	shape.setOutlineThickness(1.f);
-
+	auto& transform = reg.emplace<Transform>(player);
+	auto& material = reg.emplace<Material>(player);
+	auto& sprite = reg.emplace<Sprite>(player);
 	auto& body = reg.emplace<RigidBody>(player);
+	reg.emplace<Controller>(player);
+	auto& collider = reg.emplace<Collider>(player,
+		transform.position.x,
+		transform.position.y,
+		size.x,
+		size.y);
+	
+	transform.position = pos;
+	transform.origin = size / 2.f;
+
+	material.texture = ResourceManager::get().m_texture.get(texPath);
+
+	sprite.vertices.setPrimitiveType(sf::Quads);
+	sprite.vertices.resize(4);
+	sprite.vertices[0] = sf::Vertex(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 0.f));
+	sprite.vertices[1] = sf::Vertex(sf::Vector2f(size.x, 0.f), sf::Vector2f(material.texture.getSize().x, 0.f));
+	sprite.vertices[2] = sf::Vertex(sf::Vector2f(size), sf::Vector2f(material.texture.getSize()));
+	sprite.vertices[3] = sf::Vertex(sf::Vector2f(0.f, size.y), sf::Vector2f(0.f, material.texture.getSize().y));
+
 	body.speed = 2.f;
 	body.acceleration = 0.2f;
 	body.deceleration = 0.1f;
 
-	auto& collider = reg.emplace<Collider>(player,
-		shape.getPosition().x,
-		shape.getPosition().y,
-		size.x,
-		size.y);
-
-	//collider.getRekt().setOrigin(collider.getRekt().getSize() / 2.f);
-
-	reg.emplace<Controller>(player);
-
 	auto& window = Locator::MainWindow::ref();
-
 	sf::View view;
 	view.setCenter(transform.position);
 	view.setSize(static_cast<sf::Vector2f>(window.SCREEN_SIZE) / window.ZOOM_FACTOR);

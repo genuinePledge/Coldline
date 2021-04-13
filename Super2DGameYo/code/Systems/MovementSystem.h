@@ -10,7 +10,7 @@ class MovementSystem : public IUpdateSystem
 {
 	virtual void update(entt::registry& registry, float dt) override
 	{
-		registry.view<RigidBody, Transform, Collider, sf::RectangleShape>().each([&](auto entity, RigidBody& body, Transform& transform, Collider& collider, sf::RectangleShape& shape)
+		registry.view<RigidBody, Transform, Collider>().each([&](auto entity, RigidBody& body, Transform& transform, Collider& collider)
 		{
 			if (body.velocity.x > 0.f)
 			{
@@ -49,8 +49,7 @@ class MovementSystem : public IUpdateSystem
 				if (body.velocity.y < -body.speed)
 					body.velocity.y = -body.speed;
 
-
-			shape.move(body.velocity);
+			transform.position += body.velocity;
 			collider.getRekt().move(body.velocity);
 			Locator::MainWindow::ref().getView().move(body.velocity);			
 		});

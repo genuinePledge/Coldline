@@ -1,7 +1,7 @@
 #pragma once
 #include "../Components/CollisionData.h"
 #include "../Components/Transform.h"
-#include "../Components/RectShape.h"
+#include "../Components/Sprite.h"
 #include "../Components/RigidBody.h"
 #include "../Map/Collider.h"
 #include "IUpdateSystem.h"
@@ -11,11 +11,19 @@ class CollisionHandlingSystem : public IUpdateSystem
 {
 	virtual void update(entt::registry& registry, float dt) override
 	{
-		registry.view<CollisionData, Collider, RigidBody, sf::RectangleShape>().each([&](auto entity, CollisionData& data, Collider& collider, RigidBody& body, sf::RectangleShape& shape)
+		registry.view<CollisionData, Collider, RigidBody, Transform, Sprite>().each([&](auto entity, 
+																					CollisionData& data, 
+																					Collider& collider, 
+																					RigidBody& body, 
+																					Transform& transform,
+																					Sprite& sprite)
 		{
 			for (auto const& other_collider : data.colliders)
 			{
-				sf::FloatRect rPlayer(shape.getGlobalBounds());
+				sf::FloatRect rPlayer(transform.position.x - transform.origin.x, 
+									  transform.position.y - transform.origin.y, 
+									  sprite.vertices.getBounds().width, 
+									  sprite.vertices.getBounds().height);
 				sf::FloatRect rSolid = other_collider->getRekt().getGlobalBounds();
 				sf::FloatRect nextPos = collider.getRekt().getGlobalBounds();
 
@@ -24,7 +32,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 				nextPos.top += body.velocity.y;
 				collider.getRekt().setPosition(sf::Vector2f(nextPos.left, nextPos.top));
 
-				auto halfSize = shape.getLocalBounds().height / 2;
+				auto halfSize = sprite.vertices.getBounds().height / 2.f;
 
 
 				// TO-DO COLLISION DETECTION AND COLLISION RESPONSE
@@ -36,7 +44,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 						&& rPlayer.top + rPlayer.height > rSolid.top)
 					{
 						body.velocity.x = 0;
-						shape.move(sf::Vector2f(rSolid.left - halfSize, rPlayer.top + halfSize));
+						transform.position += sf::Vector2f(rSolid.left - halfSize, rPlayer.top + halfSize);
 						collider.getRekt().setPosition(rSolid.left - halfSize, rPlayer.top + halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rSolid.left - halfSize, rPlayer.top + halfSize);
 					}
@@ -47,7 +55,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 						&& rPlayer.left + rPlayer.width > rSolid.left)
 					{
 						body.velocity.y = 0;
-						shape.move(sf::Vector2f(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize));
+						transform.position += sf::Vector2f(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
 						collider.getRekt().setPosition(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rPlayer.left + halfSize, rSolid.top + rSolid.height + halfSize);
 					}
@@ -58,7 +66,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 						&& rPlayer.top + rPlayer.height > rSolid.top)
 					{
 						body.velocity.x = 0;
-						shape.move(sf::Vector2f(rSolid.left + rSolid.width + halfSize, rPlayer.top + halfSize));
+						transform.position += sf::Vector2f(rSolid.left + rSolid.width + halfSize, rPlayer.top + halfSize);
 						collider.getRekt().setPosition(rSolid.left + rSolid.width + halfSize, rPlayer.top + halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rSolid.left + rSolid.width + halfSize, rPlayer.top + halfSize);
 					}
@@ -69,7 +77,7 @@ class CollisionHandlingSystem : public IUpdateSystem
 						&& rPlayer.left + rPlayer.width > rSolid.left)
 					{
 						body.velocity.y = 0;
-						shape.move(sf::Vector2f(rPlayer.left + halfSize, rSolid.top - halfSize));
+						transform.position += sf::Vector2f(rPlayer.left + halfSize, rSolid.top - halfSize);
 						collider.getRekt().setPosition(rPlayer.left + halfSize, rSolid.top - halfSize);
 						Locator::MainWindow::ref().getView().setCenter(rPlayer.left + halfSize, rSolid.top - halfSize);
 					}

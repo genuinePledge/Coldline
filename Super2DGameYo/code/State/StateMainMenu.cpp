@@ -21,12 +21,15 @@ StateMainMenu::~StateMainMenu()
 }
 
 
-
 void StateMainMenu::handleEvents(sf::Event e)
 {
 	auto& reg = Locator::Registry::ref();
 	switch (e.type)
 	{
+	case sf::Event::KeyReleased:
+		if (e.key.code == sf::Keyboard::Escape)
+			stateManager->quitGame();
+		break;
 	default:
 		break;
 	}
@@ -42,6 +45,7 @@ void StateMainMenu::setupEntities()
 {
 	auto& reg = Locator::Registry::ref();
 
+	// PLAY BUTTON
 	/*{
 		auto [entity, playButton] = gui::createButton(reg);
 
@@ -54,6 +58,8 @@ void StateMainMenu::setupEntities()
 		m_entities.push_back(entity);
 	}*/
 
+
+	// (DEBUG) MAP LARGE BUTTON
 	{
 		auto [entity, mapLarge] = gui::createButton(reg);
 		mapLarge->init(ResourceManager::get().m_texture.get("widgets/buttons/maplarge"));
@@ -65,6 +71,7 @@ void StateMainMenu::setupEntities()
 		m_entities.push_back(entity);
 	}
 	
+	// (DEBUG) MAP SMALL
 	{
 		auto [entity, mapSmall] = gui::createButton(reg);
 		mapSmall->init(ResourceManager::get().m_texture.get("widgets/buttons/mapsmall"));
@@ -76,6 +83,8 @@ void StateMainMenu::setupEntities()
 		m_entities.push_back(entity);
 	}
 
+
+	// EXIT BUTTON
 	{
 		auto [entity, exitButton] = gui::createButton(reg);
 		exitButton->init(ResourceManager::get().m_texture.get("widgets/buttons/exit"));
@@ -87,6 +96,7 @@ void StateMainMenu::setupEntities()
 		m_entities.push_back(entity);
 	}
 
+	// LOGO
 	{
 		auto [entity, logo] = gui::createLabel(reg);
 		logo->init(ResourceManager::get().m_texture.get("widgets/labels/logo"));
