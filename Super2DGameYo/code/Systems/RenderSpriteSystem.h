@@ -12,10 +12,10 @@ class RenderSpriteSystem : public IRenderSystem
 		{
 			sf::RenderStates states;
 			sf::Transform t;
-			states.texture = &material.texture;
-			t.translate(transform.position);
-			t.rotate(transform.rotation);
+			t.translate(transform.position - transform.origin);
+			t.rotate(transform.rotation, transform.origin);
 			t.scale(transform.scale);
+			states.texture = &material.texture;
 			states.transform = t;
 			target.draw(sprite.vertices, states);
 		});
