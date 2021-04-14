@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include "../Scene/Scene.h"
 #include "StateBase.h"
 
 class StateManager
@@ -25,9 +24,9 @@ public:
 	~StateManager();
 
 	template<typename T>
-	void init(std::unique_ptr<Scene> scene)
+	void init()
 	{
-		m_states.emplace_back(std::make_unique<T>(*this, std::move(scene)));
+		m_states.emplace_back(std::make_unique<T>(*this));
 	}
 
 	template<typename T, typename... Args>
@@ -43,7 +42,7 @@ public:
 	StateBase& getCurrentState();
 
 	void updateStates();
-	void handleEvents();
+	void handleEvents(sf::Event e);
 
 	bool isEmpty();
 

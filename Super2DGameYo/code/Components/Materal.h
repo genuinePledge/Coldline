@@ -4,5 +4,5 @@
 struct Material
 {
 	sf::Texture texture;
-	sf::Color color;
+	sf::Color color = sf::Color::Transparent;
 };

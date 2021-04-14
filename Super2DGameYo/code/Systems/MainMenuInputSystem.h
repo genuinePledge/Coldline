@@ -1,26 +1,38 @@
 #pragma once
 #include "IUpdateSystem.h"
-#include "../Components/Button.h"
-#include "../Components/RectShape.h"
+#include "../Components/ButtonStates.h"
+#include "../Components/Sprite.h"
 #include "../Components/Transform.h"
+#include "../Locator.h"
 
 class MainMenuInputSystem : public IUpdateSystem
 {
 public:
 	virtual void update(entt::registry& registry, float delta) override
 	{
-		registry.view<Transform, Button, RectShape>().each([&](auto entity, Transform& transform, RectShape& shape, Button& button)
+		registry.view<Transform, ButtonStates, Sprite>().each([&](auto entity, Transform& transform, ButtonStates& button, Sprite& sprite)
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			auto& wnd = Locator::MainWindow::ref().get();
+			auto mousePos = sf::Mouse::getPosition(wnd);
+			
+			sf::FloatRect trigger(transform.position.x,
+								  transform.position.y,
+								  sprite.vertices.getBounds().width,
+								  sprite.vertices.getBounds().height);
+
+			if (trigger.contains(sf::Vector2f(mousePos)))
 			{
-				if (sf::Mouse::getPosition().x > (shape.vertices.getBounds().left + transform.position.x) &&
-					sf::Mouse::getPosition().x < (shape.vertices.getBounds().left + transform.position.x + shape.vertices.getBounds().width) &&
-					sf::Mouse::getPosition().y >(shape.vertices.getBounds().top + transform.position.y) &&
-					sf::Mouse::getPosition().y < (shape.vertices.getBounds().top + transform.position.y + shape.vertices.getBounds().height))
+				button.onHover();
+
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				{
-					button.isPressed = true;
+					button.action();
 				}
+
+				return;
 			}
+
+			button.onHoverEscape();
 		});
 	}
 };

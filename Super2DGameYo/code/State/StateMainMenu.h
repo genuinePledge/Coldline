@@ -1,36 +1,18 @@
 #pragma once
-#include "../Scene/TestLevel.h"
-#include "../Scene/MainMenu.h"
-#include "StatePlaying.h"
-#include "../Components/Button.h"
-
+#include "StateBase.h"
+#include "../Gui/Button.h"
 
 class StateMainMenu : public StateBase
 {
 public:
-	StateMainMenu(StateManager& manager, std::unique_ptr<Scene> scene)
-		: StateBase(manager, std::move(scene))
-	{
-	}
+	StateMainMenu(StateManager& manager);
+	~StateMainMenu();
 
-	virtual void handleEvents() override
-	{
-		sf::Event e;
-		auto& window = Locator::MainWindow::ref().get();
-		while (window.pollEvent(e))
-		{
-			switch (e.type)
-			{
-			case sf::Event::Closed:
-				window.close();
-				break;
-			case sf::Event::KeyReleased:
-				if (e.key.code == sf::Keyboard::Enter)
-					stateManager->changeState<StatePlaying>(*stateManager, std::make_unique<TestLevel>());
-				break;
-			case sf::Event::MouseButtonReleased:
-				break;
-			}
-		}
-	}
+	virtual void handleEvents(sf::Event e);
+
+private:
+	void initSystems() override;
+	void setupEntities() override;
+	
+	std::vector<std::unique_ptr<gui::Button>> m_buttons;
 };

@@ -1,4 +1,6 @@
 #include "Utility.h"
+#include <math.h>
+#include <string>
 
 namespace vect
 {

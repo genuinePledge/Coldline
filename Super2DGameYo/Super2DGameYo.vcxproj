@@ -93,14 +93,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\entt\include;$(SolutionDir)Dependencies\pugi-xml\include;$(SolutionDir)Dependencies\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\entt\include;$(SolutionDir)Dependencies\pugi-xml\include;$(SolutionDir)Dependencies\box2d\include;$(SolutionDir)Dependencies\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\box2d\bin;$(SolutionDir)Dependencies\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-window-d.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -129,14 +129,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\uncmi\source\repos\Super2DGameYo\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Misha\source\repos\Coldline\Dependencies\SFML\x86\include;C:\Users\Misha\source\repos\Coldline\Dependencies\pugi-xml\include;C:\Users\Misha\source\repos\Coldline\Dependencies\entt\include;C:\Users\Misha\source\repos\Coldline\Dependencies\box2d\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\uncmi\source\repos\Super2DGameYo\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Misha\source\repos\Coldline\Dependencies\box2d\bin\Debug;C:\Users\Misha\source\repos\Coldline\Dependencies\SFML\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;sfml-window-d.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,21 +147,28 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\uncmi\source\repos\Super2DGameYo\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Misha\source\repos\Coldline\Dependencies\pugi-xml\include;C:\Users\Misha\source\repos\Coldline\Dependencies\entt\include;C:\Users\Misha\source\repos\Coldline\Dependencies\box2d\include;C:\Users\Misha\source\repos\Coldline\Dependencies\SFML\x64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\uncmi\source\repos\Super2DGameYo\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Misha\source\repos\Coldline\Dependencies\box2d\bin\Release;C:\Users\Misha\source\repos\Coldline\Dependencies\SFML\x64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-system.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;sfml-window.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code/main.cpp" />
+    <ClCompile Include="code\Game.cpp" />
+    <ClCompile Include="code\Gui\Button.cpp" />
+    <ClCompile Include="code\Gui\Label.cpp" />
+    <ClCompile Include="code\Gui\Widget.cpp" />
     <ClCompile Include="code\State\StateBase.cpp" />
+    <ClCompile Include="code\State\StateMainMenu.cpp" />
     <ClCompile Include="code\State\StateManager.cpp" />
+    <ClCompile Include="code\State\StatePlaying.cpp" />
     <ClCompile Include="code\Utility\Utility.cpp" />
     <ClCompile Include="code\Map\Collider.cpp" />
     <ClCompile Include="code\Map\Layer.cpp" />
@@ -171,16 +178,18 @@
     <ClCompile Include="pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="code\Components\Button.h" />
+    <ClInclude Include="code\Components\ButtonStates.h" />
     <ClInclude Include="code\Components\CollisionData.h" />
     <ClInclude Include="code\Components\ControllerComponent.h" />
     <ClInclude Include="code\Components\Materal.h" />
-    <ClInclude Include="code\Components\RectShape.h" />
+    <ClInclude Include="code\Components\Sprite.h" />
     <ClInclude Include="code\Components\RigidBody.h" />
     <ClInclude Include="code\Components\Transform.h" />
+    <ClInclude Include="code\Gui\Button.h" />
+    <ClInclude Include="code\Gui\Label.h" />
+    <ClInclude Include="code\Gui\Widget.h" />
     <ClInclude Include="code\Locator.h" />
     <ClInclude Include="code\Game.h" />
-    <ClInclude Include="code\Scene\Scene.h" />
     <ClInclude Include="code\State\StateBase.h" />
     <ClInclude Include="code\State\StateMainMenu.h" />
     <ClInclude Include="code\State\StateManager.h" />
@@ -203,9 +212,7 @@
     <ClInclude Include="code\Map\Map.h" />
     <ClInclude Include="code\Map\Object.h" />
     <ClInclude Include="code\Window.h" />
-    <ClInclude Include="code\Scene\TestLevel.h" />
     <ClInclude Include="code\Gfx\Tileset.h" />
-    <ClInclude Include="code\Scene\MainMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\smol_map.tmx">

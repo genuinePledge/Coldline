@@ -49,7 +49,6 @@ class MovementSystem : public IUpdateSystem
 				if (body.velocity.y < -body.speed)
 					body.velocity.y = -body.speed;
 
-
 			transform.position += body.velocity;
 			collider.getRekt().move(body.velocity);
 			Locator::MainWindow::ref().getView().move(body.velocity);			
