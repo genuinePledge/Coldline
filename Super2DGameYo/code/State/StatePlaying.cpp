@@ -3,8 +3,6 @@
 #include "StateManager.h"
 #include "StateMainMenu.h"
 
-#include "box2d/box2d.h"
-
 #include "../Systems/CollisionHandlingSystem.h"
 #include "../Systems/ControllerSystem.h"
 #include "../Systems/MovementSystem.h"
@@ -94,10 +92,6 @@ void StatePlaying::initSystems()
 
 void StatePlaying::setupEntities()
 {
-	b2Vec2 gravity(0.f, -9.8f);
-
-	b2World world(gravity);
-
 	auto& reg = Locator::Registry::ref();
 	auto& map = Locator::MainMap::ref();
 
