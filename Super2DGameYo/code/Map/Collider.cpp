@@ -7,6 +7,7 @@ Collider::Collider(float x, float y, float width, float height)
     m_body.setFillColor(m_color);
     m_body.setPosition(x, y);
     m_body.setSize(sf::Vector2f(width, height));
+    m_body.setOrigin(width / 2.f, height / 2.f);
 }
 
 sf::RectangleShape& Collider::getRekt()
