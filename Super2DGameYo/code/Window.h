@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "box2d/box2d.h"
 
 class Window
 {
@@ -33,9 +34,30 @@ public:
 		return m_view;
 	}
 
+	b2Vec2 screenToWorldPos(const sf::Vector2f& vec)
+	{
+		return b2Vec2(vec.x / SCALING_FACTOR, vec.y / SCALING_FACTOR);
+	}
+
+	sf::Vector2f worldToScreenPos(const b2Vec2& vec)
+	{
+		return sf::Vector2f(vec.x * SCALING_FACTOR, vec.y * SCALING_FACTOR);
+	}
+
+	b2Vec2 getWorldSize(const sf::Vector2f& size)
+	{
+		return b2Vec2(size.x / SCALING_FACTOR, size.y / SCALING_FACTOR);
+	}
+
+	sf::Vector2f getScreenSize(const b2Vec2& size)
+	{
+		return sf::Vector2f(size.x * SCALING_FACTOR, size.y * SCALING_FACTOR);
+	}
+
 public:
 	const sf::Vector2<uint16_t> SCREEN_SIZE = { 800, 600 };
-	const float ZOOM_FACTOR = 3.f;
+	const float ZOOM_FACTOR = 2.f;
+	static const constexpr float SCALING_FACTOR = 16.f;
 	std::string title = "Coldline. Build ver.0.2. FPS: ";
 
 private:
