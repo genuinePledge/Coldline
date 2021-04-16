@@ -3,31 +3,31 @@
 #include "entt/entt.hpp"
 #include "../Components/ControllerComponent.h"
 #include "../Components/RigidBody.h"
-#include "../Components/Transform.h"
 
 class ControllerSystem : public IUpdateSystem
 {
 	virtual void update(entt::registry& registry, float dt) override
 	{
-		registry.view<RigidBody, Controller, Transform>().each([&](auto entity, RigidBody& body, Transform& transform)
+		registry.view<RigidBody, Controller, sf::Sprite>().each([&](auto entity, RigidBody& body, Controller& controller, sf::Sprite& sprite)
 		{
+			controller.direction = { 0.f, 0.f };
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-				body.velocity.x -= body.acceleration;
+				controller.direction.x = -1;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-				body.velocity.y += body.acceleration;
+				controller.direction.y = 1;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-				body.velocity.x += body.acceleration;
+				controller.direction.x = 1;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-				body.velocity.y -= body.acceleration;
+				controller.direction.y = -1;
 
 			auto& win = Locator::MainWindow::ref().get();
 			sf::Vector2i pixelPos = sf::Mouse::getPosition(win);
 			sf::Vector2f trueMousePos = win.mapPixelToCoords(pixelPos);
-			float angle = vect::angle(trueMousePos - transform.position, sf::Vector2f(transform.position.x, transform.position.y - 20.f) - transform.position);
-			if (trueMousePos.x < transform.position.x)
+			float angle = vect::angle(trueMousePos - sprite.getPosition(), sf::Vector2f(sprite.getPosition().x, sprite.getPosition().y - 20.f) - sprite.getPosition());
+			if (trueMousePos.x < sprite.getPosition().x)
 				angle = 360.f - angle;
 
-			transform.rotation = angle;
+			sprite.setRotation(angle);
 		});
 	}
 };
