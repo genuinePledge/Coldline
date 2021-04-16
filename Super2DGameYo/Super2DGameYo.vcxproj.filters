@@ -101,15 +101,6 @@
     <ClInclude Include="code\Systems\RenderSpriteSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Components\Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Components\Sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Components\Materal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="code\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -128,19 +119,7 @@
     <ClInclude Include="code\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Components\CollisionData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Systems\CollisionHandlingSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="code\Components\ControllerComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Systems\RenderColliderSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Systems\IFixedUpdateSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\State\StateBase.h">
@@ -168,6 +147,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Gui\Label.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Systems\UpdatePhysicsSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Components\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Systems\RenderDebugSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

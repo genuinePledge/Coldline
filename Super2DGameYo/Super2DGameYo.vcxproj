@@ -179,12 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Components\ButtonStates.h" />
-    <ClInclude Include="code\Components\CollisionData.h" />
     <ClInclude Include="code\Components\ControllerComponent.h" />
-    <ClInclude Include="code\Components\Materal.h" />
-    <ClInclude Include="code\Components\Sprite.h" />
+    <ClInclude Include="code\Components\Debug.h" />
     <ClInclude Include="code\Components\RigidBody.h" />
-    <ClInclude Include="code\Components\Transform.h" />
     <ClInclude Include="code\Gui\Button.h" />
     <ClInclude Include="code\Gui\Label.h" />
     <ClInclude Include="code\Gui\Widget.h" />
@@ -194,16 +191,15 @@
     <ClInclude Include="code\State\StateMainMenu.h" />
     <ClInclude Include="code\State\StateManager.h" />
     <ClInclude Include="code\State\StatePlaying.h" />
-    <ClInclude Include="code\Systems\CollisionHandlingSystem.h" />
     <ClInclude Include="code\Systems\ControllerSystem.h" />
-    <ClInclude Include="code\Systems\IFixedUpdateSystem.h" />
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
     <ClInclude Include="code\Systems\MainMenuInputSystem.h" />
     <ClInclude Include="code\Systems\MovementSystem.h" />
-    <ClInclude Include="code\Systems\RenderColliderSystem.h" />
+    <ClInclude Include="code\Systems\RenderDebugSystem.h" />
     <ClInclude Include="code\Systems\RenderMapSystem.h" />
     <ClInclude Include="code\Systems\RenderSpriteSystem.h" />
+    <ClInclude Include="code\Systems\UpdatePhysicsSystem.h" />
     <ClInclude Include="code\Utility\ResourceHolder.h" />
     <ClInclude Include="code\Utility\ResourceManager.h" />
     <ClInclude Include="code\Utility\Utility.h" />
