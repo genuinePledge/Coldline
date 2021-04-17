@@ -65,7 +65,7 @@ void StatePlaying::handleEvents(sf::Event e)
 			stateManager->changeState<StateMainMenu>(*stateManager);
 			break;
 		case sf::Keyboard::F1:
-			Collider::renderFlag = !Collider::renderFlag;
+			Window::debugRender = !Window::debugRender;
 			break;
 		case sf::Keyboard::F2:
 			stateManager->changeState<StatePlaying>(*stateManager, "map");
@@ -120,7 +120,7 @@ void StatePlaying::setupEntities()
 		fixtureDef.shape = &shape;
 
 		sf::CircleShape circle;
-		circle.setRadius(shape.m_radius);
+		circle.setRadius(shape.m_radius * Window::SCALING_FACTOR);
 		circle.setOrigin({ 8.f, 8.f });
 		circle.setFillColor(sf::Color::Transparent);
 		circle.setOutlineColor(sf::Color::Red);

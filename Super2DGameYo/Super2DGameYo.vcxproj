@@ -178,6 +178,7 @@
     <ClCompile Include="pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\Components\Animation.h" />
     <ClInclude Include="code\Components\ButtonStates.h" />
     <ClInclude Include="code\Components\ControllerComponent.h" />
     <ClInclude Include="code\Components\Debug.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="code\State\StateMainMenu.h" />
     <ClInclude Include="code\State\StateManager.h" />
     <ClInclude Include="code\State\StatePlaying.h" />
+    <ClInclude Include="code\Systems\AnimationSystem.h" />
     <ClInclude Include="code\Systems\ControllerSystem.h" />
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />

@@ -19,6 +19,10 @@ class MovementSystem : public IUpdateSystem
 			desiredVelocity *= body.speed;
 
 			body.body->ApplyLinearImpulseToCenter(body.body->GetMass() * (desiredVelocity - velocity), true);
+			auto view = wnd.get().getView();
+			view.setCenter(wnd.worldToScreenPos(body.body->GetPosition()));
+			wnd.get().setView(view);
+			wnd.setView(view);
 		});
 	}
 };
