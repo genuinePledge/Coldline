@@ -9,12 +9,7 @@ class UpdateSpriteSystem : public IUpdateSystem
 	{
 		registry.view<RigidBody, sf::Sprite>().each([&](auto entity, RigidBody& body, sf::Sprite& sprite)
 		{
-			auto& wnd = Locator::MainWindow::ref();
 			sprite.setPosition(Locator::MainWindow::ref().worldToScreenPos(body.body->GetPosition()));
-			auto view = wnd.get().getView();
-			view.setCenter(sprite.getPosition());
-			wnd.get().setView(view);
-			wnd.setView(view);
 		});
 	}
 };
