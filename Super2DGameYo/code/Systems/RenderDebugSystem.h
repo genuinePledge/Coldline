@@ -8,6 +8,7 @@ class RenderDebugSystem : public IRenderSystem
 {
 	virtual void render(entt::registry& reg, sf::RenderTarget& target) override
 	{
+		if (!Window::debugRender) return;
 		{
 			reg.view<DebugRect, RigidBody>().each([&](auto entity, DebugRect& debug, RigidBody& phys)
 			{
