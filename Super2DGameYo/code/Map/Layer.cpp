@@ -1,6 +1,7 @@
 #include "Layer.h"
 
-Layer::Layer()
+Layer::Layer(entt::registry& reg)
+	: registry(reg)
 {
 }
 
@@ -10,13 +11,14 @@ Layer::~Layer()
 
 void Layer::parse(const pugi::xml_node& node)
 {
-	pugi::xml_node custom_property = node.child("properties").first_child();
+	auto properties = node.child("properties").children();
 
-	while (custom_property)
+	for (auto custom_prop : properties)
 	{
-		if (!std::string("tileset_id").compare(custom_property.attribute("name").value()))
-			m_tilesetID = atoi(custom_property.attribute("value").value());
-		custom_property = custom_property.next_sibling();
+		if (!std::string("tileset_id").compare(custom_prop.attribute("name").value()))
+			m_tilesetID = atoi(custom_prop.attribute("value").value());
+		if (!std::string("is_static").compare(custom_prop.attribute("name").value()))
+			is_static = atoi(custom_prop.attribute("value").value());
 	}
 
 	pugi::xml_node data = node.child("data");
@@ -96,6 +98,11 @@ void Layer::setTilesize(int size)
 std::string Layer::getName() const
 {
 	return m_name;
+}
+
+bool Layer::isStatic() const
+{
+	return is_static;
 }
 
 void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -1,13 +1,14 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "../Gfx/Tileset.h"
-#include "pugixml.hpp"
 #include <sstream>
+#include "pugixml.hpp"
+#include "entt/entt.hpp"
 
 class Layer : public sf::Drawable
 {
 public:
-	Layer();
+	Layer(entt::registry& reg);
 	Layer(const Layer&) = default;
 	~Layer();
 
@@ -17,6 +18,7 @@ public:
 	void initVertexArray();
 	void setTilesize(int size);
 	std::string getName() const;
+	bool isStatic() const;
 
 private:
 	sf::VertexArray m_vertices;
@@ -30,6 +32,8 @@ private:
 	uint8_t m_tilesetID;
 	uint8_t m_tilesize;
 
+	entt::registry& registry;
+	bool is_static;
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
