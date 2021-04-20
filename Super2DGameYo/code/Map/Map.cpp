@@ -1,23 +1,14 @@
 #include "Map.h"
 
-Map::Map(const std::string& filePath)
+Map::Map(const std::string& filePath, entt::registry& registry)
+	: reg(registry)
 {
 	pugi::xml_document doc;
 	doc.load_file(filePath.c_str());
-	pugi::xml_node mapNode = doc.first_child();
+	auto mapNode = doc.first_child();
 	layerCounter = 0;
 	
 	loadMap(mapNode);
-}
-
-Map::~Map()
-{
-}
-
-void Map::render(sf::RenderTarget& target) const
-{
-	for (auto& layer : m_layers)
-		target.draw(layer);
 }
 
 std::vector<Layer> Map::getLayers() const
@@ -25,9 +16,14 @@ std::vector<Layer> Map::getLayers() const
 	return m_layers;
 }
 
-std::vector<std::shared_ptr<Object>> Map::getObjects(ObjType type)
+std::vector<sf::Vector2f> Map::getSpawns()
 {
-	return m_objects[type];
+	return m_spawns;
+}
+
+std::vector<sf::FloatRect> Map::getColliders()
+{
+	return m_colliders;
 }
 
 Layer& Map::getCurrentLayer()
@@ -44,69 +40,61 @@ void Map::loadMap(const pugi::xml_node& node)
 	m_mapWidth = atoi(node.attribute("width").value());
 	m_mapHeight = atoi(node.attribute("height").value());
 
-	pugi::xml_node childnode = node.first_child();
-	while (childnode)
+	auto children = node.children();
+	for (auto childnode : children)
 	{
 		if (!std::string("tileset").compare(childnode.name()))
 		{
 			loadTileset(childnode);
 		}
 
+		if (!std::string("group").compare(childnode.name()))
+		{
+			auto group_children = childnode.children();
+			for (auto child : group_children)
+			{
+				if (!std::string("layer").compare(child.name()))
+				{
+					createLayer(child);
+				}
+			}
+		}
+
 		if (!std::string("layer").compare(childnode.name()))
 		{
-			Layer layer;
-			layer.parse(childnode);
-			layer.setTileset(m_tilesets);
-			layer.setTilesize(m_tileSize);
-			layer.initVertexArray();
-			m_layers.push_back(layer);
+			createLayer(childnode);
 		}
 
 		if (!std::string("objectgroup").compare(childnode.name()))
 		{
 			if (!std::string("spawns").compare(childnode.attribute("name").value()))
 			{
-				pugi::xml_node spawn = childnode.first_child();
+				auto spawns = childnode.children();
 
-				std::vector<std::shared_ptr<Object>> objs;
-
-				while (spawn)
+				for (auto spawn : spawns)
 				{
 					float x = atof(spawn.attribute("x").value());
 					float y = atof(spawn.attribute("y").value());
-					float width = atof(spawn.attribute("width").value());
-					float height = atof(spawn.attribute("height").value());
 
-					std::shared_ptr<Object> obj = std::make_shared<Object>(x, y);
-
-					objs.push_back(obj);
-					spawn = spawn.next_sibling();
+					m_spawns.push_back({x, y});
 				}
-				m_objects[ObjType::spawns] = objs;
 			}
 
 			if (!std::string("solids").compare(childnode.attribute("name").value()))
 			{
-				pugi::xml_node solid = childnode.first_child();
+				auto solids = childnode.children();
 
-				std::vector<std::shared_ptr<Object>> objs;
-
-				while (solid)
+				for (auto solid : solids)
 				{
 					float x = atof(solid.attribute("x").value());
 					float y = atof(solid.attribute("y").value());
 					float width = atof(solid.attribute("width").value());
 					float height = atof(solid.attribute("height").value());
 
-					std::shared_ptr<Object> obj = std::make_shared<Collider>(x, y, width, height);
-
-					objs.push_back(obj);
-					solid = solid.next_sibling();
+					m_colliders.push_back(sf::FloatRect(x, y, width, height));
 				}
-				m_objects[ObjType::solids] = objs;
 			}
 		}
-		childnode = childnode.next_sibling();
 	}
 }
 
@@ -123,23 +111,44 @@ void Map::loadTileset(const pugi::xml_node& node)
 	}
 	
 	doc.load_file(path.c_str());
-	pugi::xml_node ts_node = doc.first_child();
+	auto ts_node = doc.first_child();
 
 	tileset.setName(ts_node.attribute("name").value());
 	tileset.setTilecount(atoi(ts_node.attribute("tilecount").value()));
 	tileset.setColumnCount(atoi(ts_node.attribute("columns").value()));
 
-	ts_node = ts_node.first_child();
-	while (ts_node)
+	auto ts_children = ts_node.children();
+	for (auto ts_child : ts_children)
 	{
-		if (!std::string("image").compare(ts_node.name()))
+		if (!std::string("image").compare(ts_child.name()))
 		{
-			std::string path = ts_node.attribute("source").value();
+			std::string path = ts_child.attribute("source").value();
 			
 			tileset.setTexture(ResourceManager::get().m_texture.get(path.substr(7, tileset.getName().length())));
-			tileset.setTextureSize(sf::Vector2i(atoi(ts_node.attribute("width").value()), atoi(ts_node.attribute("height").value())));
+			tileset.setTextureSize(sf::Vector2i(atoi(ts_child.attribute("width").value()), atoi(ts_child.attribute("height").value())));
 		}
-		ts_node = ts_node.next_sibling();
+
+		if (!std::string("tile").compare(ts_child.name()))
+		{
+			auto id = ts_child.attribute("id").value();
+			auto tile_settings = ts_child.children();
+			for (auto tile_setting : tile_settings)
+			{
+				if (!std::string("animation").compare(tile_setting.name()))
+				{
+					Tileset::AnimationInfo anim_info;
+					anim_info.tile = atoi(id);
+					auto frames = tile_setting.children();
+					for (auto frame : frames)
+					{
+						anim_info.frames.push_back(
+							{ atoi(frame.attribute("tileid").value())
+							,atoi(frame.attribute("duration").value()) });
+					}
+					tileset.animInfo.push_back(anim_info);
+				}
+			}
+		}
 	}
 
 	tileset.texCoords.push_back(sf::IntRect());
@@ -149,4 +158,14 @@ void Map::loadTileset(const pugi::xml_node& node)
 			tileset.texCoords.push_back(sf::IntRect(j * m_tileSize, i * m_tileSize, m_tileSize, m_tileSize));
 
 	m_tilesets.push_back(tileset);
+}
+
+void Map::createLayer(const pugi::xml_node& node)
+{
+	Layer layer(reg);
+	layer.parse(node);
+	layer.setTileset(m_tilesets);
+	layer.setTilesize(m_tileSize);
+	layer.initVertexArray();
+	m_layers.push_back(layer);
 }
