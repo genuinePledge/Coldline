@@ -10,6 +10,8 @@
 #include "../Systems/UpdatePhysicsSystem.h"
 #include "../Systems/RenderDebugSystem.h"
 
+#include "../Components/Renderable.h"
+
 #include "../Locator.h"
 
 
@@ -97,8 +99,8 @@ void StatePlaying::setupEntities()
 	auto& map = Locator::MainMap::ref();
 	auto& wnd = Locator::MainWindow::ref();
 
-	std::vector<std::shared_ptr<Object>> spawns(map.getObjects(Map::ObjType::spawns));
-	std::vector<std::shared_ptr<Object>> walls(map.getObjects(Map::ObjType::solids));
+	auto spawns = map.getSpawns();
+	auto colliders = map.getColliders();
 	std::vector<Layer> layers(map.getLayers());
 
 	for (auto i = 1u; i < spawns.size(); i++)
@@ -108,7 +110,7 @@ void StatePlaying::setupEntities()
 		b2BodyDef bodyDef;
 		bodyDef.type = b2_dynamicBody;
 		bodyDef.fixedRotation = true;
-		bodyDef.position = wnd.screenToWorldPos(spawns[i]->getRekt().getPosition());
+		bodyDef.position = wnd.screenToWorldPos({ spawns[i].x, spawns[i].y });
 
 		b2CircleShape shape;
 		shape.m_radius = wnd.getWorldSize({8.f, 8.f}).x;
@@ -130,6 +132,7 @@ void StatePlaying::setupEntities()
 		auto& sprite = reg.emplace<sf::Sprite>(entity);
 		auto& rigidbody = reg.emplace<RigidBody>(entity, bodyDef, fixtureDef);
 		auto& debug = reg.emplace<DebugCircle>(entity, circle);
+		reg.emplace<Renderable>(entity, 2);
 
 		// SETTING UP COMPONENTS
 
@@ -141,29 +144,46 @@ void StatePlaying::setupEntities()
 		m_entities.push_back(entity);
 	}
 
-	for (auto const& layer : layers)
 	{
-		const auto layer_entity = reg.create();
-		reg.emplace<Layer>(layer_entity, layer);
-		m_entities.push_back(layer_entity);
+		int i = 0;
+		for (auto const& layer : layers)
+		{
+			if (layer.isStatic())
+			{
+				sf::RenderTexture render_texture;
+				render_texture.draw(layer);
+				render_texture.display();
+				auto& texture = render_texture.getTexture();
+				auto const layer = reg.create();
+				reg.emplace<sf::Sprite>(layer, sf::Sprite(texture));
+				reg.emplace<Renderable>(layer, i++);
+				m_entities.push_back(layer);
+				m_renderTextures.push_back(render_texture);
+				continue;
+			}
+
+			const auto dynamic_layer = reg.create();
+			reg.emplace<Layer>(dynamic_layer, layer);
+			m_entities.push_back(dynamic_layer);
+		}
 	}
 
 
-	for (auto const& wall : walls)
+	for (auto const& wall : colliders)
 	{
 		b2BodyDef wallDef;
 		wallDef.type = b2_staticBody;
-		wallDef.position = { (wall->getRekt().getPosition().x + wall->getRekt().getOrigin().x) / Window::SCALING_FACTOR, (wall->getRekt().getPosition().y + wall->getRekt().getOrigin().y) / Window::SCALING_FACTOR };
+		wallDef.position = { (wall.left + wall.width / 2.f) / Window::SCALING_FACTOR, (wall.top + wall.height / 2.f) / Window::SCALING_FACTOR };
 
 		b2PolygonShape shape;
-		shape.SetAsBox(wall->getRekt().getSize().x / 2 / Window::SCALING_FACTOR, wall->getRekt().getSize().y / 2 / Window::SCALING_FACTOR);
+		shape.SetAsBox(wall.width / 2 / Window::SCALING_FACTOR, wall.height / 2 / Window::SCALING_FACTOR);
 
 		b2FixtureDef fixtureDef;
 		fixtureDef.shape = &shape;
 
 		sf::RectangleShape rect;
-		rect.setSize(wall->getRekt().getSize());
-		rect.setOrigin(wall->getRekt().getOrigin());
+		rect.setSize({ wall.width, wall.height });
+		rect.setOrigin({ wall.width / 2.f, wall.height / 2.f });
 		rect.setFillColor(sf::Color(0, 255, 0, 120));
 
 		const auto wall_entity = reg.create();
@@ -175,9 +195,11 @@ void StatePlaying::setupEntities()
 	}
 
 	auto player = reg.create();
-	player = createPlayer(reg, player, spawns[0]->getRekt().getPosition(), sf::Vector2f(16.f, 16.f), "test_player_16x16");
+	player = createPlayer(reg, player, { spawns[0].x, spawns[0].y }, sf::Vector2f(16.f, 16.f), "test_player_16x16");
 
 	m_entities.push_back(player);
+
+	reg.sort<Renderable>();
 }
 
 entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& player, sf::Vector2f pos, sf::Vector2f size, const std::string& texPath)
@@ -205,11 +227,11 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	auto& sprite = reg.emplace<sf::Sprite>(player);
 	reg.emplace<Controller>(player);
 	auto& debug = reg.emplace<DebugCircle>(player, circle);
+	reg.emplace<Renderable>(player, 2);
 	
 	sprite.setTexture(ResourceManager::get().m_texture.get(texPath));
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 	body.speed = 10.f;
-
 
 	auto& window = Locator::MainWindow::ref();
 	sf::View view;
