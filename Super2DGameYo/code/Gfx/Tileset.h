@@ -7,8 +7,20 @@ public:
 	Tileset();
 	~Tileset();
 
+	struct FrameInfo
+	{
+		int tile_id, duration;
+	};
+
+	struct AnimationInfo
+	{
+		int tile;
+		std::vector<FrameInfo> frames;
+	};
+
 	std::vector<sf::IntRect> texCoords;
 	sf::Texture m_texture;
+	std::vector<AnimationInfo> animInfo;
 
 	void		 setName(const std::string& name);
 	void		 setTilecount(size_t count);
