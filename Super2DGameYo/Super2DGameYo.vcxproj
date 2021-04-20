@@ -170,10 +170,8 @@
     <ClCompile Include="code\State\StateManager.cpp" />
     <ClCompile Include="code\State\StatePlaying.cpp" />
     <ClCompile Include="code\Utility\Utility.cpp" />
-    <ClCompile Include="code\Map\Collider.cpp" />
     <ClCompile Include="code\Map\Layer.cpp" />
     <ClCompile Include="code\Map\Map.cpp" />
-    <ClCompile Include="code\Map\Object.cpp" />
     <ClCompile Include="code\Gfx\Tileset.cpp" />
     <ClCompile Include="pugixml.cpp" />
   </ItemGroup>
@@ -182,6 +180,7 @@
     <ClInclude Include="code\Components\ButtonStates.h" />
     <ClInclude Include="code\Components\ControllerComponent.h" />
     <ClInclude Include="code\Components\Debug.h" />
+    <ClInclude Include="code\Components\Renderable.h" />
     <ClInclude Include="code\Components\RigidBody.h" />
     <ClInclude Include="code\Gui\Button.h" />
     <ClInclude Include="code\Gui\Label.h" />
@@ -205,10 +204,8 @@
     <ClInclude Include="code\Utility\ResourceHolder.h" />
     <ClInclude Include="code\Utility\ResourceManager.h" />
     <ClInclude Include="code\Utility\Utility.h" />
-    <ClInclude Include="code\Map\Collider.h" />
     <ClInclude Include="code\Map\Layer.h" />
     <ClInclude Include="code\Map\Map.h" />
-    <ClInclude Include="code\Map\Object.h" />
     <ClInclude Include="code\Window.h" />
     <ClInclude Include="code\Gfx\Tileset.h" />
   </ItemGroup>
