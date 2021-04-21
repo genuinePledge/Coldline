@@ -1,7 +1,7 @@
 #include "Layer.h"
 
-Layer::Layer(entt::registry& reg)
-	: registry(reg)
+Layer::Layer(int z)
+	: z(z)
 {
 }
 
@@ -90,6 +90,31 @@ void Layer::initVertexArray()
 		}
 }
 
+void Layer::updateVertexArray(int changedTile)
+{
+	for (int i = 0; i < m_width; i++)
+	{
+		for (int j = 0; j < m_height; j++)
+		{
+			int tileNumber = m_data[i + j * m_width];
+
+			if (changedTile - 1 != tileNumber)
+				continue;
+
+			m_data[i + j * m_width] = changedTile;
+
+			sf::Vertex* quad = &m_vertices[changedTile * 4];
+
+			sf::IntRect texrect = m_tileset.texCoords[changedTile];
+
+			quad[0].texCoords = sf::Vector2f(texrect.left, texrect.top);
+			quad[1].texCoords = sf::Vector2f(texrect.left + texrect.width, texrect.top);
+			quad[2].texCoords = sf::Vector2f(texrect.left + texrect.width, texrect.top + texrect.height);
+			quad[3].texCoords = sf::Vector2f(texrect.left, texrect.top + texrect.height);
+		}
+	}
+}
+
 void Layer::setTilesize(int size)
 {
 	m_tilesize = size;
@@ -103,6 +128,11 @@ std::string Layer::getName() const
 bool Layer::isStatic() const
 {
 	return is_static;
+}
+
+Tileset Layer::getTileset()
+{
+	return m_tileset;
 }
 
 void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const

@@ -34,6 +34,13 @@ public:
 		m_res.insert(std::make_pair(name, r));
 	}
 
+	void save(const std::string& name, const sf::Texture& tex)
+	{
+		Resource r;
+		r = tex;
+		m_res.insert(std::make_pair(name, r));
+	}
+
 private:
 	std::string getFullName(const std::string& name)
 	{

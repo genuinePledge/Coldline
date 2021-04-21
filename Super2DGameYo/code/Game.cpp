@@ -35,11 +35,12 @@ void Game::run()
 
 		handleEvents();
 
-		if (lag >= MS_PER_UPDATE)
+		/*if (lag >= MS_PER_UPDATE)
 		{
-			m_stateManager.update((float)delta);
 			lag -= MS_PER_UPDATE;
-		}
+		}*/
+		
+		m_stateManager.update((float)delta);
 
 		Locator::MainWindow::ref().get().clear();
 

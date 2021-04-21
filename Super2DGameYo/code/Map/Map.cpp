@@ -1,7 +1,6 @@
 #include "Map.h"
 
-Map::Map(const std::string& filePath, entt::registry& registry)
-	: reg(registry)
+Map::Map(const std::string& filePath)
 {
 	pugi::xml_document doc;
 	doc.load_file(filePath.c_str());
@@ -26,14 +25,6 @@ std::vector<sf::FloatRect> Map::getColliders()
 	return m_colliders;
 }
 
-Layer& Map::getCurrentLayer()
-{
-	if (layerCounter >= m_layers.size())
-		layerCounter = 0;
-	return m_layers[layerCounter++];
-}
-
-
 void Map::loadMap(const pugi::xml_node& node)
 {
 	m_tileSize = atoi(node.attribute("tileheight").value());
@@ -55,14 +46,14 @@ void Map::loadMap(const pugi::xml_node& node)
 			{
 				if (!std::string("layer").compare(child.name()))
 				{
-					createLayer(child);
+					createLayer(child, layerCounter++);
 				}
 			}
 		}
 
 		if (!std::string("layer").compare(childnode.name()))
 		{
-			createLayer(childnode);
+			createLayer(childnode, layerCounter++);
 		}
 
 		if (!std::string("objectgroup").compare(childnode.name()))
@@ -141,9 +132,8 @@ void Map::loadTileset(const pugi::xml_node& node)
 					auto frames = tile_setting.children();
 					for (auto frame : frames)
 					{
-						anim_info.frames.push_back(
-							{ atoi(frame.attribute("tileid").value())
-							,atoi(frame.attribute("duration").value()) });
+						anim_info.frames.push_back(atoi(frame.attribute("tileid").value()) + 1);
+						anim_info.duration = atoi(frame.attribute("duration").value());
 					}
 					tileset.animInfo.push_back(anim_info);
 				}
@@ -160,9 +150,9 @@ void Map::loadTileset(const pugi::xml_node& node)
 	m_tilesets.push_back(tileset);
 }
 
-void Map::createLayer(const pugi::xml_node& node)
+void Map::createLayer(const pugi::xml_node& node, int depth)
 {
-	Layer layer(reg);
+	Layer layer(depth);
 	layer.parse(node);
 	layer.setTileset(m_tilesets);
 	layer.setTilesize(m_tileSize);

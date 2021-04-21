@@ -8,7 +8,7 @@
 class Layer : public sf::Drawable
 {
 public:
-	Layer(entt::registry& reg);
+	Layer(int z);
 	Layer(const Layer&) = default;
 	~Layer();
 
@@ -16,9 +16,12 @@ public:
 	void setTileset(std::vector<Tileset>& tilesets);
 	void offsetTexCoords(int offset);
 	void initVertexArray();
+	void updateVertexArray(int tileNumber);
 	void setTilesize(int size);
 	std::string getName() const;
 	bool isStatic() const;
+	Tileset getTileset();
+	int z;
 
 private:
 	sf::VertexArray m_vertices;
@@ -32,7 +35,6 @@ private:
 	uint8_t m_tilesetID;
 	uint8_t m_tilesize;
 
-	entt::registry& registry;
 	bool is_static;
 
 	// Inherited via Drawable
