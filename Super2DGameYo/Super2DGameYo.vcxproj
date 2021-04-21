@@ -182,6 +182,7 @@
     <ClInclude Include="code\Components\Debug.h" />
     <ClInclude Include="code\Components\Renderable.h" />
     <ClInclude Include="code\Components\RigidBody.h" />
+    <ClInclude Include="code\Components\Tags.h" />
     <ClInclude Include="code\Gui\Button.h" />
     <ClInclude Include="code\Gui\Label.h" />
     <ClInclude Include="code\Gui\Widget.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
     <ClInclude Include="code\Systems\MainMenuInputSystem.h" />
+    <ClInclude Include="code\Systems\MapLayerUpdate.h" />
     <ClInclude Include="code\Systems\MovementSystem.h" />
     <ClInclude Include="code\Systems\RenderDebugSystem.h" />
     <ClInclude Include="code\Systems\RenderMapSystem.h" />
