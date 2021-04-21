@@ -7,15 +7,11 @@ public:
 	Tileset();
 	~Tileset();
 
-	struct FrameInfo
-	{
-		int tile_id, duration;
-	};
-
 	struct AnimationInfo
 	{
 		int tile;
-		std::vector<FrameInfo> frames;
+		int duration;
+		std::vector<int> frames;
 	};
 
 	std::vector<sf::IntRect> texCoords;
