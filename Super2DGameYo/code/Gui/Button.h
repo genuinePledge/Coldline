@@ -10,13 +10,13 @@ namespace gui
 	public:
 		Button(entt::entity e);
 
-		void init(const sf::Texture& tex);
+		void init(const sf::Texture& tex, entt::registry& reg);
 
-		void setTexure(const sf::Texture& tex);
-		void setPosition(float x, float y);
-		void setAction(std::function<void(void)> function);
-		void setOnHover(std::function<void(void)> function);
-		void setOnHoverEscape(std::function<void(void)> function);
+		void setTexture(const sf::Texture& tex, entt::registry& reg);
+		void setPosition(entt::registry& reg, float x, float y);
+		void setAction(std::function<void(void)> function, entt::registry& reg);
+		void setOnHover(std::function<void(void)> function, entt::registry& reg);
+		void setOnHoverEscape(std::function<void(void)> function, entt::registry& reg);
 	};
 	
 	inline std::tuple<entt::entity, std::shared_ptr<Button>> createButton(entt::registry& reg)

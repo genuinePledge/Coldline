@@ -8,10 +8,8 @@ gui::Button::Button(entt::entity e)
 	
 }
 
-void gui::Button::init(const sf::Texture& tex)
+void gui::Button::init(const sf::Texture& tex, entt::registry& reg)
 {
-	auto& reg = Locator::Registry::ref();
-
 	auto& sprite = reg.emplace<sf::Sprite>(m_entity);
 
 	sprite.setTexture(tex);
@@ -19,42 +17,32 @@ void gui::Button::init(const sf::Texture& tex)
 	reg.emplace<ButtonStates>(m_entity);
 }
 
-void gui::Button::setTexure(const sf::Texture& tex)
+void gui::Button::setTexture(const sf::Texture& tex, entt::registry& reg)
 {
-	auto& reg = Locator::Registry::ref();
-
 	auto& sprite = reg.get<sf::Sprite>(m_entity);
 	sprite.setTexture(tex);
 }
 
-void gui::Button::setPosition(float x, float y)
+void gui::Button::setPosition(entt::registry& reg, float x, float y)
 {
-	auto& reg = Locator::Registry::ref();
-
 	auto& sprite = reg.get<sf::Sprite>(m_entity);
 	sprite.setPosition(x, y);
 }
 
-void gui::Button::setAction(std::function<void(void)> function)
+void gui::Button::setAction(std::function<void(void)> function, entt::registry& reg)
 {
-	auto& reg = Locator::Registry::ref();
-
 	auto& button = reg.get<ButtonStates>(m_entity);
 	button.action = function;
 }
 
-void gui::Button::setOnHover(std::function<void(void)> function)
+void gui::Button::setOnHover(std::function<void(void)> function, entt::registry& reg)
 {
-	auto& reg = Locator::Registry::ref();
-
 	auto& button = reg.get<ButtonStates>(m_entity);
 	button.onHover = function;
 }
 
-void gui::Button::setOnHoverEscape(std::function<void(void)> function)
+void gui::Button::setOnHoverEscape(std::function<void(void)> function, entt::registry& reg)
 {
-	auto& reg = Locator::Registry::ref();
-
 	auto& button = reg.get<ButtonStates>(m_entity);
 	button.onHoverEscape = function;
 }

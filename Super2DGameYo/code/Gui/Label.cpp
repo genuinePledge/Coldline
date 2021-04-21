@@ -5,18 +5,14 @@ gui::Label::Label(entt::entity e)
 	: Widget(e) 
 { }
 
-void gui::Label::init(const sf::Texture & tex)
+void gui::Label::init(const sf::Texture & tex, entt::registry& reg)
 {
-	auto& reg = Locator::Registry::ref();
-
 	auto& sprite = reg.emplace<sf::Sprite>(m_entity);
 	sprite.setTexture(tex);
 }
 
-void gui::Label::setPosition(float x, float y)
+void gui::Label::setPosition(entt::registry& reg, float x, float y)
 {
-	auto& reg = Locator::Registry::ref();
-
 	auto& sprite = reg.get<sf::Sprite>(m_entity);
 	sprite.setPosition(x, y);
 }

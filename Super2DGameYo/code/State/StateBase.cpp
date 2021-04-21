@@ -16,21 +16,18 @@ void StateBase::init()
 
 void StateBase::update(float delta)
 {
-	auto& reg = Locator::Registry::ref();
-
 	for (auto const& sys : m_updateSystems)
 	{
-		sys->update(reg, delta);
+		sys->update(m_reg, delta);
 	}
 }
 
 void StateBase::render()
 {
-	auto& reg = Locator::Registry::ref();
 	auto& wnd = Locator::MainWindow::ref();
 	for (auto const& sys : m_renderSystems)
 	{
-		sys->render(reg, wnd.get());
+		sys->render(m_reg, wnd.get());
 	}
 }
 

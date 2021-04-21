@@ -31,4 +31,5 @@ protected:
 	std::vector<std::unique_ptr<IRenderSystem>> m_renderSystems;
 	std::vector<std::unique_ptr<IUpdateSystem>> m_updateSystems;
 	std::vector<entt::entity> m_entities;
+	entt::basic_registry<entt::entity> m_reg;
 };

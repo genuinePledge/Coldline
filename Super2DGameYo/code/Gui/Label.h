@@ -9,9 +9,9 @@ namespace gui
 	public:
 		Label(entt::entity e);
 
-		void init(const sf::Texture& tex);
+		void init(const sf::Texture& tex, entt::registry& reg);
 		
-		void setPosition(float x, float y);
+		void setPosition(entt::registry& reg, float x, float y);
 	};
 
 	inline std::tuple<entt::entity, std::unique_ptr<Label>> createLabel(entt::registry& reg)
