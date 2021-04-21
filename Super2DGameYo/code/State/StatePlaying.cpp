@@ -5,10 +5,12 @@
 
 #include "../Systems/ControllerSystem.h"
 #include "../Systems/MovementSystem.h"
-#include "../Systems/RenderMapSystem.h"
+//#include "../Systems/RenderMapSystem.h"
 #include "../Systems/RenderSpriteSystem.h"
 #include "../Systems/UpdatePhysicsSystem.h"
 #include "../Systems/RenderDebugSystem.h"
+#include "../Systems/AnimationSystem.h"
+#include "../Systems/MapLayerUpdate.h"
 
 #include "../Components/Renderable.h"
 
@@ -27,7 +29,7 @@ StatePlaying::~StatePlaying()
 	auto& reg = Locator::Registry::ref();
 
 	for (auto& e : m_entities)
-		reg.destroy(e);
+		m_reg.destroy(e);
 
 	Locator::MainMap::reset();
 }
@@ -41,7 +43,7 @@ void StatePlaying::update(float dt)
 
 	for (auto const& sys : m_updateSystems)
 	{
-		sys->update(reg, dt);
+		sys->update(m_reg, dt);
 	}
 }
 
@@ -51,7 +53,7 @@ void StatePlaying::render()
 	auto& wnd = Locator::MainWindow::ref();
 	for (auto const& sys : m_renderSystems)
 	{
-		sys->render(reg, wnd.get());
+		sys->render(m_reg, wnd.get());
 	}
 	wnd.get().setView(wnd.get().getDefaultView());
 }
@@ -87,8 +89,10 @@ void StatePlaying::initSystems()
 	m_updateSystems.emplace_back(std::make_unique<MovementSystem>());
 	m_updateSystems.emplace_back(std::make_unique<UpdateSpriteSystem>());
 	m_updateSystems.emplace_back(std::make_unique<UpdatePhysicsSystem>());
+	m_updateSystems.emplace_back(std::make_unique<AnimationSystem>());
+	m_updateSystems.emplace_back(std::make_unique<MapLayerUpdate>());
 
-	m_renderSystems.emplace_back(std::make_unique<RenderMapSystem>());
+	//m_renderSystems.emplace_back(std::make_unique<RenderMapSystem>());
 	m_renderSystems.emplace_back(std::make_unique<RenderSpriteSystem>());
 	m_renderSystems.emplace_back(std::make_unique<RenderDebugSystem>());
 }
@@ -105,7 +109,7 @@ void StatePlaying::setupEntities()
 
 	for (auto i = 1u; i < spawns.size(); i++)
 	{
-		const auto entity = reg.create();
+		const auto entity = m_reg.create();
 
 		b2BodyDef bodyDef;
 		bodyDef.type = b2_dynamicBody;
@@ -129,10 +133,10 @@ void StatePlaying::setupEntities()
 		circle.setOutlineThickness(0.5f);
 
 		// ASSIGNING COMPONENTS
-		auto& sprite = reg.emplace<sf::Sprite>(entity);
-		auto& rigidbody = reg.emplace<RigidBody>(entity, bodyDef, fixtureDef);
-		auto& debug = reg.emplace<DebugCircle>(entity, circle);
-		reg.emplace<Renderable>(entity, 2);
+		auto& sprite = m_reg.emplace<sf::Sprite>(entity);
+		auto& rigidbody = m_reg.emplace<RigidBody>(entity, bodyDef, fixtureDef);
+		auto& debug = m_reg.emplace<DebugCircle>(entity, circle);
+		m_reg.emplace<Renderable>(entity, 2);
 
 		// SETTING UP COMPONENTS
 
@@ -145,26 +149,36 @@ void StatePlaying::setupEntities()
 	}
 
 	{
-		int i = 0;
-		for (auto const& layer : layers)
+		for (auto& layer : layers)
 		{
 			if (layer.isStatic())
 			{
 				sf::RenderTexture render_texture;
+				render_texture.create(800, 800);
+				render_texture.clear(sf::Color::Transparent);
 				render_texture.draw(layer);
 				render_texture.display();
-				auto& texture = render_texture.getTexture();
-				auto const layer = reg.create();
-				reg.emplace<sf::Sprite>(layer, sf::Sprite(texture));
-				reg.emplace<Renderable>(layer, i++);
-				m_entities.push_back(layer);
-				m_renderTextures.push_back(render_texture);
+				ResourceManager::get().m_texture.save(layer.getName(), render_texture.getTexture());
+				auto const entity = m_reg.create();
+				m_reg.emplace<sf::Sprite>(entity, ResourceManager::get().m_texture.get(layer.getName()));
+				m_reg.emplace<Renderable>(entity, layer.z);
+				m_entities.push_back(entity);
 				continue;
 			}
 
-			const auto dynamic_layer = reg.create();
-			reg.emplace<Layer>(dynamic_layer, layer);
+			const auto dynamic_layer = m_reg.create();
+			m_reg.emplace<Layer>(dynamic_layer, layer);
 			m_entities.push_back(dynamic_layer);
+
+			auto tileset = layer.getTileset();
+			for (auto& animInfo : tileset.animInfo)
+			{
+				const auto animation = m_reg.create();
+				auto& animComp = m_reg.emplace<Animation>(animation);
+				animComp.frames = animInfo.frames;
+				animComp.frameTime = animInfo.duration;
+				animComp.entity = dynamic_layer;
+			}
 		}
 	}
 
@@ -186,20 +200,25 @@ void StatePlaying::setupEntities()
 		rect.setOrigin({ wall.width / 2.f, wall.height / 2.f });
 		rect.setFillColor(sf::Color(0, 255, 0, 120));
 
-		const auto wall_entity = reg.create();
-		auto& rigidBody = reg.emplace<RigidBody>(wall_entity, wallDef, fixtureDef);
-		auto& debug = reg.emplace<DebugRect>(wall_entity, rect);
+		const auto wall_entity = m_reg.create();
+		auto& rigidBody = m_reg.emplace<RigidBody>(wall_entity, wallDef, fixtureDef);
+		auto& debug = m_reg.emplace<DebugRect>(wall_entity, rect);
 
 
 		m_entities.push_back(wall_entity);
 	}
 
-	auto player = reg.create();
-	player = createPlayer(reg, player, { spawns[0].x, spawns[0].y }, sf::Vector2f(16.f, 16.f), "test_player_16x16");
+	auto player = m_reg.create();
+	player = createPlayer(m_reg, player, { spawns[0].x, spawns[0].y }, sf::Vector2f(16.f, 16.f), "test_player_16x16");
 
 	m_entities.push_back(player);
 
-	reg.sort<Renderable>();
+	m_reg.sort<Renderable>([](auto const& l, auto const& r)
+	{
+		return l.z < r.z;
+	});
+
+	m_reg.sort<sf::Sprite, Renderable>();
 }
 
 entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& player, sf::Vector2f pos, sf::Vector2f size, const std::string& texPath)
