@@ -38,7 +38,7 @@ public:
 	{
 		Resource r;
 		r = tex;
-		m_res.insert(std::make_pair(name, r));
+		m_res[name] = r;
 	}
 
 private:
