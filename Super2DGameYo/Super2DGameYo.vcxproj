@@ -179,9 +179,9 @@
     <ClInclude Include="code\Components\Animation.h" />
     <ClInclude Include="code\Components\ButtonStates.h" />
     <ClInclude Include="code\Components\ControllerComponent.h" />
-    <ClInclude Include="code\Components\Debug.h" />
     <ClInclude Include="code\Components\Renderable.h" />
     <ClInclude Include="code\Components\RigidBody.h" />
+    <ClInclude Include="code\Components\SpriteSheet.h" />
     <ClInclude Include="code\Components\Tags.h" />
     <ClInclude Include="code\Gui\Button.h" />
     <ClInclude Include="code\Gui\Label.h" />
