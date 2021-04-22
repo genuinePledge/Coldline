@@ -16,7 +16,7 @@ public:
 	void setTileset(std::vector<Tileset>& tilesets);
 	void offsetTexCoords(int offset);
 	void initVertexArray();
-	void updateVertexArray(int tileNumber);
+	void updateVertexArray(int tileNumber, int framecount);
 	void setTilesize(int size);
 	std::string getName() const;
 	bool isStatic() const;

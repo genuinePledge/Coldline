@@ -90,7 +90,7 @@ void Layer::initVertexArray()
 		}
 }
 
-void Layer::updateVertexArray(int changedTile)
+void Layer::updateVertexArray(int changedTile, int framecount)
 {
 	for (int i = 0; i < m_width; i++)
 	{
@@ -98,19 +98,19 @@ void Layer::updateVertexArray(int changedTile)
 		{
 			int tileNumber = m_data[i + j * m_width];
 
-			if (changedTile - 1 != tileNumber)
-				continue;
+			if (changedTile - 1 == tileNumber || (changedTile + framecount) - 1 == tileNumber)
+			{
+				m_data[i + j * m_width] = changedTile;
 
-			m_data[i + j * m_width] = changedTile;
+				sf::Vertex* quad = &m_vertices[(i + j * m_width) * 4];
 
-			sf::Vertex* quad = &m_vertices[changedTile * 4];
+				sf::IntRect texrect = m_tileset.texCoords[changedTile];
 
-			sf::IntRect texrect = m_tileset.texCoords[changedTile];
-
-			quad[0].texCoords = sf::Vector2f(texrect.left, texrect.top);
-			quad[1].texCoords = sf::Vector2f(texrect.left + texrect.width, texrect.top);
-			quad[2].texCoords = sf::Vector2f(texrect.left + texrect.width, texrect.top + texrect.height);
-			quad[3].texCoords = sf::Vector2f(texrect.left, texrect.top + texrect.height);
+				quad[0].texCoords = sf::Vector2f(texrect.left, texrect.top);
+				quad[1].texCoords = sf::Vector2f(texrect.left + texrect.width, texrect.top);
+				quad[2].texCoords = sf::Vector2f(texrect.left + texrect.width, texrect.top + texrect.height);
+				quad[3].texCoords = sf::Vector2f(texrect.left, texrect.top + texrect.height);
+			}
 		}
 	}
 }
