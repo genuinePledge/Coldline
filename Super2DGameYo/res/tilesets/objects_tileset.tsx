@@ -25,4 +25,18 @@
    <frame tileid="175" duration="190"/>
   </animation>
  </tile>
+ <tile id="190">
+  <animation>
+   <frame tileid="190" duration="190"/>
+   <frame tileid="206" duration="190"/>
+   <frame tileid="222" duration="190"/>
+  </animation>
+ </tile>
+ <tile id="191">
+  <animation>
+   <frame tileid="191" duration="190"/>
+   <frame tileid="207" duration="190"/>
+   <frame tileid="223" duration="190"/>
+  </animation>
+ </tile>
 </tileset>
