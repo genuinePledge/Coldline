@@ -17,8 +17,9 @@ class AnimationSystem : public IUpdateSystem
 					animation.currentFrame = 0;
 			}
 
-			auto& layer = registry.get<Layer>(animation.entity);
-			layer.updateVertexArray(animation.frames[animation.currentFrame]);
+			auto layer = registry.try_get<Layer>(animation.entity);
+			if (layer)
+				layer->updateVertexArray(animation.frames[animation.currentFrame], animation.frames.size());
 		});
 	}
 };

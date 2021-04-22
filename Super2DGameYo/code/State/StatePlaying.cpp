@@ -125,17 +125,9 @@ void StatePlaying::setupEntities()
 		fixtureDef.restitution = 0.f;
 		fixtureDef.shape = &shape;
 
-		sf::CircleShape circle;
-		circle.setRadius(shape.m_radius * Window::SCALING_FACTOR);
-		circle.setOrigin({ 8.f, 8.f });
-		circle.setFillColor(sf::Color::Transparent);
-		circle.setOutlineColor(sf::Color::Red);
-		circle.setOutlineThickness(0.5f);
-
 		// ASSIGNING COMPONENTS
 		auto& sprite = m_reg.emplace<sf::Sprite>(entity);
 		auto& rigidbody = m_reg.emplace<RigidBody>(entity, bodyDef, fixtureDef);
-		auto& debug = m_reg.emplace<DebugCircle>(entity, circle);
 		m_reg.emplace<Renderable>(entity, 2);
 
 		// SETTING UP COMPONENTS
@@ -195,21 +187,14 @@ void StatePlaying::setupEntities()
 		b2FixtureDef fixtureDef;
 		fixtureDef.shape = &shape;
 
-		sf::RectangleShape rect;
-		rect.setSize({ wall.width, wall.height });
-		rect.setOrigin({ wall.width / 2.f, wall.height / 2.f });
-		rect.setFillColor(sf::Color(0, 255, 0, 120));
-
 		const auto wall_entity = m_reg.create();
 		auto& rigidBody = m_reg.emplace<RigidBody>(wall_entity, wallDef, fixtureDef);
-		auto& debug = m_reg.emplace<DebugRect>(wall_entity, rect);
-
 
 		m_entities.push_back(wall_entity);
 	}
 
 	auto player = m_reg.create();
-	player = createPlayer(m_reg, player, { spawns[0].x, spawns[0].y }, sf::Vector2f(16.f, 16.f), "test_player_16x16");
+	player = createPlayer(m_reg, player, { spawns[0].x, spawns[0].y }, sf::Vector2f(16.f, 16.f), "player_spritesheet");
 
 	m_entities.push_back(player);
 
@@ -235,20 +220,30 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	fixtureDef.density = 1.f;
 	fixtureDef.shape = &shape;
 
-	sf::CircleShape circle;
-	circle.setRadius(Window::SCALING_FACTOR * shape.m_radius);
-	circle.setOrigin(size.x / 2.f, size.y / 2.f);
-	circle.setFillColor(sf::Color::Transparent);
-	circle.setOutlineColor(sf::Color::Blue);
-	circle.setOutlineThickness(0.5f);
-
 	auto& body = reg.emplace<RigidBody>(player, bodyDef, fixtureDef);
 	auto& sprite = reg.emplace<sf::Sprite>(player);
+	auto& sprSheet = reg.emplace<SpriteSheet>(player);
+	auto& animation = reg.emplace<Animation>(player);
 	reg.emplace<Controller>(player);
-	auto& debug = reg.emplace<DebugCircle>(player, circle);
 	reg.emplace<Renderable>(player, 2);
-	
+
+	sprSheet.columns = 3;
+	sprSheet.number_of_frames = 12;
+	sprSheet.frame_size = { 16u, 16u };
+	for (auto i = 0; i < sprSheet.number_of_frames / sprSheet.columns; i++)
+		for (auto j = 0; j < sprSheet.columns; j++)
+			sprSheet.frames.push_back(sf::IntRect(i * sprSheet.frame_size.x,
+									  j * sprSheet.frame_size.y,
+									  sprSheet.frame_size.x,
+									  sprSheet.frame_size.y));
+
+	for (auto i = 0; i < sprSheet.number_of_frames; i++)
+		animation.frames.push_back(i);
+	animation.frameTime = 190;
+	animation.entity = player;
+
 	sprite.setTexture(ResourceManager::get().m_texture.get(texPath));
+	sprite.setTextureRect(sprSheet.frames[0]);
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
 	body.speed = 10.f;
 

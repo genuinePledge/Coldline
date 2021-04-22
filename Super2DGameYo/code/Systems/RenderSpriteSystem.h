@@ -3,6 +3,8 @@
 #include "IUpdateSystem.h"
 #include "../Components/RigidBody.h"
 #include "../Components/Tags.h"
+#include "../Components/SpriteSheet.h"
+#include "../Components/Animation.h"
 
 class UpdateSpriteSystem : public IUpdateSystem
 {
@@ -11,6 +13,11 @@ class UpdateSpriteSystem : public IUpdateSystem
 		registry.view<RigidBody, sf::Sprite>().each([&](auto entity, RigidBody& body, sf::Sprite& sprite)
 		{
 			sprite.setPosition(Locator::MainWindow::ref().worldToScreenPos(body.body->GetPosition()));
+		});
+
+		registry.view<sf::Sprite, Animation, SpriteSheet>().each([&](auto entity, sf::Sprite& sprite, Animation& animation, SpriteSheet& spriteSheet)
+		{
+			sprite.setTextureRect(spriteSheet.frames[animation.currentFrame]);
 		});
 	}
 };
