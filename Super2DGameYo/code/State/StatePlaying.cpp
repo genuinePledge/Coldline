@@ -2,15 +2,17 @@
 
 #include "StateManager.h"
 #include "StateMainMenu.h"
+#include "StatePauseMenu.h"
 
 #include "../Systems/ControllerSystem.h"
 #include "../Systems/MovementSystem.h"
-//#include "../Systems/RenderMapSystem.h"
 #include "../Systems/RenderSpriteSystem.h"
 #include "../Systems/UpdatePhysicsSystem.h"
 #include "../Systems/RenderDebugSystem.h"
 #include "../Systems/AnimationSystem.h"
 #include "../Systems/MapLayerUpdate.h"
+#include "../Systems/ScreenCaptureSystem.h"
+#include "../Systems/TransitionStateSystem.h"
 
 #include "../Components/Renderable.h"
 
@@ -26,8 +28,6 @@ StatePlaying::StatePlaying(StateManager& manager, const char* levelName)
 
 StatePlaying::~StatePlaying()
 {
-	auto& reg = Locator::Registry::ref();
-
 	for (auto& e : m_entities)
 		m_reg.destroy(e);
 
@@ -36,12 +36,11 @@ StatePlaying::~StatePlaying()
 
 void StatePlaying::update(float dt)
 {
-	auto& reg = Locator::Registry::ref();
 	auto& wnd = Locator::MainWindow::ref();
 
 	wnd.get().setView(wnd.getView());
 
-	for (auto const& sys : m_updateSystems)
+	for (auto const& sys : m_update_systems)
 	{
 		sys->update(m_reg, dt);
 	}
@@ -49,30 +48,59 @@ void StatePlaying::update(float dt)
 
 void StatePlaying::render()
 {
-	auto& reg = Locator::Registry::ref();
 	auto& wnd = Locator::MainWindow::ref();
-	for (auto const& sys : m_renderSystems)
+	
+	wnd.get().setView(wnd.getView());
+
+	if (m_paused)
 	{
-		sys->render(m_reg, wnd.get());
+		wnd.get().setView(wnd.get().getDefaultView());
+		for (auto const& sys : m_on_pause_systems)
+			sys->render(m_reg, wnd.get());
+	}
+	else
+	{
+		for (auto const& sys : m_render_systems)
+			sys->render(m_reg, wnd.get());
 	}
 	wnd.get().setView(wnd.get().getDefaultView());
 }
 
-void StatePlaying::handleEvents(sf::Event e)
+void StatePlaying::handle_events(sf::Event e)
 {
+	auto& wnd = Locator::MainWindow::ref();
 	switch (e.type)
 	{
 	case sf::Event::KeyReleased:
 		switch (e.key.code)
 		{
 		case sf::Keyboard::Escape:
-			stateManager->changeState<StateMainMenu>(*stateManager);
+		{
+			// CHANGE SCENE TO PAUSE MENU
+			m_state_manager->pushState<StatePauseMenu>(*m_state_manager);
+
+			// CHECK IF SNAPSHOT EXISTS IF EXISTS DELETE IT 
+			if (m_pause_screen != entt::null)
+				m_entities.erase(std::find(m_entities.begin(), m_entities.end(), m_pause_screen));
+			
+			// CREATE SNAPSHOT ENTITY
+			m_pause_screen = m_reg.create();
+			
+			// CAPTURE WHATEVER IS ON THE SCREEN INTO A TEXTURE
+			sf::Texture texture;
+			texture.create(wnd.get().getSize().x, wnd.get().getSize().y);
+			texture.update(wnd.get());
+			ResourceManager::get().m_texture.save("pause_screen_capture", texture);
+
+			// ASSIGN COMPONENTS TO ENTITY
+			auto& sprite = m_reg.emplace<sf::Sprite>(m_pause_screen, ResourceManager::get().m_texture.get("pause_screen_capture"));
+			m_reg.emplace<PauseTag>(m_pause_screen);
+
+			m_entities.push_back(m_pause_screen);
+		}
 			break;
 		case sf::Keyboard::F1:
 			Window::debugRender = !Window::debugRender;
-			break;
-		case sf::Keyboard::F2:
-			stateManager->changeState<StatePlaying>(*stateManager, "map");
 			break;
 		default:
 			break;
@@ -81,25 +109,28 @@ void StatePlaying::handleEvents(sf::Event e)
 	default:
 		break;
 	}
+
+	
 }
 
 void StatePlaying::initSystems()
 {
-	m_updateSystems.emplace_back(std::make_unique<ControllerSystem>());
-	m_updateSystems.emplace_back(std::make_unique<MovementSystem>());
-	m_updateSystems.emplace_back(std::make_unique<UpdateSpriteSystem>());
-	m_updateSystems.emplace_back(std::make_unique<UpdatePhysicsSystem>());
-	m_updateSystems.emplace_back(std::make_unique<AnimationSystem>());
-	m_updateSystems.emplace_back(std::make_unique<MapLayerUpdate>());
+	m_update_systems.emplace_back(std::make_unique<ControllerSystem>());
+	m_update_systems.emplace_back(std::make_unique<TransitionStateSystem>());
+	m_update_systems.emplace_back(std::make_unique<MovementSystem>());
+	m_update_systems.emplace_back(std::make_unique<UpdateSpriteSystem>());
+	m_update_systems.emplace_back(std::make_unique<UpdatePhysicsSystem>());
+	m_update_systems.emplace_back(std::make_unique<AnimationSystem>());
+	m_update_systems.emplace_back(std::make_unique<MapLayerUpdate>());
 
-	//m_renderSystems.emplace_back(std::make_unique<RenderMapSystem>());
-	m_renderSystems.emplace_back(std::make_unique<RenderSpriteSystem>());
-	m_renderSystems.emplace_back(std::make_unique<RenderDebugSystem>());
+	m_render_systems.emplace_back(std::make_unique<RenderSpriteSystem>());
+	m_render_systems.emplace_back(std::make_unique<RenderDebugSystem>());
+
+	m_on_pause_systems.emplace_back(std::make_unique<ScreenCaptureSystem>());
 }
 
 void StatePlaying::setupEntities()
 {
-	auto& reg = Locator::Registry::ref();
 	auto& map = Locator::MainMap::ref();
 	auto& wnd = Locator::MainWindow::ref();
 
@@ -109,8 +140,10 @@ void StatePlaying::setupEntities()
 
 	for (auto i = 1u; i < spawns.size(); i++)
 	{
+		// CREATING ENTITY
 		const auto entity = m_reg.create();
 
+		// DECLARING BODY
 		b2BodyDef bodyDef;
 		bodyDef.type = b2_dynamicBody;
 		bodyDef.fixedRotation = true;
@@ -131,52 +164,52 @@ void StatePlaying::setupEntities()
 		m_reg.emplace<Renderable>(entity, 5);
 
 		// SETTING UP COMPONENTS
-
 		sprite.setTexture(ResourceManager::get().m_texture.get("enemy"));
 		sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
-
 
 		// PUSHING TO THE CONTAINER OF ALL THE ENTITIES IN THE SCENE
 		m_entities.push_back(entity);
 	}
 
+	for (auto& layer : layers)
 	{
-		for (auto& layer : layers)
+		// CHECK IF THE MAP LAYER IS BACKGROUND TO EXCLUDE IT FROM RENDER PIPELINE
+		if (!std::string("background").compare(layer.getName()))
 		{
-				if (!std::string("background").compare(layer.getName()))
-			{
-				sf::Image img = layer.getTileset().m_texture.copyToImage();
-				Window::clearColor = img.getPixel(layer.getTileset().texCoords[130].left, layer.getTileset().texCoords[130].top);
-				continue;
-			}
-			if (layer.isStatic())
-			{
-				sf::RenderTexture render_texture;
-				render_texture.create(800, 800);
-				render_texture.clear(sf::Color::Transparent);
-				render_texture.draw(layer);
-				render_texture.display();
-				ResourceManager::get().m_texture.save(layer.getName(), render_texture.getTexture());
-				auto const entity = m_reg.create();
-				m_reg.emplace<sf::Sprite>(entity, ResourceManager::get().m_texture.get(layer.getName()));
-				m_reg.emplace<Renderable>(entity, layer.z);
-				m_entities.push_back(entity);
-				continue;
-			}
+			sf::Image img = layer.getTileset().m_texture.copyToImage();
+			Window::clearColor = img.getPixel(layer.getTileset().texCoords[130].left, layer.getTileset().texCoords[130].top);
+			continue;
+		}
+		// CHECK IF THE MAP LAYER IS STATIC IF IT IS CREATING SPRITE OUT OF IT AND PUSH IT TO
+		// THE RENDERING PIPELINE
+		if (layer.isStatic())
+		{
+			sf::RenderTexture render_texture;
+			render_texture.create(800, 800);
+			render_texture.clear(sf::Color::Transparent);
+			render_texture.draw(layer);
+			render_texture.display();
+			ResourceManager::get().m_texture.save(layer.getName(), render_texture.getTexture());
+			auto const entity = m_reg.create();
+			m_reg.emplace<sf::Sprite>(entity, ResourceManager::get().m_texture.get(layer.getName()));
+			m_reg.emplace<Renderable>(entity, layer.z);
+			m_entities.push_back(entity);
+			continue;
+		}
+		// IF ITS DYNAMIC - MARK IT AS DYNAMIC TO LET IT UPDATE EVERY FRAME
+		const auto dynamic_layer = m_reg.create();
+		m_reg.emplace<Layer>(dynamic_layer, layer);
+		m_entities.push_back(dynamic_layer);
 
-			const auto dynamic_layer = m_reg.create();
-			m_reg.emplace<Layer>(dynamic_layer, layer);
-			m_entities.push_back(dynamic_layer);
-
-			auto tileset = layer.getTileset();
-			for (auto& animInfo : tileset.animInfo)
-			{
-				const auto animation = m_reg.create();
-				auto& animComp = m_reg.emplace<Animation>(animation);
-				animComp.frames = animInfo.frames;
-				animComp.frameTime = animInfo.duration;
-				animComp.entity = dynamic_layer;
-			}
+		auto tileset = layer.getTileset();
+		for (auto& animInfo : tileset.animInfo)
+		{
+			const auto animation = m_reg.create();
+			auto& animComp = m_reg.emplace<Animation>(animation);
+			animComp.frames = animInfo.frames;
+			animComp.frameTime = animInfo.duration;
+			animComp.entity = dynamic_layer;
+			animComp.max_frames = animComp.frames.size();
 		}
 	}
 
@@ -204,11 +237,13 @@ void StatePlaying::setupEntities()
 
 	m_entities.push_back(player);
 
+	// SORT ALL RENDER LAYERS (NOT MAP LAYERS) ACCORDING TO THEIR Z-INDEX
 	m_reg.sort<Renderable>([](auto const& l, auto const& r)
 	{
 		return l.z < r.z;
 	});
 
+	// SORT ALL THE SPRITES THE SAME WAY
 	m_reg.sort<sf::Sprite, Renderable>();
 }
 
@@ -232,6 +267,8 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	auto& animation = reg.emplace<Animation>(player);
 	reg.emplace<Controller>(player);
 	reg.emplace<Renderable>(player, 5);
+	reg.emplace<PlayerState>(player);
+	reg.emplace<TransitionStateComponent>(player).transition_logic.connect<&TransitionStateComponent::player>();
 
 	sprSheet.columns = 3;
 	sprSheet.number_of_frames = 12;
