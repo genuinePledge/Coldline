@@ -174,6 +174,7 @@
     <ClCompile Include="code\Map\Map.cpp" />
     <ClCompile Include="code\Gfx\Tileset.cpp" />
     <ClCompile Include="pugixml.cpp" />
+    <ClCompile Include="code\State\StatePauseMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Components\Animation.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="code\Components\RigidBody.h" />
     <ClInclude Include="code\Components\SpriteSheet.h" />
     <ClInclude Include="code\Components\Tags.h" />
+    <ClInclude Include="code\Components\UnitStateMachine.h" />
     <ClInclude Include="code\Gui\Button.h" />
     <ClInclude Include="code\Gui\Label.h" />
     <ClInclude Include="code\Gui\Widget.h" />
@@ -200,8 +202,9 @@
     <ClInclude Include="code\Systems\MapLayerUpdate.h" />
     <ClInclude Include="code\Systems\MovementSystem.h" />
     <ClInclude Include="code\Systems\RenderDebugSystem.h" />
-    <ClInclude Include="code\Systems\RenderMapSystem.h" />
     <ClInclude Include="code\Systems\RenderSpriteSystem.h" />
+    <ClInclude Include="code\Systems\ScreenCaptureSystem.h" />
+    <ClInclude Include="code\Systems\TransitionStateSystem.h" />
     <ClInclude Include="code\Systems\UpdatePhysicsSystem.h" />
     <ClInclude Include="code\Utility\ResourceHolder.h" />
     <ClInclude Include="code\Utility\ResourceManager.h" />
@@ -210,6 +213,7 @@
     <ClInclude Include="code\Map\Map.h" />
     <ClInclude Include="code\Window.h" />
     <ClInclude Include="code\Gfx\Tileset.h" />
+    <ClInclude Include="code\State\StatePauseMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\smol_map.tmx">

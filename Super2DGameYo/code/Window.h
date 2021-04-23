@@ -56,7 +56,7 @@ public:
 
 public:
 	const sf::Vector2<uint16_t> SCREEN_SIZE = { 800, 600 };
-	const float ZOOM_FACTOR = 2.f;
+	float ZOOM_FACTOR = 2.f;
 	static const constexpr float SCALING_FACTOR = 16.f;
 	inline static bool debugRender = true;
 	std::string title = "Coldline. Build ver.0.2. FPS: ";
