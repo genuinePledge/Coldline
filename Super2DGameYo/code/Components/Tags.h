@@ -1,7 +1,5 @@
 #pragma once
 
 
-struct TempTag
-{
-
-};
+struct TempTag { };
+struct PauseTag { };
