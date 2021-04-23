@@ -60,6 +60,7 @@ public:
 	static const constexpr float SCALING_FACTOR = 16.f;
 	inline static bool debugRender = true;
 	std::string title = "Coldline. Build ver.0.2. FPS: ";
+	inline static sf::Color clearColor = sf::Color::Black;
 
 private:
 

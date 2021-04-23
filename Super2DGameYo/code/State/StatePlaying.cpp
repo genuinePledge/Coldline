@@ -128,7 +128,7 @@ void StatePlaying::setupEntities()
 		// ASSIGNING COMPONENTS
 		auto& sprite = m_reg.emplace<sf::Sprite>(entity);
 		auto& rigidbody = m_reg.emplace<RigidBody>(entity, bodyDef, fixtureDef);
-		m_reg.emplace<Renderable>(entity, 2);
+		m_reg.emplace<Renderable>(entity, 5);
 
 		// SETTING UP COMPONENTS
 
@@ -143,6 +143,12 @@ void StatePlaying::setupEntities()
 	{
 		for (auto& layer : layers)
 		{
+				if (!std::string("background").compare(layer.getName()))
+			{
+				sf::Image img = layer.getTileset().m_texture.copyToImage();
+				Window::clearColor = img.getPixel(layer.getTileset().texCoords[130].left, layer.getTileset().texCoords[130].top);
+				continue;
+			}
 			if (layer.isStatic())
 			{
 				sf::RenderTexture render_texture;
@@ -194,7 +200,7 @@ void StatePlaying::setupEntities()
 	}
 
 	auto player = m_reg.create();
-	player = createPlayer(m_reg, player, { spawns[0].x, spawns[0].y }, sf::Vector2f(16.f, 16.f), "player_spritesheet");
+	player = createPlayer(m_reg, player, { spawns[0].x, spawns[0].y }, sf::Vector2f(16.f, 16.f), "player_spritesheet_legs");
 
 	m_entities.push_back(player);
 
@@ -225,26 +231,27 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	auto& sprSheet = reg.emplace<SpriteSheet>(player);
 	auto& animation = reg.emplace<Animation>(player);
 	reg.emplace<Controller>(player);
-	reg.emplace<Renderable>(player, 2);
+	reg.emplace<Renderable>(player, 5);
 
 	sprSheet.columns = 3;
 	sprSheet.number_of_frames = 12;
 	sprSheet.frame_size = { 16u, 16u };
 	for (auto i = 0; i < sprSheet.number_of_frames / sprSheet.columns; i++)
 		for (auto j = 0; j < sprSheet.columns; j++)
-			sprSheet.frames.push_back(sf::IntRect(i * sprSheet.frame_size.x,
-									  j * sprSheet.frame_size.y,
+			sprSheet.frames.push_back(sf::IntRect(j * sprSheet.frame_size.x,
+									  i * sprSheet.frame_size.y,
 									  sprSheet.frame_size.x,
 									  sprSheet.frame_size.y));
 
 	for (auto i = 0; i < sprSheet.number_of_frames; i++)
 		animation.frames.push_back(i);
-	animation.frameTime = 190;
+	animation.frameTime = 90;
 	animation.entity = player;
 
 	sprite.setTexture(ResourceManager::get().m_texture.get(texPath));
 	sprite.setTextureRect(sprSheet.frames[0]);
 	sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
+	sprite.setScale(1.f, 1.f);
 	body.speed = 10.f;
 
 	auto& window = Locator::MainWindow::ref();

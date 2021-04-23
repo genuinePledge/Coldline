@@ -42,7 +42,7 @@ void Game::run()
 		
 		m_stateManager.update((float)delta);
 
-		Locator::MainWindow::ref().get().clear();
+		Locator::MainWindow::ref().get().clear(Window::clearColor);
 
 		m_stateManager.render();
 
