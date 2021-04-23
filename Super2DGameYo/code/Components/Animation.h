@@ -8,5 +8,6 @@ struct Animation
 	int frameTime = 0;
 	std::vector<int> frames;
 	int currentFrame = 0;
+	int max_frames = 0;
 	entt::entity entity = entt::null;
 };
