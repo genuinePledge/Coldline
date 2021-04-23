@@ -8,10 +8,10 @@ public:
 	StateMainMenu(StateManager& manager);
 	~StateMainMenu();
 
-	virtual void handleEvents(sf::Event e);
+	virtual void handle_events(sf::Event e);
 
 private:
-	void initSystems() override;
+	void initSystems()   override;
 	void setupEntities() override;
 	
 	std::vector<std::unique_ptr<gui::Button>> m_buttons;

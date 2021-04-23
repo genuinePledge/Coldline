@@ -15,20 +15,18 @@ StateMainMenu::StateMainMenu(StateManager& manager)
 
 StateMainMenu::~StateMainMenu()
 {
-	auto& reg = Locator::Registry::ref();
 	for (auto& e : m_entities)
 		m_reg.destroy(e);
 }
 
 
-void StateMainMenu::handleEvents(sf::Event e)
+void StateMainMenu::handle_events(sf::Event e)
 {
-	auto& reg = Locator::Registry::ref();
 	switch (e.type)
 	{
 	case sf::Event::KeyReleased:
 		if (e.key.code == sf::Keyboard::Escape)
-			stateManager->quitGame();
+			m_state_manager->quitGame();
 		break;
 	default:
 		break;
@@ -37,34 +35,20 @@ void StateMainMenu::handleEvents(sf::Event e)
 
 void StateMainMenu::initSystems()
 {
-	m_renderSystems.emplace_back(std::make_unique<RenderSpriteSystem>());
-	m_updateSystems.emplace_back(std::make_unique<MenuUpdateSystem>());
+	m_render_systems.emplace_back(std::make_unique<RenderSpriteSystem>());
+	m_update_systems.emplace_back(std::make_unique<MenuUpdateSystem>());
 }
 
 void StateMainMenu::setupEntities()
 {
 	Window::clearColor = sf::Color::Black;
 
-	// PLAY BUTTON
-	/*{
-		auto [entity, playButton] = gui::createButton(m_reg);
-
-		playButton->init(ResourceManager::get().m_texture.get("widgets/play"));
-		playButton->setPosition(350.f, 386.f);
-		playButton->setAction([&]() { stateManager->changeState<StatePlaying>(*stateManager, "map"); });
-		auto duplicate = std::make_shared<gui::Button>(*playButton);
-		playButton->setOnHover([=]() { duplicate->setTexure(ResourceManager::get().m_texture.get("SELECTED_play")); });
-		playButton->setOnHoverEscape([=]() { duplicate->setTexure(ResourceManager::get().m_texture.get("widgets/play")); });
-		m_entities.push_back(entity);
-	}*/
-
-
 	// (DEBUG) MAP LARGE BUTTON
 	{
 		auto [entity, mapLarge] = gui::createButton(m_reg);
 		mapLarge->init(ResourceManager::get().m_texture.get("widgets/buttons/maplarge"), m_reg);
 		mapLarge->setPosition(m_reg, 351.f, 347.f);
-		mapLarge->setAction([&]() { stateManager->changeState<StatePlaying>(*stateManager, "test_map3"); }, m_reg);
+		mapLarge->setAction([&]() { m_state_manager->changeState<StatePlaying>(*m_state_manager, "test_map3"); }, m_reg);
 		auto duplicate = std::make_shared<gui::Button>(*mapLarge);
 		mapLarge->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/SELECTED_maplarge"), m_reg); }, m_reg);
 		mapLarge->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/maplarge"), m_reg); }, m_reg);
@@ -76,7 +60,7 @@ void StateMainMenu::setupEntities()
 		auto [entity, mapSmall] = gui::createButton(m_reg);
 		mapSmall->init(ResourceManager::get().m_texture.get("widgets/buttons/mapsmall"), m_reg);
 		mapSmall->setPosition(m_reg, 351.f, 402.f);
-		mapSmall->setAction([&]() { stateManager->changeState<StatePlaying>(*stateManager, "map"); }, m_reg);
+		mapSmall->setAction([&]() { m_state_manager->changeState<StatePlaying>(*m_state_manager, "map"); }, m_reg);
 		auto duplicate = std::make_shared<gui::Button>(*mapSmall);
 		mapSmall->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/SELECTED_mapsmall"), m_reg); }, m_reg);
 		mapSmall->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/mapsmall"), m_reg); }, m_reg);
@@ -89,7 +73,7 @@ void StateMainMenu::setupEntities()
 		auto [entity, exitButton] = gui::createButton(m_reg);
 		exitButton->init(ResourceManager::get().m_texture.get("widgets/buttons/exit"), m_reg);
 		exitButton->setPosition(m_reg, 351.f, 457.f);
-		exitButton->setAction([&]() { stateManager->quitGame(); }, m_reg);
+		exitButton->setAction([&]() { m_state_manager->quitGame(); }, m_reg);
 		auto duplicate = std::make_shared<gui::Button>(*exitButton);
 		exitButton->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/SELECTED_exit"), m_reg); }, m_reg);
 		exitButton->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/exit"), m_reg); }, m_reg);

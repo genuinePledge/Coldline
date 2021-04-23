@@ -3,8 +3,8 @@
 #include "../Locator.h"
 
 StateBase::StateBase(StateManager& manager)
-	: stateManager(&manager)
-	, paused(false)
+	: m_state_manager(&manager)
+	, m_paused(false)
 {
 }
 
@@ -16,7 +16,7 @@ void StateBase::init()
 
 void StateBase::update(float delta)
 {
-	for (auto const& sys : m_updateSystems)
+	for (auto const& sys : m_update_systems)
 	{
 		sys->update(m_reg, delta);
 	}
@@ -25,7 +25,7 @@ void StateBase::update(float delta)
 void StateBase::render()
 {
 	auto& wnd = Locator::MainWindow::ref();
-	for (auto const& sys : m_renderSystems)
+	for (auto const& sys : m_render_systems)
 	{
 		sys->render(m_reg, wnd.get());
 	}
@@ -33,15 +33,15 @@ void StateBase::render()
 
 void StateBase::pause()
 {
-	paused = true;
+	m_paused = true;
 }
 
 void StateBase::resume()
 {
-	paused = false;
+	m_paused = false;
 }
 
 bool StateBase::isPaused()
 {
-	return paused;
+	return m_paused;
 }

@@ -8,11 +8,12 @@ public:
 	StatePlaying(const StatePlaying&) = delete;
 	~StatePlaying();
 
-	virtual void update(float dt) override;
-	virtual void render() override;
-	virtual void handleEvents(sf::Event e) override;
+	virtual void update(float dt)		    override;
+	virtual void render()				    override;
+	virtual void handle_events(sf::Event e) override;
+
 private:
-	void initSystems() override;
+	void initSystems()	 override;
 	void setupEntities() override;
 	entt::entity& createPlayer(entt::registry& reg, entt::entity& player, sf::Vector2f pos, sf::Vector2f size, const std::string& texPath);
 };

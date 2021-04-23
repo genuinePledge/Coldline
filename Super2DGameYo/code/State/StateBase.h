@@ -14,7 +14,7 @@ public:
 
 	virtual void update(float delta);
 	virtual void render();
-	virtual void handleEvents(sf::Event e) = 0;
+	virtual void handle_events(sf::Event e) = 0;
 
 	virtual void pause();
 	virtual void resume();
@@ -26,10 +26,15 @@ protected:
 	virtual void setupEntities() = 0;
 
 protected:
-	bool paused;
-	StateManager* stateManager;
-	std::vector<std::unique_ptr<IRenderSystem>> m_renderSystems;
-	std::vector<std::unique_ptr<IUpdateSystem>> m_updateSystems;
+	StateManager* m_state_manager;
+
+	std::vector<std::unique_ptr<IRenderSystem>> m_render_systems;
+	std::vector<std::unique_ptr<IRenderSystem>> m_on_pause_systems;
+	std::vector<std::unique_ptr<IUpdateSystem>> m_update_systems;
 	std::vector<entt::entity> m_entities;
+	entt::entity m_pause_screen = entt::null;
+
 	entt::basic_registry<entt::entity> m_reg;
+
+	bool m_paused;
 };
