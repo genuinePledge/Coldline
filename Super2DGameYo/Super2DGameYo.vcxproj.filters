@@ -125,7 +125,7 @@
     <ClInclude Include="code\Components\ButtonStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Systems\MainMenuInputSystem.h">
+    <ClInclude Include="code\Systems\MenuUpdateSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Gui\Widget.h">

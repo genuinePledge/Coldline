@@ -196,7 +196,7 @@
     <ClInclude Include="code\Systems\ControllerSystem.h" />
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
-    <ClInclude Include="code\Systems\MainMenuInputSystem.h" />
+    <ClInclude Include="code\Systems\MenuUpdateSystem.h" />
     <ClInclude Include="code\Systems\MapLayerUpdate.h" />
     <ClInclude Include="code\Systems\MovementSystem.h" />
     <ClInclude Include="code\Systems\RenderDebugSystem.h" />
