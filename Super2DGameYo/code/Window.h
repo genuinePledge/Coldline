@@ -9,6 +9,9 @@ public:
 		: m_window(sf::VideoMode(SCREEN_SIZE.x, SCREEN_SIZE.y), title, (fullscreen ? sf::Style::Fullscreen : sf::Style::Default))
 	{
 		m_window.setVerticalSyncEnabled(true);
+		sf::Cursor cursor;
+		if (cursor.loadFromSystem(sf::Cursor::Cross))
+			m_window.setMouseCursor(cursor);
 	}
 	bool update()
 	{
