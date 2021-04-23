@@ -10,12 +10,16 @@ StateManager::~StateManager()
 
 void StateManager::popState()
 {
-	m_action.type = Action::Type::Pop;
+	std::unique_ptr<Action> action = std::make_unique<Action>();
+	action->type = Action::Type::Pop;
+	m_action.emplace_back(std::move(action));
 }
 
 void StateManager::quitGame()
 {
-	m_action.type = Action::Type::Quit;
+	std::unique_ptr<Action> action = std::make_unique<Action>();
+	action->type = Action::Type::Quit;
+	m_action.emplace_back(std::move(action));
 }
 
 void StateManager::update(float delta)
@@ -40,7 +44,7 @@ void StateManager::handleEvents(sf::Event e)
 	{
 		if (state->isPaused())
 			continue;
-		state->handleEvents(e);
+		state->handle_events(e);
 	}
 }
 
@@ -51,34 +55,37 @@ StateBase& StateManager::getCurrentState()
 
 void StateManager::updateStates()
 {
-	switch (m_action.type)
+	for (auto& action : m_action)
 	{
-	case Action::Type::Push:
-		if (!m_states.empty())
-			m_states.back()->pause();
-		m_states.emplace_back(std::move(m_action.state));
-		m_action.type = Action::Type::None;
-		break;
+		switch (action->type)
+		{
+		case Action::Type::Push:
+			if (!m_states.empty())
+				m_states.back()->pause();
+			m_states.emplace_back(std::move(action->state));
+			action->type = Action::Type::None;
+			break;
 
-	case Action::Type::Change:
-		m_states.pop_back();
-		m_states.emplace_back(std::move(m_action.state));
-		m_action.type = Action::Type::None;
-		break;
+		case Action::Type::Change:
+			m_states.pop_back();
+			m_states.emplace_back(std::move(action->state));
+			action->type = Action::Type::None;
+			break;
 
-	case Action::Type::Pop:
-		m_states.pop_back();
-		if (!m_states.empty())
-			m_states.back()->resume();
-		m_action.type = Action::Type::None;
-		break;
+		case Action::Type::Pop:
+			m_states.pop_back();
+			if (!m_states.empty())
+				m_states.back()->resume();
+			action->type = Action::Type::None;
+			break;
 
-	case Action::Type::Quit:
-		m_states.clear();
-		break;
+		case Action::Type::Quit:
+			m_states.clear();
+			break;
 
-	default:
-		break;
+		default:
+			break;
+		}
 	}
 }
 
