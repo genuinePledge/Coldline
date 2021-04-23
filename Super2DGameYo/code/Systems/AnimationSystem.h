@@ -13,7 +13,7 @@ class AnimationSystem : public IUpdateSystem
 			{
 				animation.elapsed = 0.f;
 				animation.currentFrame++;
-				if (animation.currentFrame >= animation.frames.size())
+				if (animation.currentFrame >= animation.max_frames)
 					animation.currentFrame = 0;
 			}
 
