@@ -26,7 +26,7 @@ class RenderSpriteSystem : public IRenderSystem
 {
 	virtual void render(entt::registry& registry, sf::RenderTarget& target) override
 	{
-		auto view = registry.view<sf::Sprite>();
+		auto view = registry.view<sf::Sprite>(entt::exclude<PauseTag>);
 
 		for (auto entity : view)
 		{
