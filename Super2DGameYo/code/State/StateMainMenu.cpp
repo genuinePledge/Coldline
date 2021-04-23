@@ -5,7 +5,7 @@
 #include "../Gui/Button.h"
 #include "../Gui/Label.h"
 #include "../Systems/RenderSpriteSystem.h"
-#include "../Systems/MainMenuInputSystem.h"
+#include "../Systems/MenuUpdateSystem.h"
 
 StateMainMenu::StateMainMenu(StateManager& manager)
 	: StateBase(manager)
@@ -38,11 +38,12 @@ void StateMainMenu::handleEvents(sf::Event e)
 void StateMainMenu::initSystems()
 {
 	m_renderSystems.emplace_back(std::make_unique<RenderSpriteSystem>());
-	m_updateSystems.emplace_back(std::make_unique<MainMenuInputSystem>());
+	m_updateSystems.emplace_back(std::make_unique<MenuUpdateSystem>());
 }
 
 void StateMainMenu::setupEntities()
 {
+	Window::clearColor = sf::Color::Black;
 
 	// PLAY BUTTON
 	/*{
