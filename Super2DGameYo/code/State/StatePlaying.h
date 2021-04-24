@@ -1,5 +1,6 @@
 #pragma once
 #include "StateBase.h"
+#include "../ContactListener.h"
 
 class StatePlaying : public StateBase
 {
@@ -16,4 +17,6 @@ private:
 	void initSystems()	 override;
 	void setupEntities() override;
 	entt::entity& createPlayer(entt::registry& reg, entt::entity& player, sf::Vector2f pos, sf::Vector2f size, const std::string& texPath);
+
+	ContactListener listener;
 };

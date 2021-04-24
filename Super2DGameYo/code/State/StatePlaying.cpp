@@ -13,23 +13,32 @@
 #include "../Systems/MapLayerUpdate.h"
 #include "../Systems/ScreenCaptureSystem.h"
 #include "../Systems/TransitionStateSystem.h"
+#include "../Systems/CombatSystem.h"
+#include "../Systems/LifeTimeSystem.h"
+#include "../Systems/CollisionResponseSystem.h"
+#include "../Systems/HealthSystem.h"
 
 #include "../Components/Renderable.h"
+
+#include "../ContactListener.h"
 
 #include "../Locator.h"
 
 
 StatePlaying::StatePlaying(StateManager& manager, const char* levelName)
 	: StateBase(manager)
+	, listener(m_reg)
 {
 	Locator::MainMap::set("res/maps/" + std::string(levelName) + ".tmx");
+	Locator::Physics::ref().SetContactListener(&listener);
 	init();
 }
 
 StatePlaying::~StatePlaying()
 {
 	for (auto& e : m_entities)
-		m_reg.destroy(e);
+		if (m_reg.valid(e))
+			m_reg.destroy(e);
 
 	Locator::MainMap::reset();
 }
@@ -116,10 +125,14 @@ void StatePlaying::handle_events(sf::Event e)
 void StatePlaying::initSystems()
 {
 	m_update_systems.emplace_back(std::make_unique<ControllerSystem>());
+	m_update_systems.emplace_back(std::make_unique<CombatSystem>());
+	//m_update_systems.emplace_back(std::make_unique<LifeTimeSystem>());
 	m_update_systems.emplace_back(std::make_unique<TransitionStateSystem>());
 	m_update_systems.emplace_back(std::make_unique<MovementSystem>());
 	m_update_systems.emplace_back(std::make_unique<UpdateSpriteSystem>());
 	m_update_systems.emplace_back(std::make_unique<UpdatePhysicsSystem>());
+	m_update_systems.emplace_back(std::make_unique<CollisionResponseSystem>());
+	m_update_systems.emplace_back(std::make_unique<HealthSystem>());
 	m_update_systems.emplace_back(std::make_unique<AnimationSystem>());
 	m_update_systems.emplace_back(std::make_unique<MapLayerUpdate>());
 
@@ -148,6 +161,9 @@ void StatePlaying::setupEntities()
 		bodyDef.type = b2_dynamicBody;
 		bodyDef.fixedRotation = true;
 		bodyDef.position = wnd.screenToWorldPos({ spawns[i].x, spawns[i].y });
+		b2BodyUserData data;
+		data.pointer = static_cast<uintptr_t>(entity);
+		bodyDef.userData = data;
 
 		b2CircleShape shape;
 		shape.m_radius = wnd.getWorldSize({8.f, 8.f}).x;
@@ -157,11 +173,15 @@ void StatePlaying::setupEntities()
 		fixtureDef.friction = 0.f;
 		fixtureDef.restitution = 0.f;
 		fixtureDef.shape = &shape;
+		fixtureDef.filter.categoryBits = static_cast<uint16>(CollisionMasks::ENEMY);
 
 		// ASSIGNING COMPONENTS
 		auto& sprite = m_reg.emplace<sf::Sprite>(entity);
 		auto& rigidbody = m_reg.emplace<RigidBody>(entity, bodyDef, fixtureDef);
 		m_reg.emplace<Renderable>(entity, 5);
+		m_reg.emplace<CollisionResponse>(entity).response.connect<&CollisionResponse::enemy>();
+		m_reg.emplace<CollisionCallbackData>(entity);
+		m_reg.emplace<Health>(entity, 1.f, 1.f);
 
 		// SETTING UP COMPONENTS
 		sprite.setTexture(ResourceManager::get().m_texture.get("enemy"));
@@ -216,17 +236,21 @@ void StatePlaying::setupEntities()
 
 	for (auto const& wall : colliders)
 	{
+		const auto wall_entity = m_reg.create();
 		b2BodyDef wallDef;
 		wallDef.type = b2_staticBody;
 		wallDef.position = { (wall.left + wall.width / 2.f) / Window::SCALING_FACTOR, (wall.top + wall.height / 2.f) / Window::SCALING_FACTOR };
+		b2BodyUserData data;
+		data.pointer = static_cast<uintptr_t>(wall_entity);
+		wallDef.userData = data;
 
 		b2PolygonShape shape;
 		shape.SetAsBox(wall.width / 2 / Window::SCALING_FACTOR, wall.height / 2 / Window::SCALING_FACTOR);
 
 		b2FixtureDef fixtureDef;
 		fixtureDef.shape = &shape;
+		fixtureDef.filter.categoryBits = static_cast<uint16>(CollisionMasks::STATIC);
 
-		const auto wall_entity = m_reg.create();
 		auto& rigidBody = m_reg.emplace<RigidBody>(wall_entity, wallDef, fixtureDef);
 
 		m_entities.push_back(wall_entity);
@@ -253,6 +277,9 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position = Locator::MainWindow::ref().screenToWorldPos(pos);
 	bodyDef.fixedRotation = true;
+	b2BodyUserData data;
+	data.pointer = static_cast<uintptr_t>(player);
+	bodyDef.userData = data;
 
 	b2CircleShape shape;
 	shape.m_radius = Locator::MainWindow::ref().getWorldSize(size / 2.f).x;
@@ -260,16 +287,22 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	b2FixtureDef fixtureDef;
 	fixtureDef.density = 1.f;
 	fixtureDef.shape = &shape;
+	fixtureDef.filter.categoryBits = static_cast<uint16>(CollisionMasks::PLAYER);
 
 	auto& body = reg.emplace<RigidBody>(player, bodyDef, fixtureDef);
 	auto& sprite = reg.emplace<sf::Sprite>(player);
 	auto& sprSheet = reg.emplace<SpriteSheet>(player);
 	auto& animation = reg.emplace<Animation>(player);
+	auto& shooter = reg.emplace<ProjectileEmitter>(player);
 	reg.emplace<Controller>(player);
 	reg.emplace<Renderable>(player, 5);
 	reg.emplace<PlayerState>(player);
 	reg.emplace<TransitionStateComponent>(player).transition_logic.connect<&TransitionStateComponent::player>();
+	reg.emplace<CollisionResponse>(player).response.connect<&CollisionResponse::player>();
+	reg.emplace<CollisionCallbackData>(player);
+	reg.emplace<Health>(player, 1.f, 1.f);
 
+	shooter.delay = 100.f;
 	sprSheet.columns = 3;
 	sprSheet.number_of_frames = 12;
 	sprSheet.frame_size = { 16u, 16u };
