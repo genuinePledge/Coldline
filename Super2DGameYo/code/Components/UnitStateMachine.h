@@ -6,8 +6,7 @@ struct PlayerState
 	enum class State
 	{
 		Standing,
-		Walking,
-		Attacking
+		Walking
 	} state = State::Standing;
 };
 
@@ -83,10 +82,6 @@ struct TransitionStateComponent
 			}
 		}
 			break;
-
-		case PlayerState::State::Attacking:
-			break;
-
 		default:
 			break;
 		}
