@@ -179,12 +179,17 @@
   <ItemGroup>
     <ClInclude Include="code\Components\Animation.h" />
     <ClInclude Include="code\Components\ButtonStates.h" />
+    <ClInclude Include="code\Components\CollisionResponse.h" />
     <ClInclude Include="code\Components\ControllerComponent.h" />
+    <ClInclude Include="code\Components\Health.h" />
+    <ClInclude Include="code\Components\LifeTime.h" />
+    <ClInclude Include="code\Components\ProjectileEmitter.h" />
     <ClInclude Include="code\Components\Renderable.h" />
     <ClInclude Include="code\Components\RigidBody.h" />
     <ClInclude Include="code\Components\SpriteSheet.h" />
     <ClInclude Include="code\Components\Tags.h" />
     <ClInclude Include="code\Components\UnitStateMachine.h" />
+    <ClInclude Include="code\ContactListener.h" />
     <ClInclude Include="code\Gui\Button.h" />
     <ClInclude Include="code\Gui\Label.h" />
     <ClInclude Include="code\Gui\Widget.h" />
@@ -195,9 +200,13 @@
     <ClInclude Include="code\State\StateManager.h" />
     <ClInclude Include="code\State\StatePlaying.h" />
     <ClInclude Include="code\Systems\AnimationSystem.h" />
+    <ClInclude Include="code\Systems\CollisionResponseSystem.h" />
+    <ClInclude Include="code\Systems\CombatSystem.h" />
     <ClInclude Include="code\Systems\ControllerSystem.h" />
+    <ClInclude Include="code\Systems\HealthSystem.h" />
     <ClInclude Include="code\Systems\IRenderSystem.h" />
     <ClInclude Include="code\Systems\IUpdateSystem.h" />
+    <ClInclude Include="code\Systems\LifeTimeSystem.h" />
     <ClInclude Include="code\Systems\MenuUpdateSystem.h" />
     <ClInclude Include="code\Systems\MapLayerUpdate.h" />
     <ClInclude Include="code\Systems\MovementSystem.h" />
