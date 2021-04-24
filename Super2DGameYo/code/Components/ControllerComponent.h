@@ -9,4 +9,8 @@ struct Controller
 		fast,
 		normal
 	} speed_type = SpeedType::normal;
+	sf::Vector2f mouse_pos{ 0.f, 0.f };
+
+	// TEMPORARY
+	bool is_shooting = false;
 };
