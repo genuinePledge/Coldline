@@ -302,7 +302,7 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	reg.emplace<CollisionCallbackData>(player);
 	reg.emplace<Health>(player, 1.f, 1.f);
 
-	shooter.delay = 100.f;
+	shooter.delay = 500.f;
 	sprSheet.columns = 3;
 	sprSheet.number_of_frames = 12;
 	sprSheet.frame_size = { 16u, 16u };

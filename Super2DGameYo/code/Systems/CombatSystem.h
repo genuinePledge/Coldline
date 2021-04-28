@@ -19,12 +19,13 @@ class CombatSystem : public IUpdateSystem
 		{
 			auto&& [controller, gat, rigidbody] = view.get(entity);
 
-			if (!controller.is_shooting)
-				continue;
-
 			gat.current_time += dt;
 			if (gat.current_time < gat.delay)
 				continue;
+
+			if (!controller.is_shooting)
+				continue;
+
 
 			gat.current_time = 0.f;
 
@@ -41,6 +42,7 @@ class CombatSystem : public IUpdateSystem
 			b2BodyUserData data;
 			data.pointer = static_cast<uintptr_t>(bullet);
 			bodyDef.userData = data;
+			bodyDef.bullet = true;
 
 			sf::Sprite sprite(ResourceManager::get().m_texture.get("bullet"));
 			const auto tex_size = 0.5f * static_cast<sf::Vector2f>(sprite.getTexture()->getSize());
@@ -79,7 +81,7 @@ class CombatSystem : public IUpdateSystem
 			// SORT ALL THE SPRITES THE SAME WAY
 			reg.sort<sf::Sprite, Renderable>();
 
-			bullet_body.body->ApplyForceToCenter(100.f * direction, true);
+			bullet_body.body->ApplyForceToCenter(500.f * direction, true);
 		}
 	}
 };
