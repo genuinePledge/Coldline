@@ -71,6 +71,7 @@ class CombatSystem : public IUpdateSystem
 			reg.emplace<sf::Sprite>(bullet, sprite);
 			reg.emplace<CollisionResponse>(bullet).response.connect<&CollisionResponse::projectile>();
 			reg.emplace<CollisionCallbackData>(bullet);
+			reg.emplace<LifeTime>(bullet, 0.f, 5000.f);
 
 			// SORT ALL RENDER LAYERS (NOT MAP LAYERS) ACCORDING TO THEIR Z-INDEX
 			reg.sort<Renderable>([](auto const& l, auto const& r)

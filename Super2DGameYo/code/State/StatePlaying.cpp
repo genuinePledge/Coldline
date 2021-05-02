@@ -126,7 +126,7 @@ void StatePlaying::initSystems()
 {
 	m_update_systems.emplace_back(std::make_unique<ControllerSystem>());
 	m_update_systems.emplace_back(std::make_unique<CombatSystem>());
-	//m_update_systems.emplace_back(std::make_unique<LifeTimeSystem>());
+	m_update_systems.emplace_back(std::make_unique<LifeTimeSystem>());
 	m_update_systems.emplace_back(std::make_unique<TransitionStateSystem>());
 	m_update_systems.emplace_back(std::make_unique<MovementSystem>());
 	m_update_systems.emplace_back(std::make_unique<UpdateSpriteSystem>());
