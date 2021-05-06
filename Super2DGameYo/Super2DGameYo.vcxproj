@@ -191,6 +191,7 @@
     <ClInclude Include="code\Components\SpriteSheet.h" />
     <ClInclude Include="code\Components\Tags.h" />
     <ClInclude Include="code\Components\UnitStateMachine.h" />
+    <ClInclude Include="code\Components\WinCondition.h" />
     <ClInclude Include="code\ContactListener.h" />
     <ClInclude Include="code\Gui\Button.h" />
     <ClInclude Include="code\Gui\Label.h" />
@@ -219,6 +220,7 @@
     <ClInclude Include="code\Systems\ScreenCaptureSystem.h" />
     <ClInclude Include="code\Systems\TransitionStateSystem.h" />
     <ClInclude Include="code\Systems\UpdatePhysicsSystem.h" />
+    <ClInclude Include="code\Systems\WinConditionSystem.h" />
     <ClInclude Include="code\Utility\ResourceHolder.h" />
     <ClInclude Include="code\Utility\ResourceManager.h" />
     <ClInclude Include="code\Utility\Utility.h" />

@@ -212,6 +212,12 @@
     <ClInclude Include="code\State\StateWin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="code\Systems\WinConditionSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Components\WinCondition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\smol_map.tmx" />
