@@ -18,7 +18,8 @@ StatePauseMenu::StatePauseMenu(StateManager& stateManager)
 StatePauseMenu::~StatePauseMenu()
 {
 	for (auto& e : m_entities)
-		m_reg.destroy(e);
+		if (m_reg.valid(e))
+			m_reg.destroy(e);
 }
 
 void StatePauseMenu::update(float dt)
@@ -70,7 +71,7 @@ void StatePauseMenu::setupEntities()
 	//resume
 	{
 		auto [entity, resume] = gui::createButton(m_reg);
-		resume->init(ResourceManager::get().m_texture.get("widgets/buttons/resume"), m_reg);
+		resume->init(ResourceManager::get().m_texture.get("widgets/buttons/pause_menu/resume"), m_reg);
 		resume->setPosition(m_reg, 309.f, 235.f);
 		resume->setAction([&]() {m_state_manager->popState(); }, m_reg);
 		resume->setOnHover([]() {}, m_reg);
@@ -81,7 +82,7 @@ void StatePauseMenu::setupEntities()
 	//exit to main menu
 	{
 		auto [entity, exit] = gui::createButton(m_reg);
-		exit->init(ResourceManager::get().m_texture.get("widgets/buttons/mainmenu"), m_reg);
+		exit->init(ResourceManager::get().m_texture.get("widgets/buttons/pause_menu/mainmenu"), m_reg);
 		exit->setPosition(m_reg, 309.f, 305.f);
 		exit->setAction([&]() { m_state_manager->popState(); m_state_manager->changeState<StateMainMenu>(*m_state_manager); }, m_reg);
 		exit->setOnHover([]() {}, m_reg);
