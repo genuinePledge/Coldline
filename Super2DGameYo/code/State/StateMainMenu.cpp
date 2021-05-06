@@ -46,24 +46,24 @@ void StateMainMenu::setupEntities()
 	// (DEBUG) MAP LARGE BUTTON
 	{
 		auto [entity, mapLarge] = gui::createButton(m_reg);
-		mapLarge->init(ResourceManager::get().m_texture.get("widgets/buttons/maplarge"), m_reg);
+		mapLarge->init(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/maplarge"), m_reg);
 		mapLarge->setPosition(m_reg, 351.f, 347.f);
 		mapLarge->setAction([&]() { m_state_manager->changeState<StatePlaying>(*m_state_manager, "test_map3"); }, m_reg);
 		auto duplicate = std::make_shared<gui::Button>(*mapLarge);
-		mapLarge->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/SELECTED_maplarge"), m_reg); }, m_reg);
-		mapLarge->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/maplarge"), m_reg); }, m_reg);
+		mapLarge->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/SELECTED_maplarge"), m_reg); }, m_reg);
+		mapLarge->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/maplarge"), m_reg); }, m_reg);
 		m_entities.push_back(entity);
 	}
 	
 	// (DEBUG) MAP SMALL
 	{
 		auto [entity, mapSmall] = gui::createButton(m_reg);
-		mapSmall->init(ResourceManager::get().m_texture.get("widgets/buttons/mapsmall"), m_reg);
+		mapSmall->init(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/mapsmall"), m_reg);
 		mapSmall->setPosition(m_reg, 351.f, 402.f);
 		mapSmall->setAction([&]() { m_state_manager->changeState<StatePlaying>(*m_state_manager, "map"); }, m_reg);
 		auto duplicate = std::make_shared<gui::Button>(*mapSmall);
-		mapSmall->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/SELECTED_mapsmall"), m_reg); }, m_reg);
-		mapSmall->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/mapsmall"), m_reg); }, m_reg);
+		mapSmall->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/SELECTED_mapsmall"), m_reg); }, m_reg);
+		mapSmall->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/mapsmall"), m_reg); }, m_reg);
 		m_entities.push_back(entity);
 	}
 
@@ -71,19 +71,19 @@ void StateMainMenu::setupEntities()
 	// EXIT BUTTON
 	{
 		auto [entity, exitButton] = gui::createButton(m_reg);
-		exitButton->init(ResourceManager::get().m_texture.get("widgets/buttons/exit"), m_reg);
+		exitButton->init(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/exit"), m_reg);
 		exitButton->setPosition(m_reg, 351.f, 457.f);
 		exitButton->setAction([&]() { m_state_manager->quitGame(); }, m_reg);
 		auto duplicate = std::make_shared<gui::Button>(*exitButton);
-		exitButton->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/SELECTED_exit"), m_reg); }, m_reg);
-		exitButton->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/exit"), m_reg); }, m_reg);
+		exitButton->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/SELECTED_exit"), m_reg); }, m_reg);
+		exitButton->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/exit"), m_reg); }, m_reg);
 		m_entities.push_back(entity);
 	}
 
 	// LOGO
 	{
 		auto [entity, logo] = gui::createLabel(m_reg);
-		logo->init(ResourceManager::get().m_texture.get("widgets/labels/logo"), m_reg);
+		logo->init(ResourceManager::get().m_texture.get("widgets/labels/main_menu/logo"), m_reg);
 		logo->setPosition(m_reg, 85.f, 102.f);
 		m_entities.push_back(entity);
 	}
