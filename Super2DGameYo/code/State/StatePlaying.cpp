@@ -2,6 +2,7 @@
 
 #include "StateManager.h"
 #include "StateMainMenu.h"
+#include "StateWin.h"
 #include "StatePauseMenu.h"
 
 #include "../Systems/ControllerSystem.h"
@@ -17,6 +18,7 @@
 #include "../Systems/LifeTimeSystem.h"
 #include "../Systems/CollisionResponseSystem.h"
 #include "../Systems/HealthSystem.h"
+#include "../Systems/WinConditionSystem.h"
 
 #include "../Components/Renderable.h"
 
@@ -87,25 +89,7 @@ void StatePlaying::handle_events(sf::Event e)
 		{
 			// CHANGE SCENE TO PAUSE MENU
 			m_state_manager->pushState<StatePauseMenu>(*m_state_manager);
-
-			// CHECK IF SNAPSHOT EXISTS IF EXISTS DELETE IT 
-			if (m_pause_screen != entt::null)
-				m_entities.erase(std::find(m_entities.begin(), m_entities.end(), m_pause_screen));
-			
-			// CREATE SNAPSHOT ENTITY
-			m_pause_screen = m_reg.create();
-			
-			// CAPTURE WHATEVER IS ON THE SCREEN INTO A TEXTURE
-			sf::Texture texture;
-			texture.create(wnd.get().getSize().x, wnd.get().getSize().y);
-			texture.update(wnd.get());
-			ResourceManager::get().m_texture.save("pause_screen_capture", texture);
-
-			// ASSIGN COMPONENTS TO ENTITY
-			auto& sprite = m_reg.emplace<sf::Sprite>(m_pause_screen, ResourceManager::get().m_texture.get("pause_screen_capture"));
-			m_reg.emplace<PauseTag>(m_pause_screen);
-
-			m_entities.push_back(m_pause_screen);
+			pauseGameplay();
 		}
 			break;
 		case sf::Keyboard::F1:
@@ -135,6 +119,7 @@ void StatePlaying::initSystems()
 	m_update_systems.emplace_back(std::make_unique<HealthSystem>());
 	m_update_systems.emplace_back(std::make_unique<AnimationSystem>());
 	m_update_systems.emplace_back(std::make_unique<MapLayerUpdate>());
+	m_update_systems.emplace_back(std::make_unique<WinConditionSystem>());
 
 	m_render_systems.emplace_back(std::make_unique<RenderSpriteSystem>());
 	m_render_systems.emplace_back(std::make_unique<RenderDebugSystem>());
@@ -261,6 +246,15 @@ void StatePlaying::setupEntities()
 
 	m_entities.push_back(player);
 
+
+	auto win_condition = m_reg.create();
+	auto& wc_component = m_reg.emplace<WinCondition>(win_condition);
+	wc_component.success = [&]() 
+	{
+		m_state_manager->pushState<StateWin>(*m_state_manager);
+		pauseGameplay();
+	};
+
 	// SORT ALL RENDER LAYERS (NOT MAP LAYERS) ACCORDING TO THEIR Z-INDEX
 	m_reg.sort<Renderable>([](auto const& l, auto const& r)
 	{
@@ -269,6 +263,30 @@ void StatePlaying::setupEntities()
 
 	// SORT ALL THE SPRITES THE SAME WAY
 	m_reg.sort<sf::Sprite, Renderable>();
+}
+
+void StatePlaying::pauseGameplay()
+{
+	auto& wnd = Locator::MainWindow::ref();
+
+	// CHECK IF SNAPSHOT EXISTS IF EXISTS DELETE IT 
+	if (m_pause_screen != entt::null)
+		m_entities.erase(std::find(m_entities.begin(), m_entities.end(), m_pause_screen));
+
+	// CREATE SNAPSHOT ENTITY
+	m_pause_screen = m_reg.create();
+
+	// CAPTURE WHATEVER IS ON THE SCREEN INTO A TEXTURE
+	sf::Texture texture;
+	texture.create(wnd.get().getSize().x, wnd.get().getSize().y);
+	texture.update(wnd.get());
+	ResourceManager::get().m_texture.save("pause_screen_capture", texture);
+
+	// ASSIGN COMPONENTS TO ENTITY
+	auto& sprite = m_reg.emplace<sf::Sprite>(m_pause_screen, ResourceManager::get().m_texture.get("pause_screen_capture"));
+	m_reg.emplace<PauseTag>(m_pause_screen);
+
+	m_entities.push_back(m_pause_screen);
 }
 
 entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& player, sf::Vector2f pos, sf::Vector2f size, const std::string& texPath)
