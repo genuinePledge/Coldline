@@ -12,6 +12,9 @@ public:
 		sf::Cursor cursor;
 		if (cursor.loadFromSystem(sf::Cursor::Cross))
 			m_window.setMouseCursor(cursor);
+
+		maps.push_back("test_map3");
+		maps.push_back("map");
 	}
 	bool update()
 	{
@@ -57,13 +60,33 @@ public:
 		return sf::Vector2f(size.x * SCALING_FACTOR, size.y * SCALING_FACTOR);
 	}
 
+	std::string getNextLevel()
+	{
+		i++;
+		if (i >= maps.size())
+		{
+			i = 0;
+			return "null";
+		}
+		else
+		{
+			return maps[i];
+		}
+	}
+
 public:
 	const sf::Vector2<uint16_t> SCREEN_SIZE = { 800, 600 };
 	float ZOOM_FACTOR = 2.f;
 	static const constexpr float SCALING_FACTOR = 16.f;
-	inline static bool debugRender = true;
+	inline static bool debugRender = false;
 	std::string title = "Coldline. Build ver.0.2. FPS: ";
 	inline static sf::Color clearColor = sf::Color::Black;
+
+	// TEMPORARY TO-DO: MOVE THIS TO A MAP CLASS
+	std::string current_map;
+	std::vector<const char*> maps;
+	int i = 0;
+	bool last_level_reached = false;
 
 private:
 
