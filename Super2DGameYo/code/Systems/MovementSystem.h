@@ -40,11 +40,6 @@ class MovementSystem : public IUpdateSystem
 
 			sprite.setRotation(angle);
 
-			auto view = wnd.get().getView();
-			view.setCenter(wnd.worldToScreenPos(body.body->GetPosition()));
-			view.setSize(wnd.getView().getSize());
-			wnd.get().setView(view);
-			wnd.setView(view);
 		});
 	}
 };
