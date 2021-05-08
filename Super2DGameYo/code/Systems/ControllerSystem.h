@@ -20,15 +20,16 @@ class ControllerSystem : public IUpdateSystem
 				controller.direction.x = 1;
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 				controller.direction.y = -1;
+
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 				controller.speed_type = Controller::SpeedType::fast;
 			else
 				controller.speed_type = Controller::SpeedType::normal;
+
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				controller.is_shooting = true;
 			else
 				controller.is_shooting = false;
-
 
 			// TO-DO: GET RID OF THIS MESS BRUH
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
@@ -41,8 +42,6 @@ class ControllerSystem : public IUpdateSystem
 				win.ZOOM_FACTOR -= 0.05;
 				win.getView().setSize(static_cast<sf::Vector2f>(win.SCREEN_SIZE) / win.ZOOM_FACTOR);
 			}
-
-
 
 			sf::Vector2i pixelPos = sf::Mouse::getPosition(win.get());
 			sf::Vector2f trueMousePos = win.get().mapPixelToCoords(pixelPos);

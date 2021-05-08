@@ -22,7 +22,7 @@ class RenderDebugSystem : public IRenderSystem
 				rect.setSize(body_size_screen);
 				rect.setOrigin(rect.getSize() / 2.f);
 				rect.setPosition(wnd.worldToScreenPos(phys.body->GetPosition()));
-				rect.setFillColor(sf::Color(0, 255, 0, 120));
+				rect.setFillColor(sf::Color(0, 255, 0, 60));
 				target.draw(rect);
 			}
 				break;
@@ -33,7 +33,7 @@ class RenderDebugSystem : public IRenderSystem
 				circle.setRadius(radius * wnd.SCALING_FACTOR);
 				circle.setOrigin(circle.getRadius(), circle.getRadius());
 				circle.setPosition(wnd.worldToScreenPos(phys.body->GetPosition()));
-				circle.setFillColor(sf::Color(0, 0, 255, 120));
+				circle.setFillColor(sf::Color(0, 0, 255, 60));
 				target.draw(circle);
 			}
 				break;

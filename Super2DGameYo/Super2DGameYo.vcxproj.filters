@@ -27,9 +27,6 @@
     <ClCompile Include="code\Gfx\Tileset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\Utility\Utility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pugixml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -131,7 +128,7 @@
     <ClInclude Include="code\Components\ButtonStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\Systems\MenuUpdateSystem.h">
+    <ClInclude Include="code\Systems\ButtonUpdateSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Gui\Widget.h">
@@ -216,6 +213,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Components\WinCondition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Components\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Systems\CameraUpdateSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -17,7 +17,7 @@ class CombatSystem : public IUpdateSystem
 
 		for (auto const entity : view)
 		{
-			auto&& [controller, gat, rigidbody] = view.get(entity);
+			auto&& [controller, gat, player_body] = view.get(entity);
 
 			gat.current_time += dt;
 			if (gat.current_time < gat.delay)
@@ -26,16 +26,14 @@ class CombatSystem : public IUpdateSystem
 			if (!controller.is_shooting)
 				continue;
 
-
 			gat.current_time = 0.f;
-
 
 			auto const bullet = reg.create();
 
-
-			const auto parent_pos = rigidbody.body->GetPosition();
+			const auto parent_pos = player_body.body->GetPosition();
 			auto direction = wnd.screenToWorldPos(controller.mouse_pos) - parent_pos;
 			direction.Normalize();
+
 			b2BodyDef bodyDef;
 			bodyDef.type = b2_dynamicBody;
 			bodyDef.position = parent_pos + direction;
