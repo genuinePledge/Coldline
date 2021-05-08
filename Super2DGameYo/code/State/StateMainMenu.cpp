@@ -44,7 +44,7 @@ void StateMainMenu::setupEntities()
 	Window::clearColor = sf::Color::Black;
 
 	// (DEBUG) MAP LARGE BUTTON
-	{
+	/*{
 		auto [entity, mapLarge] = gui::createButton(m_reg);
 		mapLarge->init(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/maplarge"), m_reg);
 		mapLarge->setPosition(m_reg, 351.f, 347.f);
@@ -53,17 +53,20 @@ void StateMainMenu::setupEntities()
 		mapLarge->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/SELECTED_maplarge"), m_reg); }, m_reg);
 		mapLarge->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/maplarge"), m_reg); }, m_reg);
 		m_entities.push_back(entity);
-	}
+	}*/
 	
 	// (DEBUG) MAP SMALL
 	{
-		auto [entity, mapSmall] = gui::createButton(m_reg);
-		mapSmall->init(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/mapsmall"), m_reg);
-		mapSmall->setPosition(m_reg, 351.f, 402.f);
-		mapSmall->setAction([&]() { m_state_manager->changeState<StatePlaying>(*m_state_manager, "map"); }, m_reg);
-		auto duplicate = std::make_shared<gui::Button>(*mapSmall);
-		mapSmall->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/SELECTED_mapsmall"), m_reg); }, m_reg);
-		mapSmall->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/mapsmall"), m_reg); }, m_reg);
+		auto [entity, play] = gui::createButton(m_reg);
+		play->init(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/play"), m_reg);
+		play->setPosition(m_reg, 351.f, 402.f);
+		play->setAction([&]() { 
+			Locator::MainWindow::ref().i = 0;
+			m_state_manager->changeState<StatePlaying>(*m_state_manager, Locator::MainWindow::ref().maps[0]);
+		}, m_reg);
+		auto duplicate = std::make_shared<gui::Button>(*play);
+		play->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/SELECTED_play"), m_reg); }, m_reg);
+		play->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/play"), m_reg); }, m_reg);
 		m_entities.push_back(entity);
 	}
 
