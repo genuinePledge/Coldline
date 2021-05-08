@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <deque>
 #include "StateBase.h"
 
 class StateManager
@@ -16,6 +17,7 @@ class StateManager
 			Quit
 		};
 		Type type = Type::None;
+		bool pause = false;
 		std::unique_ptr<StateBase> state;
 	};
 
@@ -30,7 +32,7 @@ public:
 	}
 
 	template<typename T, typename... Args>
-	void pushState(Args&&... args);
+	void pushState(bool pause, Args&&... args);
 	template<typename T, typename... Args>
 	void changeState(Args&&... args);
 	void popState();
@@ -47,15 +49,16 @@ public:
 	bool isEmpty();
 
 private:
-	std::vector<std::unique_ptr<Action>> m_action;
+	std::deque<std::unique_ptr<Action>> m_action;
 	std::vector<std::unique_ptr<StateBase>> m_states;
 };
 
 template<typename T, typename... Args>
-inline void StateManager::pushState(Args&&... args)
+inline void StateManager::pushState(bool pause, Args&&... args)
 {
 	std::unique_ptr<Action> action = std::make_unique<Action>();
 	action->type = Action::Type::Push;
+	action->pause = pause;
 	action->state = std::make_unique<T>(std::forward<Args>(args)...);
 	m_action.emplace_back(std::move(action));
 }

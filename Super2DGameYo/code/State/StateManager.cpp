@@ -60,23 +60,26 @@ void StateManager::updateStates()
 		switch (action->type)
 		{
 		case Action::Type::Push:
-			if (!m_states.empty())
+			if (!m_states.empty() && action->pause)
 				m_states.back()->pause();
 			m_states.emplace_back(std::move(action->state));
 			action->type = Action::Type::None;
+			m_action.pop_front();
 			break;
 
 		case Action::Type::Change:
 			m_states.pop_back();
 			m_states.emplace_back(std::move(action->state));
 			action->type = Action::Type::None;
+			m_action.pop_front();
 			break;
 
 		case Action::Type::Pop:
 			m_states.pop_back();
-			if (!m_states.empty())
+			if (!m_states.empty() && m_states.back()->isPaused())
 				m_states.back()->resume();
 			action->type = Action::Type::None;
+			m_action.pop_front();
 			break;
 
 		case Action::Type::Quit:
