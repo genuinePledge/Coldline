@@ -3,7 +3,7 @@
 #include "../Components/ButtonStates.h"
 #include "../Locator.h"
 
-class MenuUpdateSystem : public IUpdateSystem
+class ButtonUpdateSystem : public IUpdateSystem
 {
 public:
 	virtual void update(entt::registry& registry, float delta) override

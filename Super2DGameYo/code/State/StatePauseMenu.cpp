@@ -2,7 +2,7 @@
 
 #include "StateManager.h"
 #include "../Systems/RenderSpriteSystem.h"
-#include "../Systems/MenuUpdateSystem.h"
+#include "../Systems/ButtonUpdateSystem.h"
 
 #include "../Gui/Button.h"
 #include "../Gui/Label.h"
@@ -63,7 +63,7 @@ void StatePauseMenu::handle_events(sf::Event e)
 void StatePauseMenu::initSystems()
 {
 	m_render_systems.emplace_back(std::make_unique<RenderSpriteSystem>());
-	m_update_systems.emplace_back(std::make_unique<MenuUpdateSystem>());
+	m_update_systems.emplace_back(std::make_unique<ButtonUpdateSystem>());
 }
 
 void StatePauseMenu::setupEntities()

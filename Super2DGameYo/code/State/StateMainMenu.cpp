@@ -5,7 +5,7 @@
 #include "../Gui/Button.h"
 #include "../Gui/Label.h"
 #include "../Systems/RenderSpriteSystem.h"
-#include "../Systems/MenuUpdateSystem.h"
+#include "../Systems/ButtonUpdateSystem.h"
 
 StateMainMenu::StateMainMenu(StateManager& manager)
 	: StateBase(manager)
@@ -36,7 +36,7 @@ void StateMainMenu::handle_events(sf::Event e)
 void StateMainMenu::initSystems()
 {
 	m_render_systems.emplace_back(std::make_unique<RenderSpriteSystem>());
-	m_update_systems.emplace_back(std::make_unique<MenuUpdateSystem>());
+	m_update_systems.emplace_back(std::make_unique<ButtonUpdateSystem>());
 }
 
 void StateMainMenu::setupEntities()

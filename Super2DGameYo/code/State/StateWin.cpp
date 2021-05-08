@@ -2,7 +2,7 @@
 
 #include "StateManager.h"
 #include "../Systems/RenderSpriteSystem.h"
-#include "../Systems/MenuUpdateSystem.h"
+#include "../Systems/ButtonUpdateSystem.h"
 
 #include "../Gui/Button.h"
 #include "../Gui/Label.h"
