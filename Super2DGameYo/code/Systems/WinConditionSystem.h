@@ -32,7 +32,12 @@ class WinConditionSystem : public IUpdateSystem
 			{
 				auto&& [condition] = view.get(entity);
 
-				condition.success();
+				condition.current_time += dt;
+				if (condition.current_time >= condition.delay)
+				{
+					condition.current_time = 0.f;
+					condition.success();
+				}
 			}
 		}
 
