@@ -81,6 +81,9 @@ class CombatSystem : public IUpdateSystem
 			reg.sort<sf::Sprite, Renderable>();
 
 			bullet_body.body->ApplyForceToCenter(500.f * direction, true);
+
+			Locator::Sound::ref().setBuffer(ResourceManager::get().m_audio.get("gunshot"));
+			Locator::Sound::ref().play();
 		}
 	}
 };
