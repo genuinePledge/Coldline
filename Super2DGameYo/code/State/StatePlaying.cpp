@@ -26,6 +26,7 @@
 #include "../ContactListener.h"
 
 #include "../Locator.h"
+#include "StateGameOver.h"
 
 
 StatePlaying::StatePlaying(StateManager& manager, const char* levelName)
@@ -33,6 +34,35 @@ StatePlaying::StatePlaying(StateManager& manager, const char* levelName)
 	, listener(m_reg)
 {
 	Locator::MainMap::set("res/maps/" + std::string(levelName) + ".tmx");
+	Locator::MainWindow::ref().current_map = levelName;
+	Locator::Physics::ref().SetContactListener(&listener);
+	init();
+}
+
+StatePlaying::StatePlaying(StateManager& manager, bool restart)
+	: StateBase(manager)
+	, listener(m_reg)
+{
+	if (restart)
+	{
+		Locator::MainMap::set("res/maps/" + std::string(Locator::MainWindow::ref().current_map) + ".tmx");
+
+	}
+	else
+	{
+		std::string lvl = Locator::MainWindow::ref().getNextLevel();
+		if (!lvl.compare("null"))
+		{
+			Locator::MainWindow::ref().last_level_reached = true;
+			return;
+		}
+		else
+		{
+			Locator::MainMap::set("res/maps/" + std::string(lvl) + ".tmx");
+			Locator::MainWindow::ref().current_map = lvl;
+		}
+	}
+
 	Locator::Physics::ref().SetContactListener(&listener);
 	init();
 }
@@ -92,7 +122,7 @@ void StatePlaying::handle_events(sf::Event e)
 		case sf::Keyboard::Escape:
 		{
 			// CHANGE SCENE TO PAUSE MENU
-			m_state_manager->pushState<StatePauseMenu>(*m_state_manager);
+			m_state_manager->pushState<StatePauseMenu>(true, *m_state_manager);
 			pauseGameplay();
 		}
 			break;
@@ -107,7 +137,11 @@ void StatePlaying::handle_events(sf::Event e)
 		break;
 	}
 
-	
+	if (wnd.last_level_reached)
+	{
+		wnd.last_level_reached = false;
+		m_state_manager->changeState<StateMainMenu>(*m_state_manager);
+	}
 }
 
 void StatePlaying::initSystems()
@@ -255,7 +289,13 @@ void StatePlaying::setupEntities()
 	auto& wc_component = m_reg.emplace<WinCondition>(win_condition);
 	wc_component.success = [&]() 
 	{
-		m_state_manager->pushState<StateWin>(*m_state_manager);
+		m_state_manager->pushState<StateWin>(true, *m_state_manager);
+		pauseGameplay();
+	};
+
+	wc_component.fail = [&]()
+	{
+		m_state_manager->pushState<StateGameOver>(true, *m_state_manager);
 		pauseGameplay();
 	};
 
@@ -289,8 +329,6 @@ void StatePlaying::pauseGameplay()
 	// ASSIGN COMPONENTS TO ENTITY
 	auto& sprite = m_reg.emplace<sf::Sprite>(m_pause_screen, ResourceManager::get().m_texture.get("pause_screen_capture"));
 	m_reg.emplace<PauseTag>(m_pause_screen);
-
-	wnd.get().setView(wnd.get().getDefaultView());
 
 	m_entities.push_back(m_pause_screen);
 }

@@ -6,6 +6,7 @@ class StatePlaying : public StateBase
 {
 public:
 	StatePlaying(StateManager& manager, const char* levelName);
+	StatePlaying(StateManager& manager, bool restart);
 	StatePlaying(const StatePlaying&) = delete;
 	~StatePlaying();
 
