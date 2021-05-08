@@ -65,7 +65,7 @@ void StateWin::handle_events(sf::Event e)
 		case sf::Keyboard::Space:
 		{
 			m_state_manager->popState();
-			m_state_manager->changeState<StatePlaying>(*m_state_manager, "map");
+			m_state_manager->changeState<StatePlaying>(*m_state_manager, false);
 		}
 			break;
 
