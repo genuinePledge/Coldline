@@ -19,6 +19,7 @@
 #include "../Systems/CollisionResponseSystem.h"
 #include "../Systems/HealthSystem.h"
 #include "../Systems/WinConditionSystem.h"
+#include "../Systems/CameraUpdateSystem.h"
 
 #include "../Components/Renderable.h"
 
@@ -38,9 +39,12 @@ StatePlaying::StatePlaying(StateManager& manager, const char* levelName)
 
 StatePlaying::~StatePlaying()
 {
+	auto& wnd = Locator::MainWindow::ref().get();
 	for (auto& e : m_entities)
 		if (m_reg.valid(e))
 			m_reg.destroy(e);
+
+	wnd.setView(wnd.getDefaultView());
 
 	Locator::MainMap::reset();
 }
@@ -49,7 +53,7 @@ void StatePlaying::update(float dt)
 {
 	auto& wnd = Locator::MainWindow::ref();
 
-	wnd.get().setView(wnd.getView());
+	//wnd.get().setView(wnd.getView());
 
 	for (auto const& sys : m_update_systems)
 	{
@@ -61,7 +65,7 @@ void StatePlaying::render()
 {
 	auto& wnd = Locator::MainWindow::ref();
 	
-	wnd.get().setView(wnd.getView());
+	//wnd.get().setView(wnd.getView());
 
 	if (m_paused)
 	{
@@ -74,7 +78,7 @@ void StatePlaying::render()
 		for (auto const& sys : m_render_systems)
 			sys->render(m_reg, wnd.get());
 	}
-	wnd.get().setView(wnd.get().getDefaultView());
+	//wnd.get().setView(wnd.get().getDefaultView());
 }
 
 void StatePlaying::handle_events(sf::Event e)
@@ -113,6 +117,7 @@ void StatePlaying::initSystems()
 	m_update_systems.emplace_back(std::make_unique<LifeTimeSystem>());
 	m_update_systems.emplace_back(std::make_unique<TransitionStateSystem>());
 	m_update_systems.emplace_back(std::make_unique<MovementSystem>());
+	m_update_systems.emplace_back(std::make_unique<CameraUpdateSystem>());
 	m_update_systems.emplace_back(std::make_unique<UpdateSpriteSystem>());
 	m_update_systems.emplace_back(std::make_unique<UpdatePhysicsSystem>());
 	m_update_systems.emplace_back(std::make_unique<CollisionResponseSystem>());
@@ -246,7 +251,6 @@ void StatePlaying::setupEntities()
 
 	m_entities.push_back(player);
 
-
 	auto win_condition = m_reg.create();
 	auto& wc_component = m_reg.emplace<WinCondition>(win_condition);
 	wc_component.success = [&]() 
@@ -286,6 +290,8 @@ void StatePlaying::pauseGameplay()
 	auto& sprite = m_reg.emplace<sf::Sprite>(m_pause_screen, ResourceManager::get().m_texture.get("pause_screen_capture"));
 	m_reg.emplace<PauseTag>(m_pause_screen);
 
+	wnd.get().setView(wnd.get().getDefaultView());
+
 	m_entities.push_back(m_pause_screen);
 }
 
@@ -312,6 +318,7 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	auto& sprSheet = reg.emplace<SpriteSheet>(player);
 	auto& animation = reg.emplace<Animation>(player);
 	auto& shooter = reg.emplace<ProjectileEmitter>(player);
+	auto& camera = reg.emplace<Camera>(player);
 	reg.emplace<Controller>(player);
 	reg.emplace<Renderable>(player, 5);
 	reg.emplace<PlayerState>(player);
@@ -343,10 +350,9 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 	body.speed = 10.f;
 
 	auto& window = Locator::MainWindow::ref();
-	sf::View view;
-	view.setCenter(pos);
-	view.setSize(static_cast<sf::Vector2f>(window.SCREEN_SIZE) / window.ZOOM_FACTOR);
-	window.setView(view);
+	camera.view.setCenter(pos);
+	camera.view.setSize(static_cast<sf::Vector2f>(window.SCREEN_SIZE) / window.ZOOM_FACTOR);
+	camera.target = player;
 
 	return player;
 }
