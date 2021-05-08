@@ -8,6 +8,7 @@ void Game::init()
 	Locator::MainWindow::set(false);
 	Locator::Registry::set();
 	Locator::Physics::set(b2Vec2(0.f, 0.f));
+	Locator::Sound::set();
 	m_stateManager.init<StateMainMenu>();
 }
 

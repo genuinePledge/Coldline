@@ -10,4 +10,5 @@ struct Locator
 	using MainWindow = entt::service_locator<Window>;
 	using MainMap = entt::service_locator<Map>;
 	using Physics = entt::service_locator<b2World>;
+	using Sound = entt::service_locator<sf::Sound>;
 };
