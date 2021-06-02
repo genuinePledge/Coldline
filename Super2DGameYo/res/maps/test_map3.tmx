@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.5.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="70">
+<map version="1.5" tiledversion="1.5.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="76">
  <tileset firstgid="1" source="../tilesets/map_tileset.tsx"/>
  <tileset firstgid="257" source="../tilesets/objects_tileset.tsx"/>
  <layer id="1" name="background" width="50" height="50">
@@ -613,6 +613,14 @@
    <point/>
   </object>
   <object id="69" x="681.355" y="653.974">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="16" name="interactables">
+  <object id="73" name="bat" type="weapon" x="331.667" y="381.667">
+   <point/>
+  </object>
+  <object id="75" name="usp" type="weapon" x="453.667" y="383">
    <point/>
   </object>
  </objectgroup>

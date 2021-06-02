@@ -25,6 +25,11 @@ std::vector<sf::FloatRect> Map::getColliders()
 	return m_colliders;
 }
 
+std::unordered_map<std::string, sf::Vector2f> Map::getWeapons()
+{
+	return m_weapons;
+}
+
 void Map::loadMap(const pugi::xml_node& node)
 {
 	m_tileSize = atoi(node.attribute("tileheight").value());
@@ -83,6 +88,23 @@ void Map::loadMap(const pugi::xml_node& node)
 					float height = atof(solid.attribute("height").value());
 
 					m_colliders.push_back(sf::FloatRect(x, y, width, height));
+				}
+			}
+
+			if (!std::string("interactables").compare(childnode.attribute("name").value()))
+			{
+				auto objs = childnode.children();
+
+				for (auto obj : objs)
+				{
+					if (!std::string("weapon").compare(obj.attribute("type").value()))
+					{
+						float x = atof(obj.attribute("x").value());
+						float y = atof(obj.attribute("y").value());
+						std::string name = obj.attribute("name").value();
+
+						m_weapons[name] = sf::Vector2f(x, y);
+					}
 				}
 			}
 		}

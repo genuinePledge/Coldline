@@ -14,6 +14,7 @@ public:
 	std::vector<Layer> getLayers() const;
 	std::vector<sf::Vector2f> getSpawns();
 	std::vector<sf::FloatRect> getColliders();
+	std::unordered_map<std::string, sf::Vector2f> getWeapons();
 
 private:
 	void loadMap(const pugi::xml_node& node);
@@ -22,6 +23,7 @@ private:
 
 	std::vector<sf::Vector2f> m_spawns;
 	std::vector<sf::FloatRect> m_colliders;
+	std::unordered_map<std::string, sf::Vector2f> m_weapons;
 	std::vector<Tileset> m_tilesets;
 	
 	std::vector<Layer> m_layers;

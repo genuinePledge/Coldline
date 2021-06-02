@@ -9,6 +9,7 @@ void Game::init()
 	Locator::Registry::set();
 	Locator::Physics::set(b2Vec2(0.f, 0.f));
 	Locator::Sound::set();
+	Locator::Music::set();
 	m_stateManager.init<StateMainMenu>();
 }
 

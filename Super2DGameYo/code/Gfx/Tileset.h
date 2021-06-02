@@ -9,8 +9,8 @@ public:
 
 	struct AnimationInfo
 	{
-		int tile;
-		int duration;
+		int tile = 0;
+		int duration = 0;
 		std::vector<int> frames;
 	};
 
