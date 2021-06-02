@@ -73,7 +73,11 @@ void StatePauseMenu::setupEntities()
 		auto [entity, resume] = gui::createButton(m_reg);
 		resume->init(ResourceManager::get().m_texture.get("widgets/buttons/pause_menu/resume"), m_reg);
 		resume->setPosition(m_reg, 309.f, 235.f);
-		resume->setAction([&]() {m_state_manager->popState(); }, m_reg);
+		resume->setAction([&]() {
+			m_state_manager->popState();
+			Locator::Sound::ref().setBuffer(ResourceManager::get().m_audio.get("menu-select"));
+			Locator::Sound::ref().play();
+		}, m_reg);
 		resume->setOnHover([]() {}, m_reg);
 		resume->setOnHoverEscape([]() {}, m_reg);
 		m_entities.push_back(entity);
@@ -84,7 +88,12 @@ void StatePauseMenu::setupEntities()
 		auto [entity, exit] = gui::createButton(m_reg);
 		exit->init(ResourceManager::get().m_texture.get("widgets/buttons/pause_menu/mainmenu"), m_reg);
 		exit->setPosition(m_reg, 309.f, 305.f);
-		exit->setAction([&]() { m_state_manager->popState(); m_state_manager->changeState<StateMainMenu>(*m_state_manager); }, m_reg);
+		exit->setAction([&]() { 
+			m_state_manager->popState(); 
+			m_state_manager->changeState<StateMainMenu>(*m_state_manager);
+			Locator::Sound::ref().setBuffer(ResourceManager::get().m_audio.get("menu-select"));
+			Locator::Sound::ref().play();
+		}, m_reg);
 		exit->setOnHover([]() {}, m_reg);
 		exit->setOnHoverEscape([]() {}, m_reg);
 		m_entities.push_back(entity);

@@ -36,6 +36,12 @@ StatePlaying::StatePlaying(StateManager& manager, const char* levelName)
 	Locator::MainMap::set("res/maps/" + std::string(levelName) + ".tmx");
 	Locator::MainWindow::ref().current_map = levelName;
 	Locator::Physics::ref().SetContactListener(&listener);
+	if (std::string(levelName).compare("test_map3"))
+		music.openFromFile("res/audio/first-level.wav");
+	else 
+		music.openFromFile("res/audio/second-level.wav");
+	music.setLoop(true);
+	music.play();
 	init();
 }
 
@@ -64,6 +70,9 @@ StatePlaying::StatePlaying(StateManager& manager, bool restart)
 	}
 
 	Locator::Physics::ref().SetContactListener(&listener);
+	music.openFromFile("res/audio/first-level.wav");
+	music.setLoop(true);
+	music.play();
 	init();
 }
 
@@ -76,7 +85,7 @@ StatePlaying::~StatePlaying()
 
 	wnd.setView(wnd.getDefaultView());
 
-	Locator::MainMap::reset();
+	music.stop();
 }
 
 void StatePlaying::update(float dt)
@@ -173,6 +182,7 @@ void StatePlaying::setupEntities()
 
 	auto spawns = map.getSpawns();
 	auto colliders = map.getColliders();
+	auto weapons = map.getWeapons();
 	std::vector<Layer> layers(map.getLayers());
 
 	for (auto i = 1u; i < spawns.size(); i++)
@@ -257,13 +267,45 @@ void StatePlaying::setupEntities()
 		}
 	}
 
+	for (auto const& [name, pos] : weapons)
+	{
+		const auto weapon_entity = m_reg.create();
+		b2BodyDef weaponDef;
+		weaponDef.type = b2_staticBody;
+		weaponDef.position = {
+			pos.x / Window::SCALING_FACTOR,
+			pos.y / Window::SCALING_FACTOR
+		};
+
+		b2BodyUserData data;
+		data.pointer = static_cast<uintptr_t>(weapon_entity);
+		weaponDef.userData = data;
+
+		b2CircleShape shape;
+		shape.m_radius = wnd.getWorldSize({ 16.f, 16.f }).x;
+
+		b2FixtureDef fixtureDef;
+		fixtureDef.isSensor = true;
+		fixtureDef.shape = &shape;
+
+		auto& sprite = m_reg.emplace<sf::Sprite>(weapon_entity);
+		m_reg.emplace<Renderable>(weapon_entity, 6);
+		m_reg.emplace<RigidBody>(weapon_entity, weaponDef, fixtureDef);
+
+		sprite.setTexture(ResourceManager::get().m_texture.get("baseball_bat"));
+		sprite.setScale(0.5f, 0.5f);
+		sprite.setOrigin(sprite.getLocalBounds().width / 2.f, sprite.getLocalBounds().height / 2.f);
+
+		m_entities.push_back(weapon_entity);
+	}
 
 	for (auto const& wall : colliders)
 	{
 		const auto wall_entity = m_reg.create();
 		b2BodyDef wallDef;
 		wallDef.type = b2_staticBody;
-		wallDef.position = { (wall.left + wall.width / 2.f) / Window::SCALING_FACTOR, (wall.top + wall.height / 2.f) / Window::SCALING_FACTOR };
+		wallDef.position = { (wall.left + wall.width / 2.f) / Window::SCALING_FACTOR, 
+							 (wall.top + wall.height / 2.f) / Window::SCALING_FACTOR };
 		b2BodyUserData data;
 		data.pointer = static_cast<uintptr_t>(wall_entity);
 		wallDef.userData = data;
@@ -307,6 +349,7 @@ void StatePlaying::setupEntities()
 
 	// SORT ALL THE SPRITES THE SAME WAY
 	m_reg.sort<sf::Sprite, Renderable>();
+
 }
 
 void StatePlaying::pauseGameplay()
@@ -378,6 +421,7 @@ entt::entity& StatePlaying::createPlayer(entt::registry& reg, entt::entity& play
 
 	for (auto i = 0; i < sprSheet.number_of_frames; i++)
 		animation.frames.push_back(i);
+
 	animation.frameTime = 90;
 	animation.entity = player;
 

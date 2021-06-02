@@ -1,6 +1,7 @@
 #pragma once
 #include "StateBase.h"
 #include "../ContactListener.h"
+#include "SFML/Audio.hpp"
 
 class StatePlaying : public StateBase
 {
@@ -21,4 +22,5 @@ private:
 	entt::entity& createPlayer(entt::registry& reg, entt::entity& player, sf::Vector2f pos, sf::Vector2f size, const std::string& texPath);
 
 	ContactListener listener;
+	sf::Music music;
 };

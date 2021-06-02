@@ -63,6 +63,9 @@ void StateMainMenu::setupEntities()
 		play->setAction([&]() { 
 			Locator::MainWindow::ref().i = 0;
 			m_state_manager->changeState<StatePlaying>(*m_state_manager, Locator::MainWindow::ref().maps[0]);
+			Locator::Sound::ref().setBuffer(ResourceManager::get().m_audio.get("menu-select"));
+			Locator::Sound::ref().play();
+			Locator::Music::ref().stop();
 		}, m_reg);
 		auto duplicate = std::make_shared<gui::Button>(*play);
 		play->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/SELECTED_play"), m_reg); }, m_reg);
@@ -76,7 +79,12 @@ void StateMainMenu::setupEntities()
 		auto [entity, exitButton] = gui::createButton(m_reg);
 		exitButton->init(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/exit"), m_reg);
 		exitButton->setPosition(m_reg, 351.f, 457.f);
-		exitButton->setAction([&]() { m_state_manager->quitGame(); }, m_reg);
+		exitButton->setAction([&]() { 
+			m_state_manager->quitGame();
+			Locator::Sound::ref().setBuffer(ResourceManager::get().m_audio.get("menu-select"));
+			Locator::Sound::ref().play();
+			Locator::Music::ref().stop();
+		}, m_reg);
 		auto duplicate = std::make_shared<gui::Button>(*exitButton);
 		exitButton->setOnHover([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/SELECTED_exit"), m_reg); }, m_reg);
 		exitButton->setOnHoverEscape([=]() { duplicate->setTexture(ResourceManager::get().m_texture.get("widgets/buttons/main_menu/exit"), m_reg); }, m_reg);
@@ -90,4 +98,8 @@ void StateMainMenu::setupEntities()
 		logo->setPosition(m_reg, 85.f, 102.f);
 		m_entities.push_back(entity);
 	}
+
+	Locator::Music::ref().openFromFile("res/audio/main-menu.wav");
+	Locator::Music::ref().setLoop(true);
+	Locator::Music::ref().play();
 }
