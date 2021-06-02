@@ -101,5 +101,6 @@ void StateMainMenu::setupEntities()
 
 	Locator::Music::ref().openFromFile("res/audio/main-menu.wav");
 	Locator::Music::ref().setLoop(true);
+	Locator::Music::ref().setVolume(20.f);
 	Locator::Music::ref().play();
 }

@@ -40,6 +40,7 @@ StatePlaying::StatePlaying(StateManager& manager, const char* levelName)
 		music.openFromFile("res/audio/first-level.wav");
 	else 
 		music.openFromFile("res/audio/second-level.wav");
+	music.setVolume(20.f);
 	music.setLoop(true);
 	music.play();
 	init();
@@ -71,6 +72,7 @@ StatePlaying::StatePlaying(StateManager& manager, bool restart)
 
 	Locator::Physics::ref().SetContactListener(&listener);
 	music.openFromFile("res/audio/first-level.wav");
+	music.setVolume(20.f);
 	music.setLoop(true);
 	music.play();
 	init();
